@@ -16,22 +16,18 @@ class RegistrationController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'firstName' => 'required',
-            'lastName' => 'required',
+            'name' => 'required',
             'email' => 'required|email:dns|unique:users',
-            'phone' => 'required|numeric|unique:users',
             'password' => 'required|confirmed|min:8',
+            'phone' => 'required|numeric',
         ]);
 
         User::create([
-            'First_Name' => $request->firstName,
-            'Last_Name' => $request->lastName,
-            'role' => 'user',
-            'enterprise' => null,
+            'name' => $request->name,
             'email' => $request->email,
-            'phone' => $request->phone,
             'password' => Hash::make($request->password),
-            'subcription' => null,
+            'phone' => $request->phone,
+            'role' => 'user',
         ]);
 
         $request->session()->put('success', 'Registration success!');

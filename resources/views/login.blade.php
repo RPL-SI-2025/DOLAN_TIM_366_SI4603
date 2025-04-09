@@ -9,7 +9,13 @@
 <body>
     <div class="container mt-5">
         <h2 class="text-center">Login</h2>
-        <form action="" method="POST">
+        <form action="{{ route('login') }}" method="POST">
+        @if (session()->has('loginError'))
+                    <div class="alert alert-danger alert-dismissable fade show" role="alert">
+                        {{ session('loginError') }}
+                    </div>
+                @endif
+        @csrf
             <div class="mb-3">
                 <label for="email" class="form-label">Email</label>
                 <input type="email" class="form-control" id="email" name="email" required>
@@ -18,7 +24,7 @@
                 <label for="password" class="form-label">Password</label>
                 <input type="password" class="form-control" id="password" name="password" required>
             </div>
-            <button type="submit" class="btn btn-primary w-100">Register</button>
+            <button type="submit" class="btn btn-primary w-100">Login</button>
         </form>
     </div>
 </body>

@@ -10,8 +10,8 @@ Route::get('/', function () {
 });
 
 
-Route::get('/', [LoginController::class, 'showLoginForm'])->name('login')->middleware('guest');
+Route::get('/', [LoginController::class, 'showLoginForm'])->name('login');
 Route::post('/', [LoginController::class, 'login'])->name('login');
 
-Route::get('/register', [RegistrationController::class, 'showRegistrationForm'])->name('registration')->middleware('guest');
+Route::get('/register', [RegistrationController::class, 'showRegistrationForm'])->name('registration');
 Route::post('/register', [RegistrationController::class, 'store'])->name('registration');
