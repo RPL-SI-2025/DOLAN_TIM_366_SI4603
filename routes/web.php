@@ -42,5 +42,8 @@ Route::prefix('dashboard')->name('dashboard.')->group(function () {
         Route::put('/{destination}', [DestinationController::class, 'update'])->name('update');
         Route::delete('/{destination}', [DestinationController::class, 'destroy'])->name('destroy');
     });
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 });
