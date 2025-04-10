@@ -1,0 +1,21 @@
+<x-layout-admin>
+  <h1 class="text-2xl font-bold text-gray-800 mb-6">Welcome User to Dashboard</h1>
+
+  <div class="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
+    <div class="p-4 bg-white rounded-lg shadow-md dark:bg-gray-800">
+      <h2 class="text-lg font-semibold text-gray-700 dark:text-gray-200">Statistics</h2>
+      <p class="text-gray-600 dark:text-gray-400">Here you can find some statistics about the website.</p>
+      </ul>
+    </div>
+    <div class="p-4 bg-white rounded-lg shadow-md dark:bg-gray-800">
+      <h2 class="text-lg font-semibold text-gray-700 dark:text-gray-200">Recent Articles</h2>
+      <p class="text-gray-600 dark:text-gray-400">Here you can find the most recent articles.</p>
+    </div>
+    <div class="p-4 bg-white rounded-lg shadow-md dark:bg-gray-800">
+      <h2 class="text-lg font-semibold text-gray-700 dark:text-gray-200">Recent Users</h2>
+      <p class="text-gray-600 dark:text-gray-400">Here you can find the most recent users.</p>
+      <ul class="mt-4 space-y-2">
+      </ul>
+    </div>
+  </div>
+</x-layout-admin>
