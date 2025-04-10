@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\RegistrationController;
 use App\Http\Controllers\LoginController;
+use App\Http\Controllers\AdminController;
 
 Route::get('/', function () {
     return view('user.welcome');
@@ -14,6 +15,10 @@ Route::post('login', [LoginController::class, 'login'])->name('login');
 // Halaman register
 Route::get('/register', [RegistrationController::class, 'showRegistrationForm'])->name('registration');
 Route::post('/register', [RegistrationController::class, 'store'])->name('registration');
+
+// Create Admin
+Route::get('/admin/create', [AdminController::class, 'create']);
+Route::post('/admin/store', [AdminController::class, 'store'])->name('admin.store');
 
 // Dashboard
 Route::prefix('dashboard')->name('dashboard.')->group(function () {
@@ -31,4 +36,5 @@ Route::prefix('dashboard')->name('dashboard.')->group(function () {
     // Gallery
     Route::get('gallery/download', [GalleryController::class, 'download_pdf'])->name('gallery.download_pdf');
     Route::resource('gallery', GalleryController::class);
+
 });
