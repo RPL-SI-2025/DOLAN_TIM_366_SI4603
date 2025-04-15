@@ -18,4 +18,4 @@
       </ul>
     </div>
   </div>
-
+  </x-layout-admin>
