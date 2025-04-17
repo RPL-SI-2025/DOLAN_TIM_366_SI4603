@@ -37,6 +37,52 @@ class DestinationSeeder extends Seeder
             'price' => 300000,
         ]);
 
+        Destination::create([
+            'name' => 'Danau Toba',
+            'description' => 'Danau vulkanik terbesar di Indonesia, dengan pemandangan yang luar biasa dan pulau di tengahnya.',
+            'location' => 'Sumatera Utara, Indonesia',
+            'image' => 'destinations/danau_toba.jpg',  // Pastikan file gambar sudah ada di public/storage
+            'stock' => 75,
+            'price' => 300000,
+        ]);
+
+        Destination::create([
+            'name' => 'Bukit Tinggi',
+            'description' => 'Danau vulkanik terbesar di Indonesia, dengan pemandangan yang luar biasa dan pulau di tengahnya.',
+            'location' => 'Sumatera Utara, Indonesia',
+            'image' => 'destinations/bukit_tinggi.jpg',  // Pastikan file gambar sudah ada di public/storage
+            'stock' => 75,
+            'price' => 300000,
+        ]);
+
+        Destination::create([
+            'name' => 'Pantai Sawarna',
+            'description' => 'Danau vulkanik terbesar di Indonesia, dengan pemandangan yang luar biasa dan pulau di tengahnya.',
+            'category' => 'Pantai',
+            'location' => 'Sumatera Utara, Indonesia',
+            'image' => 'destinations/pantai_sawarna.jpg',  // Pastikan file gambar sudah ada di public/storage
+            'stock' => 75,
+            'price' => 300000,
+        ]);
+        Destination::create([
+            'name' => 'Lembang',
+            'description' => 'Danau vulkanik terbesar di Indonesia, dengan pemandangan yang luar biasa dan pulau di tengahnya.',
+            'location' => 'Sumatera Utara, Indonesia',
+            'image' => 'destinations/lembang.jpg',  // Pastikan file gambar sudah ada di public/storage
+            'stock' => 75,
+            'price' => 300000,
+        ]);
+
+        Destination::create([
+            'name' => 'Puncak',
+            'description' => 'Danau vulkanik terbesar di Indonesia, dengan pemandangan yang luar biasa dan pulau di tengahnya.',
+            'location' => 'Sumatera Utara, Indonesia',
+            'image' => 'destinations/puncak.jpg',  // Pastikan file gambar sudah ada di public/storage
+            'stock' => 75,
+            'price' => 300000,
+        ]);
+
+
         // Tambahkan data lainnya sesuai kebutuhan
     }
 }

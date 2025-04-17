@@ -6,11 +6,9 @@ use App\Http\Controllers\LoginController;
 use App\Http\Controllers\DestinationController;
 use App\Http\Controllers\AdminController;
 // use App\Http\Controllers\GalleryController;
+use App\Http\Controllers\HomeController;
+use App\Http\Controllers\PromoController;
 
-
-Route::get('/', function () {
-    return view('user.welcome');
-})->name('welcome');
 
 // Halaman login
 Route::get('login', [LoginController::class, 'showLoginForm'])->name('login');
@@ -20,7 +18,14 @@ Route::post('login', [LoginController::class, 'login'])->name('login');
 Route::get('/register', [RegistrationController::class, 'showRegistrationForm'])->name('registration');
 Route::post('/register', [RegistrationController::class, 'store'])->name('registration');
 
-
+// Homepage
+Route::get('/promo', [PromoController::class, 'getPromo'])->name('promo.get');
+Route::get('/', [HomeController::class, 'index']);
+Route::get('/destinations', [DestinationController::class, 'getDestinations'])->name('destinations.get');
+// home setelah login
+Route::get('/homeuser', function () {
+    return view('homeuser');
+})->middleware('auth')->name('homeuser');
 
 // Dashboard
 Route::prefix('dashboard')->name('dashboard.')->group(function () {
