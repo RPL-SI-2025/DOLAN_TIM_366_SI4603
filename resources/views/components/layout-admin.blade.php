@@ -15,12 +15,11 @@
 
 <x-sidebar/>
 
-<div class="p-4 sm:ml-64">
+<div class="p-4 sm:ml-64 min-h-screen overflow-auto">
    <div class="p-4 rounded-lg mt-14">
       {{ $slot }}
    </div>
 </div>
-
 
 </body>
 

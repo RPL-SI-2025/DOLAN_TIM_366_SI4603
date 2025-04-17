@@ -16,7 +16,7 @@
                         <th class="px-4 py-3 font-semibold">Lokasi</th>
                         <th class="px-4 py-3 font-semibold">Stock</th>
                         <th class="px-4 py-3 font-semibold">Harga</th>
-                        <th class="px-4 py-3 font-semibold">Gambar</th> <!-- Tambahkan kolom gambar -->
+                        <th class="px-4 py-3 font-semibold">Gambar</th> 
                         <th class="px-4 py-3 font-semibold">Aksi</th>
                     </tr>
                 </thead>
@@ -30,11 +30,12 @@
                             <td class="px-4 py-2">Rp{{ number_format($destination->price, 0, ',', '.') }}</td>
                             <td class="px-4 py-2">
                                 @if ($destination->image)
-                                    <img src="{{ asset('storage/' . $destination->image) }}" alt="{{ $destination->name }}" class="w-16 h-16 object-cover">
+                                    <img src="{{ asset('storage/' . $destination->image) }}" alt="{{ $destination->name }}" class="w-36 h-36 object-cover" style="width: 150px; height: 150px; object-fit: cover;">
                                 @else
                                     <span>No Image</span>
                                 @endif
-                            </td> <!-- Kolom Gambar -->
+                            </td>
+
                             <td class="px-4 py-2 space-x-2">
                                 <a href="{{ route('dashboard.destination.edit', $destination->id) }}" class="text-blue-600 hover:underline">Edit</a>
                                 <form action="{{ route('dashboard.destination.destroy', $destination->id) }}" method="POST" class="inline-block" onsubmit="return confirm('Yakin hapus destinasi ini?')">
