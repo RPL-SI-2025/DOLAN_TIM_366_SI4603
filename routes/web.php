@@ -16,9 +16,7 @@ Route::post('login', [LoginController::class, 'login'])->name('login');
 Route::get('/register', [RegistrationController::class, 'showRegistrationForm'])->name('registration');
 Route::post('/register', [RegistrationController::class, 'store'])->name('registration');
 
-// Create Admin
-Route::get('/admin/create', [AdminController::class, 'create']);
-Route::post('/admin/store', [AdminController::class, 'store'])->name('admin.store');
+
 
 // Dashboard
 Route::prefix('dashboard')->name('dashboard.')->group(function () {
@@ -27,13 +25,21 @@ Route::prefix('dashboard')->name('dashboard.')->group(function () {
         return view('dashboard.dashboard');
     })->name('index');
 
-    Route::get('itineraries', [ItineraryController::class, 'index'])->name('itineraries.index')->middleware('auth');
+    // Create Admin
+    Route::get('/admin', [AdminController::class, 'index'])->name('admin.index');
+    Route::get('/admin/create', [AdminController::class, 'create'])->name('admin.create');
+    Route::post('/admin/store', [AdminController::class, 'store'])->name('admin.store');
+    Route::delete('/admin/{id}', [AdminController::class, 'destroy'])->name('admin.destroy');
+    Route::get('/admin/{id}/edit', [AdminController::class, 'edit'])->name('admin.edit');
+    Route::put('/admin/{id}', [AdminController::class, 'update'])->name('admin.update');
 
-    // Admin
-    Route::get('admin/download', [AdminController::class, 'download_pdf'])->name('admin.download_pdf');
-    Route::resource('admin', AdminController::class);
+
+
+
+    // Route::get('itineraries', [ItineraryController::class, 'index'])->name('itineraries.index')->middleware('auth');
 
     // Gallery
-    Route::get('gallery/download', [GalleryController::class, 'download_pdf'])->name('gallery.download_pdf');
-    Route::resource('gallery', GalleryController::class);
+    // Route::get('gallery/download', [GalleryController::class, 'download_pdf'])->name('gallery.download_pdf');
+    // Route::resource('gallery', GalleryController::class);
 });
+

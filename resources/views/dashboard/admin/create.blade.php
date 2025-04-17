@@ -1,3 +1,5 @@
+<x-layout-admin>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -87,7 +89,7 @@
         </div>
     @endif
 
-    <form method="POST" action="{{ route('admin.store') }}">
+    <form method="POST" action="{{ route('dashboard.admin.store') }}">
         @csrf
 
         <label for="name">Name</label>
@@ -112,3 +114,5 @@
 
 </body>
 </html>
+
+    </x-layout-admin>
