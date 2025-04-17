@@ -4,8 +4,9 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\RegistrationController;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\DestinationController;
-// use App\Http\Controllers\AdminController;
+use App\Http\Controllers\AdminController;
 // use App\Http\Controllers\GalleryController;
+
 
 Route::get('/', function () {
     return view('user.welcome');
@@ -19,6 +20,8 @@ Route::post('login', [LoginController::class, 'login'])->name('login');
 Route::get('/register', [RegistrationController::class, 'showRegistrationForm'])->name('registration');
 Route::post('/register', [RegistrationController::class, 'store'])->name('registration');
 
+
+
 // Dashboard
 Route::prefix('dashboard')->name('dashboard.')->group(function () {
     // Dashboard utama
@@ -26,7 +29,7 @@ Route::prefix('dashboard')->name('dashboard.')->group(function () {
         return view('dashboard.dashboard');
     })->name('index');
 
-    // Destinasi
+    // Destinasi Admin
     Route::middleware('auth')->group(function () {
         Route::get('destination', [DestinationController::class, 'index'])->name('destination.index');
         Route::get('destination/create', [DestinationController::class, 'create'])->name('destination.create');
@@ -36,12 +39,16 @@ Route::prefix('dashboard')->name('dashboard.')->group(function () {
         Route::delete('destination/{id}', [DestinationController::class, 'destroy'])->name('destination.destroy');
     });
     
-    // // Admin
-    // Route::get('admin/download', [AdminController::class, 'download_pdf'])->name('admin.download_pdf');
-    // Route::resource('admin', AdminController::class);
-    //     Route::resource('gallery', GalleryController::class);
+    // Create Admin
+    Route::get('/admin', [AdminController::class, 'index'])->name('admin.index');
+    Route::get('/admin/create', [AdminController::class, 'create'])->name('admin.create');
+    Route::post('/admin/store', [AdminController::class, 'store'])->name('admin.store');
+    Route::delete('/admin/{id}', [AdminController::class, 'destroy'])->name('admin.destroy');
+    Route::get('/admin/{id}/edit', [AdminController::class, 'edit'])->name('admin.edit');
+    Route::put('/admin/{id}', [AdminController::class, 'update'])->name('admin.update');
+
+    // Gallery
+    // Route::get('gallery/download', [GalleryController::class, 'download_pdf'])->name('gallery.download_pdf');
+    // Route::resource('gallery', GalleryController::class);
 });
 
-// Gallery
-// Route::get('gallery/download', [GaxslleryController::class, 'download_pdf'])->name('gallery.download_pdf');
-// Route::resource('gallery', GalleryController::class);
