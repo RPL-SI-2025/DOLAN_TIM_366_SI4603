@@ -35,6 +35,7 @@ Route::prefix('dashboard')->name('dashboard.')->group(function () {
         Route::put('destination/{id}', [DestinationController::class, 'update'])->name('destination.update');
         Route::delete('destination/{id}', [DestinationController::class, 'destroy'])->name('destination.destroy');
     });
+    
     // // Admin
     // Route::get('admin/download', [AdminController::class, 'download_pdf'])->name('admin.download_pdf');
     // Route::resource('admin', AdminController::class);
