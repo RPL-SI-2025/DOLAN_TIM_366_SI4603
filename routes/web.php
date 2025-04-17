@@ -36,5 +36,4 @@ Route::prefix('dashboard')->name('dashboard.')->group(function () {
     // Gallery
     Route::get('gallery/download', [GalleryController::class, 'download_pdf'])->name('gallery.download_pdf');
     Route::resource('gallery', GalleryController::class);
-
 });
