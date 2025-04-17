@@ -3,11 +3,15 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\RegistrationController;
 use App\Http\Controllers\LoginController;
+use App\Http\Controllers\DestinationController;
 use App\Http\Controllers\AdminController;
+// use App\Http\Controllers\GalleryController;
+
 
 Route::get('/', function () {
     return view('user.welcome');
 })->name('welcome');
+
 // Halaman login
 Route::get('login', [LoginController::class, 'showLoginForm'])->name('login');
 Route::post('login', [LoginController::class, 'login'])->name('login');
@@ -25,6 +29,16 @@ Route::prefix('dashboard')->name('dashboard.')->group(function () {
         return view('dashboard.dashboard');
     })->name('index');
 
+    // Destinasi Admin
+    Route::middleware('auth')->group(function () {
+        Route::get('destination', [DestinationController::class, 'index'])->name('destination.index');
+        Route::get('destination/create', [DestinationController::class, 'create'])->name('destination.create');
+        Route::post('destination', [DestinationController::class, 'store'])->name('destination.store');
+        Route::get('destination/{id}/edit', [DestinationController::class, 'edit'])->name('destination.edit');
+        Route::put('destination/{id}', [DestinationController::class, 'update'])->name('destination.update');
+        Route::delete('destination/{id}', [DestinationController::class, 'destroy'])->name('destination.destroy');
+    });
+    
     // Create Admin
     Route::get('/admin', [AdminController::class, 'index'])->name('admin.index');
     Route::get('/admin/create', [AdminController::class, 'create'])->name('admin.create');
@@ -32,11 +46,6 @@ Route::prefix('dashboard')->name('dashboard.')->group(function () {
     Route::delete('/admin/{id}', [AdminController::class, 'destroy'])->name('admin.destroy');
     Route::get('/admin/{id}/edit', [AdminController::class, 'edit'])->name('admin.edit');
     Route::put('/admin/{id}', [AdminController::class, 'update'])->name('admin.update');
-
-
-
-
-    // Route::get('itineraries', [ItineraryController::class, 'index'])->name('itineraries.index')->middleware('auth');
 
     // Gallery
     // Route::get('gallery/download', [GalleryController::class, 'download_pdf'])->name('gallery.download_pdf');
