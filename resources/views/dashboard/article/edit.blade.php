@@ -33,10 +33,15 @@
                         <img src="{{ asset('storage/' . $article->image) }}" class="w-32 h-32 object-cover">
                     </div>
                 @endif
-                <input type="file" name="image" class="block w-full">
+                <input 
+                type="file" 
+                name="image"
+                class=
+                "block w-full border-2 border-blue-500 rounded-lg p-2 cursor-pointer 
+                hover:border-blue-700 hover:bg-blue-50 transition">
                 @error('image') <p class="text-red-500 text-sm">{{ $message }}</p> @enderror
+            
             </div>
-
             <button type="submit" class="bg-green-500 text-white px-4 py-2 rounded">Update</button>
             <a href="{{ route('dashboard.articles.index') }}" class="ml-2 text-gray-600 hover:underline">Batal</a>
         </form>

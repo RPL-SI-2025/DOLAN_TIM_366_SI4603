@@ -26,11 +26,16 @@
             </div>
 
             <div>
-                <label class="block font-semibold">Gambar (Opsional)</label>
-                <input type="file" name="image" class="block w-full">
+                <label class="block font-semibold">Gambar</label>
+                <input 
+                type="file" 
+                name="image"
+                class=
+                "block w-full border-2 border-blue-500 rounded-lg p-2 cursor-pointer 
+                hover:border-blue-700 hover:bg-blue-50 transition">
                 @error('image') <p class="text-red-500 text-sm">{{ $message }}</p> @enderror
-            </div>
 
+            </div>
             <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded">Simpan</button>
             <a href="{{ route('dashboard.articles.index') }}" class="ml-2 text-gray-600 hover:underline">Batal</a>
         </form>
