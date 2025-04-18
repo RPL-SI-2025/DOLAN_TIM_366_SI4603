@@ -101,4 +101,12 @@ class DestinationController extends Controller
         $destination->delete();
         return redirect()->route('dashboard.destination.index')->with('success', 'Destinasi berhasil dihapus.');
     }
+    public function getDestinations()
+    {
+        // Ambil 4 destinasi secara acak
+        $destinations = Destination::inRandomOrder()->limit(4)->get();
+
+        // Mengembalikan data dalam format JSON
+        return response()->json($destinations);
+    }
 }
