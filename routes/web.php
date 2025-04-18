@@ -29,25 +29,25 @@ Route::prefix('dashboard')->name('dashboard.')->group(function () {
     // Dashboard utama
     Route::get('', function () {
         return view('dashboard.dashboard');
-    })->name('index')->middleware('auth');
+    })->name('index')->middleware(['auth', 'role:admin,super_admin']);
 
     // Destinasi Admin
     Route::middleware('auth')->group(function () {
-        Route::get('destination', [DestinationController::class, 'index'])->name('destination.index')->middleware('auth');
-        Route::get('destination/create', [DestinationController::class, 'create'])->name('destination.create')->middleware('auth');
-        Route::post('destination', [DestinationController::class, 'store'])->name('destination.store')->middleware('auth');
-        Route::get('destination/{id}/edit', [DestinationController::class, 'edit'])->name('destination.edit')->middleware('auth');
-        Route::put('destination/{id}', [DestinationController::class, 'update'])->name('destination.update')->middleware('auth');
-        Route::delete('destination/{id}', [DestinationController::class, 'destroy'])->name('destination.destroy')->middleware('auth');
+        Route::get('destination', [DestinationController::class, 'index'])->name('destination.index')->middleware(['auth', 'role:admin,super_admin']);
+        Route::get('destination/create', [DestinationController::class, 'create'])->name('destination.create')->middleware(['auth', 'role:admin,super_admin']);
+        Route::post('destination', [DestinationController::class, 'store'])->name('destination.store')->middleware(['auth', 'role:admin,super_admin']);
+        Route::get('destination/{id}/edit', [DestinationController::class, 'edit'])->name('destination.edit')->middleware(['auth', 'role:admin,super_admin']);
+        Route::put('destination/{id}', [DestinationController::class, 'update'])->name('destination.update')->middleware(['auth', 'role:admin,super_admin']);
+        Route::delete('destination/{id}', [DestinationController::class, 'destroy'])->name('destination.destroy')->middleware(['auth', 'role:admin,super_admin']);
     });
     
     // Create Admin
-    Route::get('/admin', [AdminController::class, 'index'])->name('admin.index')->middleware('auth');
-    Route::get('/admin/create', [AdminController::class, 'create'])->name('admin.create')->middleware('auth');
-    Route::post('/admin/store', [AdminController::class, 'store'])->name('admin.store')->middleware('auth');
-    Route::delete('/admin/{id}', [AdminController::class, 'destroy'])->name('admin.destroy')->middleware('auth');
-    Route::get('/admin/{id}/edit', [AdminController::class, 'edit'])->name('admin.edit')->middleware('auth');
-    Route::put('/admin/{id}', [AdminController::class, 'update'])->name('admin.update')->middleware('auth');
+    Route::get('/admin', [AdminController::class, 'index'])->name('admin.index')->middleware(['auth', 'role:super_admin']);
+    Route::get('/admin/create', [AdminController::class, 'create'])->name('admin.create')->middleware(['auth', 'role:super_admin']);
+    Route::post('/admin/store', [AdminController::class, 'store'])->name('admin.store')->middleware(['auth', 'role:super_admin']);
+    Route::delete('/admin/{id}', [AdminController::class, 'destroy'])->name('admin.destroy')->middleware(['auth', 'role:super_admin']);
+    Route::get('/admin/{id}/edit', [AdminController::class, 'edit'])->name('admin.edit')->middleware(['auth', 'role:super_admin']);
+    Route::put('/admin/{id}', [AdminController::class, 'update'])->name('admin.update')->middleware(['auth', 'role:super_admin']);
 
     // Gallery
     // Route::get('gallery/download', [GalleryController::class, 'download_pdf'])->name('gallery.download_pdf');

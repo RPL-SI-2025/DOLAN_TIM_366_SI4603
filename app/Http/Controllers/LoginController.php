@@ -22,8 +22,12 @@ class LoginController extends Controller
 
         if (Auth::attempt($credentials)) {
             $request->session()->regenerate();
-
-            return redirect()->intended('/home');
+            $user = Auth::user();
+            if ($user->role == 'admin' || $user->role == 'super_admin') {
+                return redirect()->intended('/dashboard')->with('success', 'Login successful!');
+            } else {
+                return redirect()->intended('/home')->with('success', 'Login successful!');
+            }
         }
 
         return back()->with('loginError', 'Login failed!');
@@ -37,6 +41,6 @@ class LoginController extends Controller
 
         $request->session()->regenerateToken();
 
-        return redirect()->back();
+        return redirect()->route('login')->with('success', 'Logout successful!');
     }
 }
