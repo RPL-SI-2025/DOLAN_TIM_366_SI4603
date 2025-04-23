@@ -11,14 +11,16 @@ use App\Http\Controllers\AdminController;
 Route::get('/', function () {
     return view('user.welcome');
 })->name('welcome');
+// Halaman register
+Route::get('/register', [RegistrationController::class, 'showRegistrationForm'])->name('registration');
+Route::post('/register', [RegistrationController::class, 'store'])->name('registration');
 
 // Halaman login
 Route::get('login', [LoginController::class, 'showLoginForm'])->name('login');
 Route::post('login', [LoginController::class, 'login'])->name('login');
 
-// Halaman register
-Route::get('/register', [RegistrationController::class, 'showRegistrationForm'])->name('registration');
-Route::post('/register', [RegistrationController::class, 'store'])->name('registration');
+Route::get('logout', [LoginController::class, 'logout'])->name('logout');
+
 
 
 
@@ -27,25 +29,25 @@ Route::prefix('dashboard')->name('dashboard.')->group(function () {
     // Dashboard utama
     Route::get('', function () {
         return view('dashboard.dashboard');
-    })->name('index');
+    })->name('index')->middleware(['auth', 'role:admin,super_admin']);
 
     // Destinasi Admin
     Route::middleware('auth')->group(function () {
-        Route::get('destination', [DestinationController::class, 'index'])->name('destination.index');
-        Route::get('destination/create', [DestinationController::class, 'create'])->name('destination.create');
-        Route::post('destination', [DestinationController::class, 'store'])->name('destination.store');
-        Route::get('destination/{id}/edit', [DestinationController::class, 'edit'])->name('destination.edit');
-        Route::put('destination/{id}', [DestinationController::class, 'update'])->name('destination.update');
-        Route::delete('destination/{id}', [DestinationController::class, 'destroy'])->name('destination.destroy');
+        Route::get('destination', [DestinationController::class, 'index'])->name('destination.index')->middleware(['auth', 'role:admin,super_admin']);
+        Route::get('destination/create', [DestinationController::class, 'create'])->name('destination.create')->middleware(['auth', 'role:admin,super_admin']);
+        Route::post('destination', [DestinationController::class, 'store'])->name('destination.store')->middleware(['auth', 'role:admin,super_admin']);
+        Route::get('destination/{id}/edit', [DestinationController::class, 'edit'])->name('destination.edit')->middleware(['auth', 'role:admin,super_admin']);
+        Route::put('destination/{id}', [DestinationController::class, 'update'])->name('destination.update')->middleware(['auth', 'role:admin,super_admin']);
+        Route::delete('destination/{id}', [DestinationController::class, 'destroy'])->name('destination.destroy')->middleware(['auth', 'role:admin,super_admin']);
     });
     
     // Create Admin
-    Route::get('/admin', [AdminController::class, 'index'])->name('admin.index');
-    Route::get('/admin/create', [AdminController::class, 'create'])->name('admin.create');
-    Route::post('/admin/store', [AdminController::class, 'store'])->name('admin.store');
-    Route::delete('/admin/{id}', [AdminController::class, 'destroy'])->name('admin.destroy');
-    Route::get('/admin/{id}/edit', [AdminController::class, 'edit'])->name('admin.edit');
-    Route::put('/admin/{id}', [AdminController::class, 'update'])->name('admin.update');
+    Route::get('/admin', [AdminController::class, 'index'])->name('admin.index')->middleware(['auth', 'role:super_admin']);
+    Route::get('/admin/create', [AdminController::class, 'create'])->name('admin.create')->middleware(['auth', 'role:super_admin']);
+    Route::post('/admin/store', [AdminController::class, 'store'])->name('admin.store')->middleware(['auth', 'role:super_admin']);
+    Route::delete('/admin/{id}', [AdminController::class, 'destroy'])->name('admin.destroy')->middleware(['auth', 'role:super_admin']);
+    Route::get('/admin/{id}/edit', [AdminController::class, 'edit'])->name('admin.edit')->middleware(['auth', 'role:super_admin']);
+    Route::put('/admin/{id}', [AdminController::class, 'update'])->name('admin.update')->middleware(['auth', 'role:super_admin']);
 
     // Gallery
     // Route::get('gallery/download', [GalleryController::class, 'download_pdf'])->name('gallery.download_pdf');
