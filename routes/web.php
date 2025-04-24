@@ -6,6 +6,8 @@ use App\Http\Controllers\LoginController;
 use App\Http\Controllers\DestinationController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\ArticleController;
+use app\Http\Controllers\PromoController;
+use App\Http\Controllers\HomeController;
 // use App\Http\Controllers\GalleryController;
 
 // Halaman register
@@ -58,3 +60,5 @@ Route::prefix('dashboard')->name('dashboard.')->group(function () {
     Route::put('articles/{article}', [ArticleController::class, 'update'])->name('articles.update')->middleware(['auth', 'role:admin,super_admin']);
     Route::get('articles/{article}/edit', [ArticleController::class, 'edit'])->name('articles.edit')->middleware(['auth', 'role:admin,super_admin']);
     Route::delete('articles/{article}', [ArticleController::class, 'destroy'])->name('articles.destroy')->middleware(['auth', 'role:admin,super_admin']);
+
+});

@@ -44,26 +44,24 @@
       transform: scale(1.05); /* Memberikan efek pembesaran saat hover */
       box-shadow: 0 6px 15px rgba(0, 0, 0, 0.3);
     }
+
+    .grid:hover .hover-trigger {
+    filter: grayscale(100%) blur(3px) brightness(50%);
+    transition: all 0.3s ease;
+  }
+  
+  .grid:hover .hover-trigger:hover {
+    filter: grayscale(0%) blur(0px);
+    transform: scale(1.1);
+    transition: all 0.3s ease;
+  }
   </style>
 </head>
 <body class="text-gray-800">
 
-  <!-- Navbar -->
-  <div class="w-full flex justify-center pt-6">
-    <div class="bg-white glass rounded-full px-10 py-4 flex items-center justify-between shadow-lg max-w-3xl w-full">
-      <div class="text-2xl font-bold text-purple-600">Dolan</div>
-      <nav class="hidden md:flex gap-6 text-gray-800 font-medium">
-        <a href="#" class="hover:text-purple-600">Home</a>
-        <a href=destination class="hover:text-purple-600">Tours</a>
-        <a href="#gallery" class="hover:text-purple-600">Gallery</a>
-        <a href="#review" class="hover:text-purple-600">Review</a>
-        <a href="#contribute" class="hover:text-purple-600">Contribute</a>
-      </nav>
-      <a href=register class="ml-4 bg-purple-600 text-white px-5 py-2 rounded-full hover:bg-purple-700 transition">
-        Sign In
-      </a>
-    </div>
-  </div>
+<x-navbar>
+
+</x-navbar>
 
   <!-- Main Content -->
   <main class="container mx-auto px-4 py-16 text-center">
@@ -77,6 +75,55 @@
     <p class="text-gray-600 mb-8">Jelajahi keindahan Nusantara! Temukan destinasi wisata terbaik di Indonesia, dari pantai eksotis</br>
     hingga pegunungan menakjubkan. Rencanakan petualangan impianmu sekarang!</p>
     <button class="bg-purple-600 text-white px-6 py-3 rounded-full text-lg">Explore Indonesia Tours</button>
+
+       <!-- New Interactive Cards Section -->
+       <section class="py-12">
+      <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+      <div class="mt-10 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+        <a href="#" class="relative group hover-trigger shadow-lg">
+        <img class="w-full h-96 object-cover rounded-lg" src="https://auto2000.co.id/berita-dan-tips/_next/image?url=https%3A%2F%2Fastradigitaldigiroomuat.blob.core.windows.net%2Fstorage-uat-001%2Ftempat-wisata-di-jawa-tengah.jpg&w=3840&q=75" alt="Explore Mountains">
+        <div class="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+          <h3 class="text-white text-xl font-semibold">Explore Jawa</h3>
+        </div>
+        <div class="absolute bottom-4 left-4 text-white">
+          <p class="text-sm">Places</p>
+          <h4 class="text-lg font-bold">Jawa</h4>
+        </div>
+        </a>
+        <a href="#" class="relative group hover-trigger shadow-lg">
+        <img class="w-full h-96 object-cover rounded-lg" src="https://asset.kompas.com/crops/hHV9rHYhH9wEUvLR4uf8fz2Ow_I=/47x0:980x622/1200x800/data/photo/2023/02/07/63e1e9484201d.jpg" alt="Explore Beaches">
+        <div class="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+          <h3 class="text-white text-xl font-semibold">Explore Sulawesi</h3>
+        </div>
+        <div class="absolute bottom-4 left-4 text-white">
+          <p class="text-sm">Places</p>
+          <h4 class="text-lg font-bold">Sulawesi</h4>
+        </div>
+        </a>
+        <a href="#" class="relative group hover-trigger shadow-lg">
+        <img class="w-full h-96 object-cover rounded-lg" src="https://asset.kompas.com/crops/BShYREKiSk5jDHVI6LxR5llMzKo=/0x0:729x486/1200x800/data/photo/2020/06/12/5ee30a5cac0fa.jpg" alt="Explore Cities">
+        <div class="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+          <h3 class="text-white text-xl font-semibold">Explore Sumatera</h3>
+        </div>
+        <div class="absolute bottom-4 left-4 text-white">
+          <p class="text-sm">Places</p>
+          <h4 class="text-lg font-bold">Sumatera</h4>
+        </div>
+        </a>
+        <a href="#" class="relative group hover-trigger shadow-lg">
+        <img class="w-full h-96 object-cover rounded-lg" src="https://awsimages.detik.net.id/community/media/visual/2019/02/28/e27d496c-d76b-4415-8cc3-d1131c07215f_169.jpeg?w=1200" alt="Explore Forests">
+        <div class="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+          <h3 class="text-white text-xl font-semibold">Explore Papua</h3>
+        </div>
+        <div class="absolute bottom-4 left-4 text-white">
+          <p class="text-sm">Places</p>
+          <h4 class="text-lg font-bold">Papua</h4>
+        </div>
+        </a>
+      </div>
+      </div>
+    </section>
+    <!-- End of Interactive Cards Section -->
 
     <div id="destinations" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 mt-12">
       <!-- Destinasi akan dimuat di sini dengan AJAX -->
