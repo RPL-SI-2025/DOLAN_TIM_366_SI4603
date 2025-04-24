@@ -8,10 +8,6 @@ use App\Http\Controllers\AdminController;
 use App\Http\Controllers\ArticleController;
 // use App\Http\Controllers\GalleryController;
 
-
-Route::get('/', function () {
-    return view('user.homeuser');
-})->name('welcome');
 // Halaman register
 Route::get('/register', [RegistrationController::class, 'showRegistrationForm'])->name('registration');
 Route::post('/register', [RegistrationController::class, 'store'])->name('registration');
@@ -19,10 +15,16 @@ Route::post('/register', [RegistrationController::class, 'store'])->name('regist
 // Halaman login
 Route::get('login', [LoginController::class, 'showLoginForm'])->name('login');
 Route::post('login', [LoginController::class, 'login'])->name('login');
-
 Route::get('logout', [LoginController::class, 'logout'])->name('logout');
 
-
+// Homepage
+Route::get('/promo', [PromoController::class, 'getPromo'])->name('promo.get');
+Route::get('/', [HomeController::class, 'index']);
+Route::get('/destinations', [DestinationController::class, 'getDestinations'])->name('destinations.get');
+// home setelah login
+Route::get('/homeuser', function () {
+    return view('homeuser');
+})->middleware('auth')->name('homeuser');
 
 
 // Dashboard
@@ -56,9 +58,3 @@ Route::prefix('dashboard')->name('dashboard.')->group(function () {
     Route::put('articles/{article}', [ArticleController::class, 'update'])->name('articles.update')->middleware(['auth', 'role:admin,super_admin']);
     Route::get('articles/{article}/edit', [ArticleController::class, 'edit'])->name('articles.edit')->middleware(['auth', 'role:admin,super_admin']);
     Route::delete('articles/{article}', [ArticleController::class, 'destroy'])->name('articles.destroy')->middleware(['auth', 'role:admin,super_admin']);
-
-    // Gallery
-    // Route::get('gallery/download', [GalleryController::class, 'download_pdf'])->name('gallery.download_pdf');
-    // Route::resource('gallery', GalleryController::class);
-});
-
