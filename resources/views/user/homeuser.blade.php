@@ -46,32 +46,15 @@
     }
   </style>
 </head>
+<x-navbar>
+</x-navbar>
 <body class="text-gray-800">
 
   <!-- Navbar -->
-  <div class="w-full flex justify-center pt-6">
-    <div class="bg-white glass rounded-full px-10 py-4 flex items-center justify-between shadow-lg max-w-3xl w-full">
-      <div class="text-2xl font-bold text-purple-600">Dolan</div>
-      <nav class="hidden md:flex gap-6 text-gray-800 font-medium">
-        <a href="#" class="hover:text-purple-600">Home</a>
-        <a href=destination class="hover:text-purple-600">Tours</a>
-        <a href="#gallery" class="hover:text-purple-600">Gallery</a>
-        <a href="#review" class="hover:text-purple-600">Review</a>
-        <a href="#contribute" class="hover:text-purple-600">Contribute</a>
-      </nav>
-      <a href=register class="ml-4 bg-purple-600 text-white px-5 py-2 rounded-full hover:bg-purple-700 transition">
-        Profile
-      </a>
-    </div>
-  </div>
-
+  
   <!-- Main Content -->
   <main class="container mx-auto px-4 py-16 text-center">
     <!-- Promo Section -->
-    <div id="promo">
-      <i class="fas fa-tag"></i> <!-- Ikon promo untuk menunjukkan ini adalah promo -->
-      Loading Promo...
-    </div>
 
     <h1 class="text-4xl font-bold mb-4">Destinasi Wisata Nusantara</h1>
     <p class="text-gray-600 mb-8">Jelajahi keindahan Nusantara! Temukan destinasi wisata terbaik di Indonesia, dari pantai eksotis</br>
@@ -112,7 +95,6 @@
   // Load Promo
   function loadPromo() {
     $.ajax({
-      url: '{{ route('promo.get') }}', // Pastikan rutenya benar
       method: 'GET',
       success: function(data) {
         var promo = data; // Data promo yang diterima
@@ -128,7 +110,6 @@
   // Load Destinations
   function loadDestinations() {
     $.ajax({
-      url: '{{ route('destinations.get') }}', // Pastikan rutenya benar
       method: 'GET',
       success: function(data) {
         var destinations = data; // Data destinasi yang diterima
