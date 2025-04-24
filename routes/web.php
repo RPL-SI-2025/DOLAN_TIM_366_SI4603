@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\RegistrationController;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\ProfileController;
 
 Route::get('/', function () {
     return view('user.welcome');
@@ -33,6 +34,14 @@ Route::prefix('dashboard')->name('dashboard.')->group(function () {
     Route::get('/admin/{id}/edit', [AdminController::class, 'edit'])->name('admin.edit');
     Route::put('/admin/{id}', [AdminController::class, 'update'])->name('admin.update');
 
+    // Profile
+    Route::prefix('profile')->name('profile.')->group(function () {
+        Route::get('/', [ProfileController::class, 'show'])->name('show');
+        Route::get('/edit', [ProfileController::class, 'edit'])->name('edit');
+        Route::put('/', [ProfileController::class, 'update'])->name('update');
+        Route::delete('/', [ProfileController::class, 'destroy'])->name('destroy');
+});
+
 
 
 
@@ -41,5 +50,5 @@ Route::prefix('dashboard')->name('dashboard.')->group(function () {
     // Gallery
     // Route::get('gallery/download', [GalleryController::class, 'download_pdf'])->name('gallery.download_pdf');
     // Route::resource('gallery', GalleryController::class);
-});
 
+});
