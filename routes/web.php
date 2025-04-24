@@ -5,6 +5,7 @@ use App\Http\Controllers\RegistrationController;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\DestinationController;
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\ArticleController;
 // use App\Http\Controllers\GalleryController;
 
 
@@ -18,10 +19,7 @@ Route::post('/register', [RegistrationController::class, 'store'])->name('regist
 // Halaman login
 Route::get('login', [LoginController::class, 'showLoginForm'])->name('login');
 Route::post('login', [LoginController::class, 'login'])->name('login');
-
 Route::get('logout', [LoginController::class, 'logout'])->name('logout');
-
-
 
 
 // Dashboard
@@ -49,7 +47,15 @@ Route::prefix('dashboard')->name('dashboard.')->group(function () {
     Route::get('/admin/{id}/edit', [AdminController::class, 'edit'])->name('admin.edit')->middleware(['auth', 'role:super_admin']);
     Route::put('/admin/{id}', [AdminController::class, 'update'])->name('admin.update')->middleware(['auth', 'role:super_admin']);
 
-    // Gallery
+     // Article
+     Route::get('articles', [ArticleController::class, 'index'])->name('articles.index')->middleware(['auth', 'role:admin,super_admin']);
+     Route::get('articles/create', [ArticleController::class, 'create'])->name('articles.create')->middleware(['auth', 'role:admin,super_admin']);
+     Route::post('articles', [ArticleController::class, 'store'])->name('articles.store')->middleware(['auth', 'role:admin,super_admin']);
+     Route::put('articles/{article}', [ArticleController::class, 'update'])->name('articles.update')->middleware(['auth', 'role:admin,super_admin']);
+     Route::get('articles/{article}/edit', [ArticleController::class, 'edit'])->name('articles.edit')->middleware(['auth', 'role:admin,super_admin']);
+     Route::delete('articles/{article}', [ArticleController::class, 'destroy'])->name('articles.destroy')->middleware(['auth', 'role:admin,super_admin']);
+   
+     // Gallery
     // Route::get('gallery/download', [GalleryController::class, 'download_pdf'])->name('gallery.download_pdf');
     // Route::resource('gallery', GalleryController::class);
 });
