@@ -27,7 +27,11 @@ class DestinationController extends Controller
     public function create()
     {
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
         if (Auth::check() && (Auth::user()->role !== 'admin' || Auth::user()->role !== 'super_admin')) {
+=======
+        if (Auth::check() && (Auth::user()->role !== 'admin' && Auth::user()->role !== 'super_admin')) {
+>>>>>>> Stashed changes
 =======
         if (Auth::check() && (Auth::user()->role !== 'admin' && Auth::user()->role !== 'super_admin')) {
 >>>>>>> Stashed changes
