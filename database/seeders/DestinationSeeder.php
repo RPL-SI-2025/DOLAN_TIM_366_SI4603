@@ -15,6 +15,10 @@ class DestinationSeeder extends Seeder
             'description' => 'Pantai yang terkenal dengan pasir putihnya yang indah dan ombak yang cocok untuk surfing.',
             'location' => 'Bali, Indonesia',
             'image' => 'destinations/pantai_kuta.jpg',  // Pastikan file gambar sudah ada di public/storage
+            'additional_images' => json_encode([
+                'destinations/pantai_kuta.jpg',
+                'destinations/pantai_kuta.jpg',
+            ]),
             'stock' => 100,
             'price' => 250000,
         ]);
@@ -24,6 +28,10 @@ class DestinationSeeder extends Seeder
             'description' => 'Gunung berapi yang aktif di Jawa Timur, Indonesia, terkenal dengan pemandangan matahari terbitnya.',
             'location' => 'Probolinggo, Jawa Timur, Indonesia',
             'image' => 'destinations/gunung_bromo.jpg',  // Pastikan file gambar sudah ada di public/storage
+            'additional_images' => json_encode([
+                'destinations/gunung_bromo.jpg',
+                'destinations/gunung_bromo.jpg',
+            ]),
             'stock' => 50,
             'price' => 350000,
         ]);
@@ -32,57 +40,15 @@ class DestinationSeeder extends Seeder
             'name' => 'Danau Toba',
             'description' => 'Danau vulkanik terbesar di Indonesia, dengan pemandangan yang luar biasa dan pulau di tengahnya.',
             'location' => 'Sumatera Utara, Indonesia',
-            'image' => 'destinations/danau_toba.jpg',  // Pastikan file gambar sudah ada di public/storage
+            'image' => 'destinations/danau_toba.jpg',  
+            'additional_images' => json_encode([
+                'destinations/danau_toba.jpg',
+                'destinations/danau_toba.jpg',
+            ]),
             'stock' => 75,
             'price' => 300000,
         ]);
-
-        Destination::create([
-            'name' => 'Danau Toba',
-            'description' => 'Danau vulkanik terbesar di Indonesia, dengan pemandangan yang luar biasa dan pulau di tengahnya.',
-            'location' => 'Sumatera Utara, Indonesia',
-            'image' => 'destinations/danau_toba.jpg',  // Pastikan file gambar sudah ada di public/storage
-            'stock' => 75,
-            'price' => 300000,
-        ]);
-
-        Destination::create([
-            'name' => 'Bukit Tinggi',
-            'description' => 'Danau vulkanik terbesar di Indonesia, dengan pemandangan yang luar biasa dan pulau di tengahnya.',
-            'location' => 'Sumatera Utara, Indonesia',
-            'image' => 'destinations/bukit_tinggi.jpg',  // Pastikan file gambar sudah ada di public/storage
-            'stock' => 75,
-            'price' => 300000,
-        ]);
-
-        Destination::create([
-            'name' => 'Pantai Sawarna',
-            'description' => 'Danau vulkanik terbesar di Indonesia, dengan pemandangan yang luar biasa dan pulau di tengahnya.',
-            'category' => 'Pantai',
-            'location' => 'Sumatera Utara, Indonesia',
-            'image' => 'destinations/pantai_sawarna.jpg',  // Pastikan file gambar sudah ada di public/storage
-            'stock' => 75,
-            'price' => 300000,
-        ]);
-        Destination::create([
-            'name' => 'Lembang',
-            'description' => 'Danau vulkanik terbesar di Indonesia, dengan pemandangan yang luar biasa dan pulau di tengahnya.',
-            'location' => 'Sumatera Utara, Indonesia',
-            'image' => 'destinations/lembang.jpg',  // Pastikan file gambar sudah ada di public/storage
-            'stock' => 75,
-            'price' => 300000,
-        ]);
-
-        Destination::create([
-            'name' => 'Puncak',
-            'description' => 'Danau vulkanik terbesar di Indonesia, dengan pemandangan yang luar biasa dan pulau di tengahnya.',
-            'location' => 'Sumatera Utara, Indonesia',
-            'image' => 'destinations/puncak.jpg',  // Pastikan file gambar sudah ada di public/storage
-            'stock' => 75,
-            'price' => 300000,
-        ]);
-
-
+        
         // Tambahkan data lainnya sesuai kebutuhan
     }
 }

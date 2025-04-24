@@ -1,13 +1,13 @@
 <x-layout-admin>
-    <style>
-        .submit-button {
-            display: block; width: 100%; max-width: 1500px; margin: 24px auto 0; padding: 12px 24px;
-            background-color:rgb(61, 216, 118); color: white; font-weight: 600; border: 2px solidrgb(38, 255, 118);
-            border-radius: 8px; cursor: pointer; transition: background-color 0.3s ease, box-shadow 0.3s ease;
-        }
-        .submit-button:hover { background-color: #15803d; box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2); }
-    </style>
-
+<x-slot name="title">Daftar Destinasi</x-slot>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Daftar Destinasi</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 p-6">
     <div class="container mx-auto p-6 bg-white shadow-lg rounded-xl max-w-4xl">
         <h2 class="text-20xl font-semibold text-indigo-600 mb-8 text-center">Create New Destination</h2>
 
@@ -38,6 +38,14 @@
             </div>
 
             <div class="flex flex-col">
+                <label for="additional_images" class="text-sm font-semibold text-gray-700">Additional Images</label>
+                <input type="file" id="additional_images" name="additional_images[]" accept="image/*" multiple
+                    class="mt-2 p-4 border border-gray-300 rounded-lg w-full focus:outline-none focus:ring-2 focus:ring-indigo-500 transition duration-300 ease-in-out"
+                    onchange="previewAdditionalImages(event)">
+                <div id="additional-images-preview" class="mt-4 flex space-x-4"></div>
+            </div>
+
+            <div class="flex flex-col">
                 <label for="stock" class="text-sm font-semibold text-gray-700">Stock</label>
                 <input type="number" id="stock" name="stock" required class="mt-2 p-4 border border-gray-300 rounded-lg w-full focus:outline-none focus:ring-2 focus:ring-indigo-500 transition duration-300 ease-in-out">
             </div>
@@ -47,7 +55,23 @@
                 <input type="number" id="price" name="price" required class="mt-2 p-4 border border-gray-300 rounded-lg w-full focus:outline-none focus:ring-2 focus:ring-indigo-500 transition duration-300 ease-in-out">
             </div>
 
-            <button type="submit" class="submit-button">Tambahkan Destinasi</button>
+            <button type="submit" class="block w-full max-w-6xl mx-auto mt-6 px-6 py-3 bg-green-500 text-white font-semibold border-2 border-green-400 rounded-lg cursor-pointer transition duration-300 ease-in-out hover:bg-green-700 hover:shadow-lg">
+                Tambahkan Destinasi
+            </button>
         </form>
     </div>
+</body>
+</html>
+
+    <script>
+        function previewImage(event) {
+            const reader = new FileReader();
+            reader.onload = function() {
+                const imagePreview = document.getElementById('image-preview');
+                imagePreview.src = reader.result;
+                imagePreview.classList.remove('hidden');
+            }
+            reader.readAsDataURL(event.target.files[0]);
+        }
+    </script>
 </x-layout-admin>
