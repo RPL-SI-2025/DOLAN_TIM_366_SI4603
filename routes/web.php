@@ -8,10 +8,6 @@ use App\Http\Controllers\AdminController;
 use App\Http\Controllers\ArticleController;
 // use App\Http\Controllers\GalleryController;
 
-
-Route::get('/', function () {
-    return view('user.welcome');
-})->name('welcome');
 // Halaman register
 Route::get('/register', [RegistrationController::class, 'showRegistrationForm'])->name('registration');
 Route::post('/register', [RegistrationController::class, 'store'])->name('registration');
@@ -20,6 +16,15 @@ Route::post('/register', [RegistrationController::class, 'store'])->name('regist
 Route::get('login', [LoginController::class, 'showLoginForm'])->name('login');
 Route::post('login', [LoginController::class, 'login'])->name('login');
 Route::get('logout', [LoginController::class, 'logout'])->name('logout');
+
+// Homepage
+Route::get('/promo', [PromoController::class, 'getPromo'])->name('promo.get');
+Route::get('/', [HomeController::class, 'index']);
+Route::get('/destinations', [DestinationController::class, 'getDestinations'])->name('destinations.get');
+// home setelah login
+Route::get('/homeuser', function () {
+    return view('homeuser');
+})->middleware('auth')->name('homeuser');
 
 
 // Dashboard
