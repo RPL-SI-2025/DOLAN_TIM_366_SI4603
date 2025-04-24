@@ -1,4 +1,13 @@
 <x-layout-admin>
+<x-slot name="title">Daftar Destinasi</x-slot>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Daftar Destinasi</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 p-6">
     <div class="px-6 py-4">
         <div class="flex justify-between items-center mb-6">
             <h1 class="text-2xl font-bold">Daftar Destinasi Wisata</h1>
@@ -16,7 +25,8 @@
                         <th class="px-4 py-3 font-semibold">Lokasi</th>
                         <th class="px-4 py-3 font-semibold">Stock</th>
                         <th class="px-4 py-3 font-semibold">Harga</th>
-                        <th class="px-4 py-3 font-semibold">Gambar</th> 
+                        <th class="px-4 py-3 font-semibold">Gambar</th>
+                        <th class="px-4 py-3 font-semibold">Gambar Tambahan</th>
                         <th class="px-4 py-3 font-semibold">Aksi</th>
                     </tr>
                 </thead>
@@ -35,6 +45,17 @@
                                     <span>No Image</span>
                                 @endif
                             </td>
+                            <td class="px-4 py-2">
+                                @if ($destination->additional_images && is_array($destination->additional_images))
+                                    <div class="flex space-x-2">
+                                        @foreach ($destination->additional_images as $image)
+                                            <img src="{{ asset('storage/' . $image) }}" alt="Additional Image" class="w-24 h-24 object-cover rounded">
+                                        @endforeach
+                                    </div>
+                                @else
+                                    <span>No Additional Images</span>
+                                @endif
+                            </td>
 
                             <td class="px-4 py-2 space-x-2">
                                 <a href="{{ route('dashboard.destination.edit', $destination->id) }}" class="text-blue-600 hover:underline">Edit</a>
@@ -47,11 +68,13 @@
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="7" class="px-4 py-4 text-center text-gray-500">Belum ada destinasi.</td>
+                            <td colspan="8" class="px-4 py-4 text-center text-gray-500">Belum ada destinasi.</td>
                         </tr>
                     @endforelse
                 </tbody>
             </table>
         </div>
     </div>
+</body>
+</html>
 </x-layout-admin>
