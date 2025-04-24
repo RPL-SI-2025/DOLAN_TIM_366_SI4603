@@ -28,6 +28,9 @@ Route::get('/homeuser', function () {
     return view('homeuser');
 })->middleware('auth')->name('homeuser');
 
+//Artikel
+Route::get('/articles', [ArticleController::class, 'publicIndex'])->name('articles.index');
+Route::get('articles/{article}', [ArticleController::class, 'show'])->name('articles.show');
 
 // Dashboard
 Route::prefix('dashboard')->name('dashboard.')->group(function () {
