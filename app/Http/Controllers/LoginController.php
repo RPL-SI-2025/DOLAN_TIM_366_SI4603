@@ -30,7 +30,7 @@ class LoginController extends Controller
             }
         }
 
-        return back()->with('loginError', 'Login failed!');
+        return back()->with('loginError', 'Email or Password Incorrect');
     }
 
     public function logout(Request $request)
