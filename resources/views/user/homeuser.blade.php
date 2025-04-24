@@ -60,7 +60,7 @@
         <a href="#contribute" class="hover:text-purple-600">Contribute</a>
       </nav>
       <a href=register class="ml-4 bg-purple-600 text-white px-5 py-2 rounded-full hover:bg-purple-700 transition">
-        Profile
+        Register
       </a>
     </div>
   </div>
@@ -112,7 +112,6 @@
   // Load Promo
   function loadPromo() {
     $.ajax({
-      url: '{{ route('promo.get') }}', // Pastikan rutenya benar
       method: 'GET',
       success: function(data) {
         var promo = data; // Data promo yang diterima
@@ -128,7 +127,6 @@
   // Load Destinations
   function loadDestinations() {
     $.ajax({
-      url: '{{ route('destinations.get') }}', // Pastikan rutenya benar
       method: 'GET',
       success: function(data) {
         var destinations = data; // Data destinasi yang diterima
