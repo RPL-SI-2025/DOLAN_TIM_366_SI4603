@@ -14,7 +14,8 @@
       </a>
       @elseif (Auth::check() && (Auth::user()->isUser()))
       <a href=profile class="ml-4 bg-purple-600 text-white px-5 py-2 rounded-full hover:bg-purple-700 transition">
-      Profilee
+      Profile
+
       </a>
       @else
       <a href=register class="ml-4 bg-purple-600 text-white px-5 py-2 rounded-full hover:bg-purple-700 transition">
