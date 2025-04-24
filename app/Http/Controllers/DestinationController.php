@@ -26,7 +26,7 @@ class DestinationController extends Controller
     // CREATE: Show form to create a new destination
     public function create()
     {
-        if (Auth::check() && Auth::user()->role !== 'admin') {
+        if (Auth::check() && (Auth::user()->role !== 'admin' || Auth::user()->role !== 'super_admin')) {
             return redirect()->route('dashboard.destination.index')->with('error', 'Akses ditolak. Hanya admin yang boleh.');
         }
         return view('dashboard.destination.create');
