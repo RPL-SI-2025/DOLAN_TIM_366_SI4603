@@ -20,7 +20,7 @@
             </div>
 
             {{-- Form --}}
-            <form action="{{ route('dashboard.profile.update') }}" method="POST" class="px-6 pb-8 space-y-5" enctype="multipart/form-data">
+            <form action="{{ route('dashboard.user.profile.update') }}" method="POST" class="px-6 pb-8 space-y-5" enctype="multipart/form-data">
                 @csrf
                 @method('PUT')
 

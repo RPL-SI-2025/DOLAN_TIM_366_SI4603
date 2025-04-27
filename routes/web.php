@@ -35,7 +35,7 @@ Route::prefix('dashboard')->name('dashboard.')->group(function () {
     Route::put('/admin/{id}', [AdminController::class, 'update'])->name('admin.update');
 
     // Profile
-    Route::prefix('profile')->name('profile.')->group(function () {
+    Route::prefix('user/profile')->name('user.profile.')->middleware('auth')->group(function () {
         Route::get('/', [ProfileController::class, 'show'])->name('show');
         Route::get('/edit', [ProfileController::class, 'edit'])->name('edit');
         Route::put('/', [ProfileController::class, 'update'])->name('update');
