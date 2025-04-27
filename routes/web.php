@@ -8,6 +8,7 @@ use App\Http\Controllers\AdminController;
 use App\Http\Controllers\ArticleController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\PromoController;
+use App\Http\Controllers\ProfileController;
 // use App\Http\Controllers\GalleryController;
 
 // Halaman register
@@ -65,3 +66,14 @@ Route::prefix('dashboard')->name('dashboard.')->group(function () {
     Route::delete('articles/{article}', [ArticleController::class, 'destroy'])->name('articles.destroy')->middleware(['auth', 'role:admin,super_admin']);
 
 });
+    // Profile
+    Route::prefix('user/profile')->name('user.profile.')->middleware('auth')->group(function () {
+        Route::get('/', [ProfileController::class, 'show'])->name('show');
+        Route::get('/edit', [ProfileController::class, 'edit'])->name('edit');
+        Route::put('/', [ProfileController::class, 'update'])->name('update');
+        Route::delete('/', [ProfileController::class, 'destroy'])->name('destroy');
+});
+
+
+
+
