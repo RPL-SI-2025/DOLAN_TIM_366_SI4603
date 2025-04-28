@@ -5,7 +5,7 @@
         <a href="/" class="hover:text-purple-600">Home</a>
         <a href=destinations class="hover:text-purple-600">Tours</a>
         <a href="#gallery" class="hover:text-purple-600">Gallery</a>
-        <a href="#review" class="hover:text-purple-600">Review</a>
+        <a href="articles" class="hover:text-purple-600">Article</a>
         <a href="#contribute" class="hover:text-purple-600">Contribute</a>
       </nav>
       @if (Auth::check() && (Auth::user()->isAdmin() || Auth::user()->isSuperAdmin()))

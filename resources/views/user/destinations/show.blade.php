@@ -128,5 +128,10 @@
       </div>
     </section>
   </main>
+      <!-- Footer Section -->
+      <footer class="bg-purple-100 text-center py-6 text-sm text-purple-600 mt-12">
+        <p>&copy; {{ date('Y') }} Dolan. Website ini dikelola oleh tim Dolan Wisata.</p>
+    </footer>
+
 </body>
 </html>
