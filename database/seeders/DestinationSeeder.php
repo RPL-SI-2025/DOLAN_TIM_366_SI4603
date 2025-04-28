@@ -14,11 +14,11 @@ class DestinationSeeder extends Seeder
             'name' => 'Pantai Kuta',
             'description' => 'Pantai yang terkenal dengan pasir putihnya yang indah dan ombak yang cocok untuk surfing.',
             'location' => 'Bali, Indonesia',
-            'image' => 'destinations/pantai_kuta.jpg',  // Pastikan file gambar sudah ada di public/storage
-            'additional_images' => json_encode([
-                'destinations/pantai_kuta.jpg',
-                'destinations/pantai_kuta.jpg',
-            ]),
+            'image' => 'images/destinations/pantai_kuta.jpg',  
+            'additional_images' => [
+                'images/additional_destinations/pantai_kuta_1.jpg',
+                'images/additional_destinations/pantai_kuta_2.jpg',
+            ],
             'stock' => 100,
             'price' => 250000,
         ]);
@@ -27,11 +27,11 @@ class DestinationSeeder extends Seeder
             'name' => 'Gunung Bromo',
             'description' => 'Gunung berapi yang aktif di Jawa Timur, Indonesia, terkenal dengan pemandangan matahari terbitnya.',
             'location' => 'Probolinggo, Jawa Timur, Indonesia',
-            'image' => 'destinations/gunung_bromo.jpg',  // Pastikan file gambar sudah ada di public/storage
-            'additional_images' => json_encode([
-                'destinations/gunung_bromo.jpg',
-                'destinations/gunung_bromo.jpg',
-            ]),
+            'image' => 'images/destinations/gunung_bromo.jpg',  
+            'additional_images' => [
+                'images/additional_destinations/gunung_bromo_1.jpg',
+                'images/additional_destinations/gunung_bromo_2.jpg',
+            ],
             'stock' => 50,
             'price' => 350000,
         ]);
@@ -40,11 +40,11 @@ class DestinationSeeder extends Seeder
             'name' => 'Danau Toba',
             'description' => 'Danau vulkanik terbesar di Indonesia, dengan pemandangan yang luar biasa dan pulau di tengahnya.',
             'location' => 'Sumatera Utara, Indonesia',
-            'image' => 'destinations/danau_toba.jpg',  
-            'additional_images' => json_encode([
-                'destinations/danau_toba.jpg',
-                'destinations/danau_toba.jpg',
-            ]),
+            'image' => 'images/destinations/danau_toba.jpg',  // Path baru untuk gambar utama
+            'additional_images' => [
+                'images/additional_destinations/danau_toba_1.jpg',
+                'images/additional_destinations/danau_toba_2.jpg',
+            ],
             'stock' => 75,
             'price' => 300000,
         ]);
