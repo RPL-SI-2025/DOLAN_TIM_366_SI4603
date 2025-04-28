@@ -1,13 +1,6 @@
 <x-layout-admin>
-<x-slot name="title">Daftar Destinasi</x-slot>
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Daftar Destinasi</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-</head>
-<body class="bg-gray-100 p-6">
+    <x-slot name="title">Edit Destinasi</x-slot>
+    
     <div class="container mx-auto p-6 bg-white shadow-lg rounded-xl max-w-4xl">
         <h2 class="text-2xl font-semibold text-indigo-600 mb-8 text-center">Edit Destinasi Wisata</h2>
 
@@ -15,105 +8,178 @@
             @csrf
             @method('PUT')
 
-            <div class="flex flex-col">
-                <label for="name" class="text-sm font-semibold text-gray-700">Nama Destinasi</label>
-                <input type="text" id="name" name="name" required value="{{ old('name', $destination->name) }}"
-                    class="mt-2 p-4 border border-gray-300 rounded-lg w-full focus:outline-none focus:ring-2 focus:ring-indigo-500 transition duration-300 ease-in-out">
-            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- Left Column -->
+                <div class="space-y-6">
+                    <div class="flex flex-col">
+                        <label for="name" class="text-sm font-semibold text-gray-700 mb-1">Nama Destinasi</label>
+                        <input type="text" id="name" name="name" required value="{{ old('name', $destination->name) }}"
+                            class="p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 transition">
+                    </div>
 
-            <div class="flex flex-col">
-                <label for="description" class="text-sm font-semibold text-gray-700">Deskripsi</label>
-                <textarea id="description" name="description" rows="4" required
-                    class="mt-2 p-4 border border-gray-300 rounded-lg w-full focus:outline-none focus:ring-2 focus:ring-indigo-500 transition duration-300 ease-in-out">{{ old('description', $destination->description) }}</textarea>
-            </div>
+                    <div class="flex flex-col">
+                        <label for="location" class="text-sm font-semibold text-gray-700 mb-1">Lokasi</label>
+                        <input type="text" id="location" name="location" required value="{{ old('location', $destination->location) }}"
+                            class="p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 transition">
+                    </div>
 
-            <div class="flex flex-col">
-                <label for="location" class="text-sm font-semibold text-gray-700">Lokasi</label>
-                <input type="text" id="location" name="location" required value="{{ old('location', $destination->location) }} "
-                    class="mt-2 p-4 border border-gray-300 rounded-lg w-full focus:outline-none focus:ring-2 focus:ring-indigo-500 transition duration-300 ease-in-out">
-            </div>
-
-            <div class="flex flex-col">
-                <label for="stock" class="text-sm font-semibold text-gray-700">Stock</label>
-                <input type="number" id="stock" name="stock" required value="{{ old('stock', $destination->stock) }}"
-                    class="mt-2 p-4 border border-gray-300 rounded-lg w-full focus:outline-none focus:ring-2 focus:ring-indigo-500 transition duration-300 ease-in-out">
-            </div>
-
-            <div class="flex flex-col">
-                <label for="price" class="text-sm font-semibold text-gray-700">Harga</label>
-                <input type="number" id="price" name="price" required value="{{ old('price', $destination->price) }}"
-                    class="mt-2 p-4 border border-gray-300 rounded-lg w-full focus:outline-none focus:ring-2 focus:ring-indigo-500 transition duration-300 ease-in-out">
-            </div>
-
-            <div class="flex flex-col">
-                <label for="image" class="text-sm font-semibold text-gray-700 mb-2">Gambar (Opsional)</label>
-                <input type="file" id="image" name="image"
-                    class="mt-2 p-4 border border-gray-300 rounded-lg w-full focus:outline-none focus:ring-2 focus:ring-indigo-500 transition duration-300 ease-in-out">
-                @if ($destination->image)
-                    <img src="{{ asset("storage/{$destination->image}") }}" alt="Destinasi Image"
-                        class="mt-4 rounded shadow max-w-xs">
-                @endif
-            </div>
-
-            <div class="flex flex-col">
-            <label class="text-sm font-semibold text-gray-700 mb-2">Additional Images (opsional)</label>
-
-            @if ($destination->additional_images && is_array($destination->additional_images))
-                <div class="mt-4 flex flex-wrap gap-4">
-                    @foreach ($destination->additional_images as $index => $image)
-                        <div class="relative w-36" id="existing-image-{{ $index }}">
-                            {{-- Gambar lama --}}
-                            <img src="{{ asset("storage/{$image}") }}" alt="Additional Image"
-                                class="rounded shadow w-full h-24 object-cover mb-2">
-
-                            {{-- Input untuk mengganti gambar lama --}}
-                            <input type="file" name="replaced_images[{{ $image }}]"
-                                class="text-xs text-gray-600 block w-full bg-gray-50 border border-gray-300 rounded p-1 mb-2">
-
-                            {{-- Tombol hapus --}}
-                            <button type="button" onclick="removeExistingImage('{{ $index }}')" 
-                                class="absolute top-0 right-0 -mt-2 -mr-2 bg-red-500 text-white rounded-full p-1 hover:bg-red-600">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
-                                </svg>
-                            </button>
-                            
-                            {{-- Hidden input hanya jika user hapus --}}
-                            <input type="hidden" id="removed-image-{{ $index }}" value="{{ $image }}">
-                        </div>
-                    @endforeach
+                    <div class="flex flex-col">
+                        <label for="description" class="text-sm font-semibold text-gray-700 mb-1">Deskripsi</label>
+                        <textarea id="description" name="description" rows="4" required
+                            class="p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 transition">{{ old('description', $destination->description) }}</textarea>
+                    </div>
                 </div>
-            @endif
 
-            {{-- Input untuk menambah gambar baru (bukan pengganti) --}}
-            <div class="mt-6">
-                <label for="additional_images" class="text-sm font-semibold text-gray-700">Tambah Gambar Baru</label>
-                <input type="file" id="additional_images" name="additional_images[]" multiple
-                    class="mt-2 p-4 border border-gray-300 rounded-lg w-full focus:outline-none focus:ring-2 focus:ring-indigo-500 transition duration-300 ease-in-out">
+                <!-- Right Column -->
+                <div class="space-y-6">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div class="flex flex-col">
+                            <label for="stock" class="text-sm font-semibold text-gray-700 mb-1">Stok</label>
+                            <input type="number" id="stock" name="stock" required value="{{ old('stock', $destination->stock) }}"
+                                class="p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 transition">
+                        </div>
+
+                        <div class="flex flex-col">
+                            <label for="price" class="text-sm font-semibold text-gray-700 mb-1">Harga</label>
+                            <input type="number" id="price" name="price" required value="{{ old('price', $destination->price) }}"
+                                class="p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 transition">
+                        </div>
+                    </div>
+
+                    <div class="flex flex-col">
+                        <label for="image" class="text-sm font-semibold text-gray-700 mb-1">Gambar Utama</label>
+                        <input type="file" id="image" name="image" accept="image/*"
+                            class="p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 transition"
+                            onchange="previewMainImage(event)">
+                        @if ($destination->image)
+                            <div class="mt-3">
+                                <img src="{{ asset($destination->image) }}" alt="Destinasi Image" id="main-image-preview"
+                                    class="rounded shadow max-h-40">
+                            </div>
+                        @endif
+                    </div>
+                </div>
             </div>
 
-        </div>
-            <button type="submit" class="w-full max-w-6xl mx-auto mt-6 px-6 py-3 bg-green-500 text-white font-semibold border-2 border-green-400 rounded-lg hover:bg-green-700 hover:shadow-lg transition duration-300 ease-in-out">
-                Perbarui Destinasi
-            </button>
+            <!-- Additional Images Section -->
+            <div class="pt-4">
+                <h3 class="text-lg font-medium text-gray-800 mb-2">Gambar Tambahan</h3>
+                
+                @if ($destination->additional_images && is_array($destination->additional_images) && count($destination->additional_images) > 0)
+                    <div class="bg-gray-50 p-4 rounded-lg border border-gray-200">
+                        <p class="text-sm text-gray-600 mb-3">Gambar saat ini:</p>
+                        <div class="flex flex-wrap gap-4" id="additional-images-container">
+                            @foreach ($destination->additional_images as $index => $image)
+                                <div class="relative w-32 bg-white p-2 rounded shadow-sm" id="image-container-{{ $index }}">
+                                    <img src="{{ asset($image) }}" alt="Additional Image {{ $index + 1 }}"
+                                        class="w-full h-24 object-cover rounded mb-2">
+                                    
+                                    <div class="flex justify-end">
+                                        <button type="button" onclick="removeImage('{{ $image }}', {{ $index }})" 
+                                            class="bg-red-500 text-white rounded p-1 text-xs hover:bg-red-600 transition">
+                                            Hapus
+                                        </button>
+                                    </div>
+                                    
+                                    <input type="hidden" name="existing_images[]" value="{{ $image }}" id="existing-image-{{ $index }}">
+                                </div>
+                            @endforeach
+                        </div>
+                    </div>
+                @else
+                    <p class="text-gray-500 italic text-sm">Belum ada gambar tambahan</p>
+                @endif
+
+                <div class="mt-4">
+                    <label for="additional_images" class="text-sm font-semibold text-gray-700 mb-1">Tambah Gambar Baru</label>
+                    <input type="file" id="additional_images" name="additional_images[]" multiple accept="image/*"
+                        class="p-3 border border-gray-300 rounded-lg w-full focus:outline-none focus:ring-2 focus:ring-indigo-500 transition"
+                        onchange="previewNewImages(event)">
+                    <div id="new-images-preview" class="flex flex-wrap gap-2 mt-2"></div>
+                </div>
+            </div>
+
+            <div class="pt-4">
+                <button type="submit" class="w-full py-3 bg-green-500 text-white font-semibold rounded-lg transition hover:bg-green-600 focus:ring-2 focus:ring-green-300">
+                    Perbarui Destinasi
+                </button>
+            </div>
         </form>
     </div>
-</body>
-</html>
 
     <script>
-        function removeExistingImage(index) {
-            const imageName = document.getElementById('removed-image-' + index).value;
-
-            // Tambah input hidden ke form
-            const hiddenInput = document.createElement('input');
-            hiddenInput.type = 'hidden';
-            hiddenInput.name = 'removed_images[]';
-            hiddenInput.value = imageName;
-            document.querySelector('form').appendChild(hiddenInput);
-
-            // Hapus dari UI
-            document.getElementById('existing-image-' + index).remove();
+        // Array to store removed images
+        const removedImages = [];
+        
+        function removeImage(imagePath, index) {
+            // Add to removed images array
+            removedImages.push(imagePath);
+            
+            // Remove the container from UI with animation
+            const container = document.getElementById('image-container-' + index);
+            container.classList.add('opacity-50');
+            setTimeout(() => {
+                container.remove();
+            }, 300);
+            
+            // Update hidden input field for form submission
+            updateRemovedImagesField();
+        }
+        
+        function updateRemovedImagesField() {
+            // Remove any existing removed_images inputs
+            document.querySelectorAll('input[name="removed_images[]"]').forEach(el => el.remove());
+            
+            // Add new hidden inputs for each removed image
+            removedImages.forEach(image => {
+                const input = document.createElement('input');
+                input.type = 'hidden';
+                input.name = 'removed_images[]';
+                input.value = image;
+                document.querySelector('form').appendChild(input);
+            });
+        }
+        
+        function previewMainImage(event) {
+            const reader = new FileReader();
+            reader.onload = function() {
+                const previewImg = document.getElementById('main-image-preview');
+                if (previewImg) {
+                    previewImg.src = reader.result;
+                } else {
+                    const newImg = document.createElement('img');
+                    newImg.src = reader.result;
+                    newImg.id = 'main-image-preview';
+                    newImg.classList.add('rounded', 'shadow', 'max-h-40', 'mt-3');
+                    
+                    const container = document.querySelector('label[for="image"]').parentNode;
+                    container.appendChild(newImg);
+                }
+            }
+            if (event.target.files[0]) {
+                reader.readAsDataURL(event.target.files[0]);
+            }
+        }
+        
+        function previewNewImages(event) {
+            const previewContainer = document.getElementById('new-images-preview');
+            previewContainer.innerHTML = '';
+            
+            Array.from(event.target.files).forEach((file, idx) => {
+                const reader = new FileReader();
+                reader.onload = function() {
+                    const imgContainer = document.createElement('div');
+                    imgContainer.classList.add('relative', 'w-24', 'h-24');
+                    
+                    const imgElement = document.createElement('img');
+                    imgElement.src = reader.result;
+                    imgElement.classList.add('w-full', 'h-full', 'object-cover', 'rounded', 'shadow-sm');
+                    
+                    imgContainer.appendChild(imgElement);
+                    previewContainer.appendChild(imgContainer);
+                }
+                reader.readAsDataURL(file);
+            });
         }
     </script>
 </x-layout-admin>

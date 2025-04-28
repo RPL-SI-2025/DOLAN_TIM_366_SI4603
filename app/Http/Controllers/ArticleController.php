@@ -14,6 +14,17 @@ class ArticleController extends Controller
         return view('dashboard.article.index', compact('articles'));
     }
 
+     public function publicIndex()
+    {
+        $articles = Article::latest()->paginate(10);
+        return view('articles.index', compact('articles'));
+    }
+
+    public function show(Article $article)
+    {
+        return view('articles.show', compact('article'));
+    }
+
     public function create()
     {
         return view('dashboard.article.create');
