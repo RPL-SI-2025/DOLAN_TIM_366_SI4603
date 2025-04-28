@@ -42,56 +42,32 @@
 
             </div>
 
-            <div class="mb-7 animate-on-scroll">
     <div class="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
-        <!-- Sort and Filter Section -->
-        <section class="flex justify-between items-center py-4 bg-white shadow-md rounded-lg px-6 animate-on-scroll">
-          <div class="flex items-center">
-            <label for="sort" class="text-lg font-medium text-gray-700">Sort by:</label>
-            <select id="sort" class="ml-2 p-2 border border-gray-300 rounded-md focus:ring-purple-500 focus:border-purple-500">
-              <option value="popularity">Popularity</option>
-              <option value="price">Price</option>
-              <option value="duration">Duration</option>
-            </select>
-          </div>
-          <div class="flex items-center">
-            <label for="filter" class="text-lg font-medium text-gray-700">Filter by:</label>
-            <select id="filter" class="ml-2 p-2 border border-gray-300 rounded-md focus:ring-purple-500 focus:border-purple-500">
-              <option value="all">All</option>
-              <option value="mountains">Mountains</option>
-              <option value="cities">Cities</option>
-              <option value="historical">Historical</option>
-            </select>
-          </div>
-        </section>
 
         <!-- Section with title, subtitle, and cards -->
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mt-5 animate-on-scroll">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mt-5">
+            @if($destinations->isEmpty())
+            <p class="text-center text-gray-500 dark:text-gray-400">No destinations available at the moment.</p>
+            @else
             @foreach($destinations as $destination)
             <div class="max-w-sm drop-shadow-lg bg-white border border-gray-200 rounded-lg shadow-sm dark:bg-gray-800 dark:border-gray-700">
                 <a href="#">
-                    <img class="rounded-t-lg w-full" src="{{ asset('storage/' . $destination->image) }}" alt="{{ $destination->title }}" />
+                <img class="rounded-t-lg w-full" src="{{ asset($destination->image)}}" alt="{{ $destination->name }}" />
                 </a>
                 <div class="p-5">
-                    <a href="#">
-                        <h4 class="text-2xl font-bold tracking-tight text-gray-900 dark:text-white">{{ $destination->name }}</h4>
-                        <h5 class="mb-2 text-xl font-bold tracking-tight text-purple-900 dark:text-white">{{ $destination->location }}</h5>
-                    </a>
-                    <div class="flex items-center mb-2">
-                        <svg fill="#949494" width="16px" height="16px" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M12,6a1,1,0,0,0-1,1v5a1,1,0,0,0,.293.707l3,3a1,1,0,0,0,1.414-1.414L13,11.586V7A1,1,0,0,0,12,6Z M23.812,10.132A12,12,0,0,0,3.578,3.415V1a1,1,0,0,0-2,0V5a2,2,0,0,0,2,2h4a1,1,0,0,0,0-2H4.827a9.99,9.99,0,1,1-2.835,7.878A.982.982,0,0,0,1,12a1.007,1.007,0,0,0-1,1.1,12,12,0,1,0,23.808-2.969Z"></path>
-                        </svg>
-                        <p class="text-xs font-normal text-gray-700 dark:text-gray-400 ml-2">Rp. {{ $destination->price }}</p>
-                    </div>
-                    <div class="flex items-center mb-2">
-                        <svg fill="#949494" width="16px" height="16px" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M12,6a1,1,0,0,0-1,1v5a1,1,0,0,0,.293.707l3,3a1,1,0,0,0,1.414-1.414L13,11.586V7A1,1,0,0,0,12,6Z M23.812,10.132A12,12,0,0,0,3.578,3.415V1a1,1,0,0,0-2,0V5a2,2,0,0,0,2,2h4a1,1,0,0,0,0-2H4.827a9.99,9.99,0,1,1-2.835,7.878A.982.982,0,0,0,1,12a1.007,1.007,0,0,0-1,1.1,12,12,0,1,0,23.808-2.969Z"></path>
-                        </svg>
-                    </div>
-                    <a href="{{ route('destinations.show', $destination->id) }}" class="inline-block text-white bg-gradient-to-br from-purple-400 to-black hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-gray-200 dark:focus:ring-purple-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2">Book Now</a>
+                <a href="#">
+                    <h4 class="text-2xl font-bold tracking-tight text-gray-900 dark:text-white">{{ $destination->name }}</h4>
+                    <h5 class="mb-2 text-xl font-bold tracking-tight text-purple-900 dark:text-white">{{ $destination->location }}</h5>
+                </a>
+                <div class="flex items-center mb-2">
+                    <p class="text-xs font-normal text-gray-700 dark:text-gray-400">Rp. {{ $destination->price }}</p>
+                </div>
+
+                <a href="{{ route('destinations.show', $destination->id) }}" class="inline-block text-white bg-gradient-to-br from-purple-400 to-black hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-gray-200 dark:focus:ring-purple-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2">Book Now</a>
                 </div>
             </div>
             @endforeach
+            @endif
         </div>
     </div>
 </div>

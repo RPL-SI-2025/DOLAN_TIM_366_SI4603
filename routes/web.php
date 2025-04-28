@@ -23,7 +23,6 @@ Route::get('logout', [LoginController::class, 'logout'])->name('logout');
 // Homepage
 Route::get('/promo', [PromoController::class, 'getPromo'])->name('promo.get');
 Route::get('/', [HomeController::class, 'index']);
-Route::get('/destinations', [DestinationController::class, 'getDestinations'])->name('destinations.get');
 // home setelah login
 Route::get('/homeuser', function () {
     return view('homeuser');
@@ -76,4 +75,5 @@ Route::prefix('dashboard')->name('dashboard.')->group(function () {
 
 
 
-Route::get('destination', [DestinationController::class, 'ShowDestinations'])->name('destination.index');
+Route::get('destinations', [DestinationController::class, 'showAllDestinations'])->name('destination.index');
+Route::get('destinations/{id}', [DestinationController::class, 'showDestination'])->name('destinations.show');

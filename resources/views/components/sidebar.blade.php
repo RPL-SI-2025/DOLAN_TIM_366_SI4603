@@ -5,7 +5,7 @@
     <ul class="space-y-2 font-medium">
       <li>
         <a href="{{ route('dashboard.index') }}"
-        class="flex items-center p-2 {{ Request::is('dashboard') ? 'active text-white bg-blue-600' : 'text-gray-900 hover:bg-gray-100' }} rounded-lg group">
+        class="flex items-center p-2 {{ Request::is('dashboard') ? 'active text-white bg-green-600' : 'text-gray-900 hover:bg-gray-100' }} rounded-lg group">
         <svg
             class="w-5 h-5 text-gray-500 group-hover:text-gray-900 transition duration-75"
             aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 22 21">
@@ -18,7 +18,7 @@
       </li>
       <li>
         <a href="{{ route('dashboard.destination.index') }}"
-         class="flex items-center p-2 {{ Request::is('dashboard/destination') ? 'active text-white bg-blue-600' : 'text-gray-900 hover:bg-gray-100' }} rounded-lg group">
+         class="flex items-center p-2 {{ Request::is('dashboard/destination') ? 'active text-white bg-green-600' : 'text-gray-900 hover:bg-gray-100' }} rounded-lg group">
           <svg
             class="flex-shrink-0 w-5 h-5 text-gray-500 group-hover:text-gray-900 transition duration-75"
             aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 18 18">
@@ -30,7 +30,7 @@
       </li>
       <li>
       <a href="{{ route('dashboard.articles.index') }}"
-      class="flex items-center p-2 {{ Request::is('dashboard/articles') ? 'active text-white bg-blue-600' : 'text-gray-900 hover:bg-gray-100' }} rounded-lg group">
+      class="flex items-center p-2 {{ Request::is('dashboard/articles') ? 'active text-white bg-green-600' : 'text-gray-900 hover:bg-gray-100' }} rounded-lg group">
       <svg
             class="flex-shrink-0 w-5 h-5 text-gray-500 group-hover:text-gray-900 transition duration-75"
             aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
@@ -42,7 +42,7 @@
           </li>
           <li>
           <a href="/dashboard/admin"
-         class="flex items-center p-2 {{ Request::is('dashboard/admin') ? 'active text-white bg-blue-600' : 'text-gray-900 hover:bg-gray-100' }} rounded-lg group">
+         class="flex items-center p-2 {{ Request::is('dashboard/admin') ? 'active text-white bg-green-600' : 'text-gray-900 hover:bg-gray-100' }} rounded-lg group">
             <svg
             class="flex-shrink-0 w-5 h-5 text-gray-500 group-hover:text-gray-900 transition duration-75"
             aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 18">
