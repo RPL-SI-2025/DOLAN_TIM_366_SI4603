@@ -13,7 +13,7 @@
       Dashboard
       </a>
       @elseif (Auth::check() && (Auth::user()->isUser()))
-      <a href=profile class="ml-4 bg-purple-600 text-white px-5 py-2 rounded-full hover:bg-purple-700 transition">
+      <a href=user/profile class="ml-4 bg-purple-600 text-white px-5 py-2 rounded-full hover:bg-purple-700 transition">
       Profile
 
       </a>

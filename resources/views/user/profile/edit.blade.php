@@ -1,4 +1,13 @@
-<x-layout-admin>
+<!doctype html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Profile</title>
+  @vite(['resources/css/app.css', 'resources/js/app.js'])
+</head>
+
 <div class="w-full max-w-2xl mx-auto mt-16 px-4 sm:px-6">
         <div class="bg-white dark:bg-gray-900 shadow-md rounded-2xl overflow-hidden transition">
             <div class="flex flex-col items-center text-center p-6">
@@ -20,7 +29,7 @@
             </div>
 
             {{-- Form --}}
-            <form action="{{ route('dashboard.user.profile.update') }}" method="POST" class="px-6 pb-8 space-y-5" enctype="multipart/form-data">
+            <form action="{{ route('user.profile.update') }}" method="POST" class="px-6 pb-8 space-y-5" enctype="multipart/form-data">
                 @csrf
                 @method('PUT')
 
@@ -67,4 +76,3 @@
             reader.readAsDataURL(event.target.files[0]);
         }
     </script>
-</x-layout-admin>

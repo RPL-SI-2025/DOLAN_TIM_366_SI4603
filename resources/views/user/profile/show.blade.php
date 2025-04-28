@@ -1,4 +1,14 @@
-<x-layout-admin class="px-6 sm:px-8 lg:px-12">
+<!doctype html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Profile | Dolan </title>
+  @vite(['resources/css/app.css', 'resources/js/app.js'])
+</head>
+
+<div class="px-6 sm:px-8 lg:px-12">
     <div class="min-h-screen bg-gradient-to-tr from-gray-100 via-white to-gray-100 py-10">
         <div class="max-w-4xl mx-auto px-6 sm:px-8 lg:px-12 bg-white rounded-3xl shadow-xl overflow-hidden animate-fade-in-up">
             <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -39,7 +49,7 @@
                     </div>
 
                     <div class="pt-6">
-                    <a href="{{ route('dashboard.user.profile.edit') }}" class="inline-block bg-blue-600 dark:bg-blue-500 hover:bg-blue-700 dark:hover:bg-blue-600 text-white font-semibold text-sm md:text-base px-5 py-2 rounded-xl shadow-md transition duration-300 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-offset-1">
+                    <a href="{{ route('user.profile.edit') }}" class="inline-block bg-blue-600 dark:bg-blue-500 hover:bg-blue-700 dark:hover:bg-blue-600 text-white font-semibold text-sm md:text-base px-5 py-2 rounded-xl shadow-md transition duration-300 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-offset-1">
                         Edit Profil
                     </a>
 
@@ -48,10 +58,10 @@
                     </div>
 
                     <div class="mt-8 text-sm">
-                        <a href="{{ route('dashboard.index') }}" class="text-indigo-600 hover:underline hover:translate-x-1 transition-all">&larr; Kembali ke Dashboard</a>
+                        <a href="/" class="text-indigo-600 hover:underline hover:translate-x-1 transition-all">&larr; Kembali ke Home</a>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-</x-layout-admin>
+</div>

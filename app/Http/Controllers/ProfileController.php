@@ -51,7 +51,7 @@ class ProfileController extends Controller
             $user->update(['profile_photo_path' => $path]);
         }
 
-        return redirect()->route('dashboard.user.profile.show')->with('success', 'Profil berhasil diperbarui!');
+        return redirect()->route('user.profile.show')->with('success', 'Profil berhasil diperbarui!');
     }
 
     public function destroy(Request $request)
