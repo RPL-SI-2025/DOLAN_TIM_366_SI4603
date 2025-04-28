@@ -8,10 +8,13 @@
     <!-- Flowbite CSS -->
     <script src="https://cdn.jsdelivr.net/npm/flowbite@1.6.5/dist/flowbite.min.js"></script>
 </head>
+<x-navbar></x-navbar>
 <body class="bg-purple-50 text-gray-800 flex flex-col min-h-screen">
 
+
+
     <!-- Jumbotron Section from Flowbite -->
-    <section class="bg-gradient-to-r from-purple-500 to-purple-600 text-white py-12 px-6 md:px-12 text-center">
+    <section class="text-purple py-12 px-6 md:px-12 text-center">
         <div class="max-w-4xl mx-auto">
             <h2 class="text-3xl font-bold mb-4">Temukan Artikel Wisata yang Menginspirasi</h2>
             <p class="text-xl mb-6">Baca artikel-artikel menarik yang memberikan informasi tentang destinasi wisata terbaik di Indonesia. Temukan destinasi favorit Anda berikutnya!</p>
@@ -51,13 +54,6 @@
             {{ $articles->links() }}
         </div>
     </main>
-
-            <!-- Back to Home Button -->
-        <div class="mt-4 text-center">
-            <a href="{{ url('/') }}" class="inline-block bg-purple-700 text-white px-6 py-3 rounded-lg hover:bg-purple-600">
-                Kembali ke Home
-            </a>
-        </div>
 
     <!-- Footer Section -->
     <footer class="bg-purple-100 text-center py-6 text-sm text-purple-600 mt-12">

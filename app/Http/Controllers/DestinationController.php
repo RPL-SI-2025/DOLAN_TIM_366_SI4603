@@ -169,4 +169,10 @@ class DestinationController extends Controller
         return response()->json($data);
     }
 
+    public function ShowDestinations()
+    {
+        $destinations = Destination::all();
+        return view('user.destinations.index', compact('destinations'));
+    }
+
 }

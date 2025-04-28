@@ -76,4 +76,6 @@ Route::prefix('dashboard')->name('dashboard.')->group(function () {
 
 
 
+Route::get('destination', [DestinationController::class, 'ShowDestinations'])->name('destination.index');
+
 
