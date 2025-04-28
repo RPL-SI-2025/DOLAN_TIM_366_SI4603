@@ -197,15 +197,4 @@ class DestinationController extends Controller
 
         return response()->json($data);
     }
-<<<<<<< Updated upstream
-
-    public function ShowDestinations()
-    {
-        $destinations = Destination::all();
-        return view('user.destinations.index', compact('destinations'));
-    }
-
 }
-=======
-}
->>>>>>> Stashed changes
