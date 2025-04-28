@@ -198,3 +198,4 @@ class DestinationController extends Controller
         return response()->json($data);
     }
 }
+
