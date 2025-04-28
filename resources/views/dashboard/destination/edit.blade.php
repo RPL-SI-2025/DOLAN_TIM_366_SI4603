@@ -4,7 +4,7 @@
     <div class="container mx-auto p-6 bg-white shadow-lg rounded-xl max-w-4xl">
         <h2 class="text-2xl font-semibold text-indigo-600 mb-8 text-center">Edit Destinasi Wisata</h2>
 
-        <form action="{{ route('dashboard.destination.update', $destination->id) }}" method="POST" enctype="multipart/form-data" class="space-y-6">
+        <form action="{{ route('dashboard.destination.update', $destination->id) }}" method="POST" enctype="multipart/form-data" class="space-y-6" id="destination-form">
             @csrf
             @method('PUT')
 
@@ -52,7 +52,7 @@
                             class="p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 transition"
                             onchange="previewMainImage(event)">
                         @if ($destination->image)
-                            <div class="mt-3">
+                            <div class="mt-3 relative" id="main-image-container">
                                 <img src="{{ asset($destination->image) }}" alt="Destinasi Image" id="main-image-preview"
                                     class="rounded shadow max-h-40">
                             </div>
@@ -99,6 +99,10 @@
                 </div>
             </div>
 
+            <div id="removed-images-container">
+                <!-- Hidden inputs for removed images will be added here -->
+            </div>
+
             <div class="pt-4">
                 <button type="submit" class="w-full py-3 bg-green-500 text-white font-semibold rounded-lg transition hover:bg-green-600 focus:ring-2 focus:ring-green-300">
                     Perbarui Destinasi
@@ -112,23 +116,54 @@
         const removedImages = [];
         
         function removeImage(imagePath, index) {
-            // Add to removed images array
-            removedImages.push(imagePath);
-            
-            // Remove the container from UI with animation
+            // Show loading or disable button
             const container = document.getElementById('image-container-' + index);
             container.classList.add('opacity-50');
-            setTimeout(() => {
-                container.remove();
-            }, 300);
             
-            // Update hidden input field for form submission
-            updateRemovedImagesField();
+            // AJAX call to delete the image physically from storage
+            fetch('{{ route("dashboard.destination.removeImage") }}', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                },
+                body: JSON.stringify({
+                    image_path: imagePath
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    // Add to removed images array for form submission
+                    removedImages.push(imagePath);
+                    
+                    // Remove the container from UI with animation
+                    setTimeout(() => {
+                        container.remove();
+                    }, 300);
+                    
+                    // Update hidden input field for form submission
+                    updateRemovedImagesField();
+                    
+                    // Show success message
+                    showNotification('Gambar berhasil dihapus', 'success');
+                } else {
+                    // Show error and revert opacity
+                    container.classList.remove('opacity-50');
+                    showNotification('Gagal menghapus gambar: ' + data.message, 'error');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                container.classList.remove('opacity-50');
+                showNotification('Terjadi kesalahan saat menghapus gambar', 'error');
+            });
         }
         
         function updateRemovedImagesField() {
-            // Remove any existing removed_images inputs
-            document.querySelectorAll('input[name="removed_images[]"]').forEach(el => el.remove());
+            // Get the container for removed images
+            const container = document.getElementById('removed-images-container');
+            container.innerHTML = ''; // Clear existing inputs
             
             // Add new hidden inputs for each removed image
             removedImages.forEach(image => {
@@ -136,7 +171,7 @@
                 input.type = 'hidden';
                 input.name = 'removed_images[]';
                 input.value = image;
-                document.querySelector('form').appendChild(input);
+                container.appendChild(input);
             });
         }
         
@@ -180,6 +215,28 @@
                 }
                 reader.readAsDataURL(file);
             });
+        }
+        
+        function showNotification(message, type = 'info') {
+            // Create notification element
+            const notification = document.createElement('div');
+            notification.className = `fixed bottom-4 right-4 p-4 rounded shadow-lg ${
+                type === 'success' ? 'bg-green-500' : 
+                type === 'error' ? 'bg-red-500' : 
+                'bg-blue-500'
+            } text-white`;
+            notification.innerText = message;
+            
+            // Add to DOM
+            document.body.appendChild(notification);
+            
+            // Remove after 3 seconds
+            setTimeout(() => {
+                notification.classList.add('opacity-0', 'transition-opacity');
+                setTimeout(() => {
+                    notification.remove();
+                }, 300);
+            }, 3000);
         }
     </script>
 </x-layout-admin>

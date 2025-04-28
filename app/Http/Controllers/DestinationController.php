@@ -102,7 +102,9 @@ class DestinationController extends Controller
         $destination = Destination::findOrFail($id);
 
         try {
+            // Handle main image update
             if ($request->hasFile('image')) {
+                // Delete old image if exists
                 if ($destination->image && File::exists(public_path($destination->image))) {
                     File::delete(public_path($destination->image));
                 }
@@ -112,23 +114,26 @@ class DestinationController extends Controller
                 $validated['image'] = $this->mainImagePath . '/' . $imageName;
             }
 
+            // Handle additional images
             $currentAdditionalImages = is_array($destination->additional_images) ? $destination->additional_images : [];
             $finalAdditionalImages = [];
             
-            // Proses gambar yang sudah ada
+            // Keep existing images that weren't removed
             if ($request->has('existing_images')) {
                 $finalAdditionalImages = $request->input('existing_images', []);
             } else {
                 $finalAdditionalImages = $currentAdditionalImages;
             }
             
-            // Hapus gambar yang dipilih untuk dihapus
+            // Delete removed images from storage
             if ($request->has('removed_images') && is_array($request->removed_images)) {
                 foreach ($request->removed_images as $imageToRemove) {
+                    // Check if file exists before deleting
                     if (File::exists(public_path($imageToRemove))) {
                         File::delete(public_path($imageToRemove));
                     }
                     
+                    // Remove from the final images array
                     $finalAdditionalImages = array_filter($finalAdditionalImages, function ($img) use ($imageToRemove) {
                         return $img !== $imageToRemove;
                     });
@@ -136,7 +141,7 @@ class DestinationController extends Controller
                 $finalAdditionalImages = array_values($finalAdditionalImages);
             }
 
-            // Tambahkan gambar baru
+            // Add new additional images
             if ($request->hasFile('additional_images')) {
                 foreach ($request->file('additional_images') as $file) {
                     $imgName = time() . '_' . rand(1000, 9999) . '_' . $file->getClientOriginalName();
@@ -162,10 +167,12 @@ class DestinationController extends Controller
 
         $destination = Destination::findOrFail($id);
 
+        // Delete main image if exists
         if ($destination->image && File::exists(public_path($destination->image))) {
             File::delete(public_path($destination->image));
         }
         
+        // Delete all additional images if they exist
         if (!empty($destination->additional_images) && is_array($destination->additional_images)) {
             foreach ($destination->additional_images as $image) {
                 if (File::exists(public_path($image))) {
@@ -177,6 +184,32 @@ class DestinationController extends Controller
         $destination->delete();
 
         return redirect()->route('dashboard.destination.index')->with('success', 'Destinasi berhasil dihapus.');
+    }
+
+    // Add a new method to handle AJAX image deletion
+    public function removeImage(Request $request)
+    {
+        if (Auth::check() && !in_array(Auth::user()->role, ['admin', 'super_admin'])) {
+            return response()->json(['success' => false, 'message' => 'Akses ditolak. Hanya admin yang boleh.'], 403);
+        }
+
+        $imagePath = $request->input('image_path');
+        
+        if (!$imagePath) {
+            return response()->json(['success' => false, 'message' => 'Path gambar tidak ditemukan.'], 400);
+        }
+
+        try {
+            // Check if file exists before attempting to delete
+            if (File::exists(public_path($imagePath))) {
+                File::delete(public_path($imagePath));
+                return response()->json(['success' => true, 'message' => 'Gambar berhasil dihapus.']);
+            } else {
+                return response()->json(['success' => false, 'message' => 'File tidak ditemukan.'], 404);
+            }
+        } catch (\Exception $e) {
+            return response()->json(['success' => false, 'message' => 'Gagal menghapus gambar: ' . $e->getMessage()], 500);
+        }
     }
 
     public function getDestinations()
@@ -198,4 +231,3 @@ class DestinationController extends Controller
         return response()->json($data);
     }
 }
-
