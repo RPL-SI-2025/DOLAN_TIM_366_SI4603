@@ -172,51 +172,6 @@
     });
   }
 
-  // Load Destinations
-  function loadDestinations() {
-    $.ajax({
-      url: '{{ route('destinations.get') }}', // Pastikan rutenya benar
-      method: 'GET',
-      success: function(data) {
-        var destinations = data; // Data destinasi yang diterima
-        var displayedDestinations = []; // Menyimpan destinasi yang sudah ditampilkan
-        var htmlContent = '';
-        var count = 0; // Menyimpan jumlah destinasi yang ditampilkan
-
-        // Membuat card untuk setiap destinasi
-        destinations.forEach(function(destination) {
-          // Mengecek apakah destinasi sudah ditampilkan
-          if (!displayedDestinations.includes(destination.id)) {
-            htmlContent += `
-              <div class="bg-white shadow-md rounded-lg overflow-hidden">
-                <img class="w-full h-48 object-cover" src="/storage/images/${destination.image}" alt="${destination.name}"/>
-                <div class="p-4">
-                  <h3 class="text-lg font-semibold">${destination.name}</h3>
-                  <p>${destination.description}</p>
-                </div>
-              </div>
-            `;
-
-            // Menambahkan ID destinasi ke array displayedDestinations
-            displayedDestinations.push(destination.id);
-
-            count++;
-
-            // Jika sudah menampilkan 4 destinasi, berhenti
-            if (count >= 4) {
-              return false;
-            }
-          }
-        });
-
-        // Menambahkan card ke dalam kontainer jika ada destinasi
-        if (htmlContent) {
-          $('#destinations').html(htmlContent);
-        }
-      }
-    });
-  }
-
   // Memanggil fungsi untuk memuat promo dan destinasi pertama kali saat halaman dimuat
   loadPromo();
   loadDestinations();
