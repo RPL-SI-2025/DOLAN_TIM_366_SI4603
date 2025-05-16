@@ -85,6 +85,7 @@
                                                 Hapus
                                             </button>
                                         </form>
+                                        <a href="{{ route('dashboard.destination.ratings', $destination->id) }}" class="bg-yellow-500 text-white px-3 py-1 rounded hover:bg-yellow-600 transition">Lihat Rating</a>
                                     </div>
                                 </td>
                             </tr>
