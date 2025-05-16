@@ -39,5 +39,12 @@ class DatabaseSeeder extends Seeder
             'phone' => '123456',
             'role' => 'user',
         ]);
+
+        // Call other seeders
+        $this->call([
+            DestinationSeeder::class,
+            ArticleSeeder::class,
+            PromoSeeder::class,
+        ]);
     }
 }
