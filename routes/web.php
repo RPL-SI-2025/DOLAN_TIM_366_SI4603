@@ -18,9 +18,8 @@ Route::post('login', [LoginController::class, 'login'])->name('login');
 Route::get('logout', [LoginController::class, 'logout'])->name('logout');
 
 // Homepage
-Route::get('/promo', [PromoController::class, 'getPromo'])->name('promo.get');
-Route::get('/', [HomeController::class, 'index']);
-Route::get('/destinations', [DestinationController::class, 'getDestinations'])->name('destinations.get');
+// Route::get('/promo', [PromoController::class, 'getPromo'])->name('promo.get');
+// Route::get('/', [HomeController::class, 'index'])->name('home.index');
 // home setelah login
 Route::get('/homeuser', function () {
     return view('homeuser');
@@ -58,3 +57,4 @@ Route::prefix('dashboard')->name('dashboard.')->group(function () {
     Route::put('articles/{article}', [ArticleController::class, 'update'])->name('articles.update')->middleware(['auth', 'role:admin,super_admin']);
     Route::get('articles/{article}/edit', [ArticleController::class, 'edit'])->name('articles.edit')->middleware(['auth', 'role:admin,super_admin']);
     Route::delete('articles/{article}', [ArticleController::class, 'destroy'])->name('articles.destroy')->middleware(['auth', 'role:admin,super_admin']);
+});
