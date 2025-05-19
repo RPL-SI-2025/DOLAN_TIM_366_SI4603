@@ -60,6 +60,10 @@
                   </g>
                 </svg>
               </a>
+              <!-- tombol untuk pemesanan tiket -->
+               <a href="{{ $destinations->booking_link }}" class="px-8 py-4 bg-gradient-to-r from-purple-500 to-black text-white font-bold rounded-lg hover:bg-gradient-to-r hover:from-purple-600 hover:to-black transition flex items-center">
+                Book Now
+              </a>
             </div>
           </div>
         </div>

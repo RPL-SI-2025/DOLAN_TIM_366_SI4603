@@ -22,7 +22,7 @@ Route::get('logout', [LoginController::class, 'logout'])->name('logout');
 
 // Homepage
 Route::get('/promo', [PromoController::class, 'getPromo'])->name('promo.get');
-Route::get('/', [HomeController::class, 'index']);
+Route::get('/', [HomeController::class, 'index'])->name('home');
 // home setelah login
 Route::get('/homeuser', function () {
     return view('homeuser');
