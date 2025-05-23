@@ -5,6 +5,9 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
+use App\Models\Badge;
+
+
 
 class AdminController extends Controller
 
@@ -81,6 +84,23 @@ public function update(Request $request, $id)
     return redirect()->route('dashboard.admin.index')->with('success', 'Admin berhasil diperbarui.');
 }
 
+public function badgeIndex()
+{
+    $badges = Badge::with('user')->get();
+    return view('admin.badge.index', compact('badges'));
+}
+
+public function badgeCreate()
+{
+    $users = User::all();
+    return view('admin.badge.create', compact('users'));
+}
+
+public function badgeStore(Request $request)
+{
+    Badge::create($request->all());
+    return redirect()->route('admin.badge.index');
+}
 
 }
 
