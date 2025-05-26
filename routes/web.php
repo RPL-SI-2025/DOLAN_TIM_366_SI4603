@@ -87,9 +87,10 @@ Route::prefix('dashboard')->name('dashboard.')->group(function () {
 Route::get('destinations', [DestinationController::class, 'showAllDestinations'])->name('destination.index');
 Route::get('destinations/{id}', [DestinationController::class, 'showDestination'])->name('destinations.show');
 
-//Ticket Purchase
+// Ticket Purchase
 Route::get('/tickets-for-sale', [TicketController::class, 'showAvailableTickets'])->name('tickets.available')->middleware('auth');
 Route::post('/purchase/ticket/{ticket}', [OrderController::class, 'purchaseTicket'])->name('purchase.ticket')->middleware('auth');
 
 // Midtrans 
 Route::get('/payment/checkout/{order}', [PaymentController::class, 'createTransaction'])->name('payment.checkout')->middleware('auth');
+Route::get('/payment/finish/{order}', [PaymentController::class, 'paymentFinish'])->name('payment.finish')->middleware('auth');
