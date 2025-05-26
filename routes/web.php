@@ -10,6 +10,11 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\PromoController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\RatingController;
+use App\Http\Controllers\CheckoutController;
+use App\Http\Controllers\BookingController;
+use App\Http\Controllers\TicketController;
+use App\Http\Controllers\PaymentController;
+use App\Http\Controllers\OrderController;
 // use App\Http\Controllers\GalleryController;
 
 // Halaman register
@@ -23,11 +28,12 @@ Route::get('logout', [LoginController::class, 'logout'])->name('logout');
 
 // Homepage
 Route::get('/promo', [PromoController::class, 'getPromo'])->name('promo.get');
-Route::get('/', [HomeController::class, 'index']);
+Route::get('/', [HomeController::class, 'index'])->name('home');
 // home setelah login
 Route::get('/homeuser', function () {
     return view('homeuser');
 })->middleware('auth')->name('homeuser');
+
 
 //Artikel
 Route::get('/articles', [ArticleController::class, 'publicIndex'])->name('articles.index');
@@ -83,6 +89,11 @@ Route::prefix('user')->name('user.')->middleware('auth')->group(function () {
     Route::get('ratings/{rating}', [RatingController::class, 'show'])->name('ratings.show');
     Route::get('ratings/{rating}/edit', [RatingController::class, 'edit'])->name('ratings.edit');
     Route::put('ratings/{rating}', [RatingController::class, 'update'])->name('ratings.update');
+
+    // Ticket
+    Route::resource('tickets', TicketController::class)->middleware(['auth', 'role:admin,super_admin']);
+
+
 });
 
     // Profile
@@ -97,3 +108,10 @@ Route::prefix('user')->name('user.')->middleware('auth')->group(function () {
 
 Route::get('destinations', [DestinationController::class, 'showAllDestinations'])->name('destination.index');
 Route::get('destinations/{id}', [DestinationController::class, 'showDestination'])->name('destinations.show');
+
+//Ticket Purchase
+Route::get('/tickets-for-sale', [TicketController::class, 'showAvailableTickets'])->name('tickets.available')->middleware('auth');
+Route::post('/purchase/ticket/{ticket}', [OrderController::class, 'purchaseTicket'])->name('purchase.ticket')->middleware('auth');
+
+// Midtrans 
+Route::get('/payment/checkout/{order}', [PaymentController::class, 'createTransaction'])->name('payment.checkout')->middleware('auth');

@@ -1,0 +1,50 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use App\Http\Controllers\Controller;
+use Illuminate\Http\Request;
+use App\Models\Order;
+use App\Models\Ticket;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Validator;
+
+class OrderController extends Controller
+{
+    public function purchaseTicket(Request $request, Ticket $ticket)
+    {
+        $validator = Validator::make($request->all(), [
+            'quantity' => 'required|integer|min:1',
+        ]);
+
+        if ($validator->fails()) {
+            return redirect()->route('tickets.available')
+                ->withErrors($validator)
+                ->withInput();
+        }
+
+        $quantity = $request->input('quantity');
+        $total_amount = $ticket->price * $quantity;
+
+        try {
+            $order = Order::create([
+                'user_id' => Auth::id(),
+                'product_id' => $ticket->id,
+                'product_type' => Ticket::class, // Using ::class to get fully qualified class name
+                'quantity' => $quantity,
+                'total_amount' => $total_amount,
+                'status' => 'pending', // Initial status
+            ]);
+
+            // Redirect to Midtrans payment checkout page
+            return redirect()->route('payment.checkout', ['order' => $order->id])
+                ->with('success', 'Order created successfully. Please proceed to payment.');
+                
+        } catch (\Exception $e) {
+            // Log the exception message if needed
+            // Log::error('Error creating order: ' . $e->getMessage());
+            return redirect()->route('tickets.available')
+                ->with('error', 'Could not create order. Please try again. ' . $e->getMessage());
+        }
+    }
+}
