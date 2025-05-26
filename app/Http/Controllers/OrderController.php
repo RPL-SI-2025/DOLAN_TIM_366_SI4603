@@ -30,19 +30,16 @@ class OrderController extends Controller
             $order = Order::create([
                 'user_id' => Auth::id(),
                 'product_id' => $ticket->id,
-                'product_type' => Ticket::class, // Using ::class to get fully qualified class name
+                'product_type' => Ticket::class,
                 'quantity' => $quantity,
                 'total_amount' => $total_amount,
-                'status' => 'pending', // Initial status
+                'status' => 'pending',
             ]);
 
-            // Redirect to Midtrans payment checkout page
             return redirect()->route('payment.checkout', ['order' => $order->id])
                 ->with('success', 'Order created successfully. Please proceed to payment.');
                 
         } catch (\Exception $e) {
-            // Log the exception message if needed
-            // Log::error('Error creating order: ' . $e->getMessage());
             return redirect()->route('tickets.available')
                 ->with('error', 'Could not create order. Please try again. ' . $e->getMessage());
         }
