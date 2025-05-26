@@ -23,7 +23,6 @@
                             <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Lokasi</th>
                             <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Stock</th>
                             <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Harga</th>
-                            <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Tiket</th>
                             <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Gambar Utama</th>
                             <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Gambar Tambahan</th>
                             <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Aksi</th>
@@ -37,11 +36,6 @@
                                 <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-600">{{ $destination->location }}</td>
                                 <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-600">{{ $destination->stock }}</td>
                                 <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-600">Rp{{ number_format($destination->price, 0, ',', '.') }}</td>
-                                <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-600">
-                                    <span class="px-2 py-1 text-xs rounded-full {{ $destination->has_ticket ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800' }}">
-                                        {{ $destination->has_ticket ? 'Ya' : 'Tidak' }}
-                                    </span>
-                                </td>
                                 <td class="px-4 py-3">
                                     @if ($destination->image)
                                         <img src="{{ asset($destination->image) }}" 
@@ -71,14 +65,6 @@
                                 </td>
                                 <td class="px-4 py-3 whitespace-nowrap text-sm font-medium">
                                     <div class="flex space-x-3">
-                                        <a href="{{ route('dashboard.destination.show', $destination->id) }}" 
-                                           class="text-indigo-600 hover:text-indigo-900 transition flex items-center gap-1 mr-3">
-                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-                                            </svg>
-                                            Detail
-                                        </a>
                                         <a href="{{ route('dashboard.destination.edit', $destination->id) }}" 
                                            class="text-blue-600 hover:text-blue-900 transition flex items-center gap-1">
                                             <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -99,13 +85,12 @@
                                                 Hapus
                                             </button>
                                         </form>
-                                        <a href="{{ route('dashboard.destination.ratings', $destination->id) }}" class="bg-yellow-500 text-white px-3 py-1 rounded hover:bg-yellow-600 transition">Lihat Rating</a>
                                     </div>
                                 </td>
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="9" class="px-4 py-4 text-center text-gray-500 italic">Belum ada destinasi wisata.</td>
+                                <td colspan="8" class="px-4 py-4 text-center text-gray-500 italic">Belum ada destinasi wisata.</td>
                             </tr>
                         @endforelse
                     </tbody>

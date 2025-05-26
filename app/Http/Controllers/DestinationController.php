@@ -35,38 +35,26 @@ class DestinationController extends Controller
     public function store(Request $request)
     {
         if (Auth::check() && !in_array(Auth::user()->role, ['admin', 'super_admin'])) {
-            return redirect()->route('dashboard.destination.index')->with('error', 'Akses ditolak. Hanya admin yang boleh.');
+            return response()->json(['message' => 'Akses ditolak. Hanya admin yang boleh.'], 403);
         }
 
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'description' => 'required|string',
             'location' => 'required|string',
-            'image' => 'required|image|max:2048',
+            'image' => 'nullable|image|max:2048',
             'additional_images' => 'nullable|array',
             'additional_images.*' => 'image|max:2048',
-            'stock' => 'nullable|integer|min:0',
-            'price' => 'nullable|numeric|min:0|max:999999999.99', // Add max value to prevent out of range
-            'tour_includes' => 'nullable|string',
-            'tour_payments' => 'nullable|string',
-            'has_ticket' => 'nullable|boolean',
+            'stock' => 'required|integer|min:0',
+            'price' => 'required|numeric|min:0',
         ]);
 
-        // Set appropriate values when has_ticket is false
-        if (isset($validated['has_ticket']) && $validated['has_ticket'] == 0) {
-            $validated['stock'] = 0;
-            $validated['price'] = 0;
-            $validated['tour_payments'] = null;
-        }
-
-        // Handle main image upload
         if ($request->hasFile('image')) {
             $imageName = time() . '_' . $request->file('image')->getClientOriginalName();
             $request->file('image')->move(public_path($this->mainImagePath), $imageName);
             $validated['image'] = $this->mainImagePath . '/' . $imageName;
         }
 
-        // Handle additional images upload
         if ($request->hasFile('additional_images')) {
             $additionalImages = [];
             foreach ($request->file('additional_images') as $file) {
@@ -79,12 +67,8 @@ class DestinationController extends Controller
             $validated['additional_images'] = [];
         }
 
-        try {
-            Destination::create($validated);
-            return redirect()->route('dashboard.destination.index')->with('success', 'Destinasi berhasil ditambahkan.');
-        } catch (\Exception $e) {
-            return redirect()->back()->with('error', 'Gagal menambahkan destinasi: ' . $e->getMessage())->withInput();
-        }
+        Destination::create($validated);
+        return redirect()->route('dashboard.destination.index')->with('success', 'Destinasi berhasil ditambahkan.');
     }
 
     public function edit($id)
@@ -111,19 +95,9 @@ class DestinationController extends Controller
             'additional_images.*' => 'image|max:2048',
             'removed_images' => 'nullable|array',
             'existing_images' => 'nullable|array',
-            'stock' => 'required_if:has_ticket,1|integer|min:0|nullable',
-            'price' => 'required_if:has_ticket,1|numeric|min:0|nullable',
-            'tour_includes' => 'nullable|string',
-            'tour_payments' => 'nullable|string',
-            'has_ticket' => 'nullable|boolean',
+            'stock' => 'required|integer|min:0',
+            'price' => 'required|numeric|min:0',
         ]);
-
-        // Set appropriate values when has_ticket is false
-        if (isset($validated['has_ticket']) && $validated['has_ticket'] == 0) {
-            $validated['stock'] = 0;
-            $validated['price'] = 0;
-            $validated['tour_payments'] = null;
-        }
 
         $destination = Destination::findOrFail($id);
 

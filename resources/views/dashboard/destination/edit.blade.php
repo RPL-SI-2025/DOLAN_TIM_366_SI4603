@@ -28,14 +28,6 @@
                         <textarea id="description" name="description" rows="4" required
                             class="p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 transition">{{ old('description', $destination->description) }}</textarea>
                     </div>
-                    
-                    <div class="flex flex-col">
-                        <label for="tour_includes" class="text-sm font-semibold text-gray-700 mb-1">Fasilitas & Fitur Tour</label>
-                        <textarea id="tour_includes" name="tour_includes" rows="4" 
-                            class="p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 transition"
-                            placeholder="Contoh: Air terjun indah dan memukau, ada kolam renang untuk anak, dll">{{ old('tour_includes', $destination->tour_includes) }}</textarea>
-                        <p class="text-xs text-gray-500 mt-1">Deskripsi lengkap tentang apa saja yang disediakan di lokasi wisata</p>
-                    </div>
                 </div>
 
                 <!-- Right Column -->
@@ -52,24 +44,6 @@
                             <input type="number" id="price" name="price" required value="{{ old('price', $destination->price) }}"
                                 class="p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 transition">
                         </div>
-                    </div>
-                    
-                    <div class="flex flex-col">
-                        <label for="tour_payments" class="text-sm font-semibold text-gray-700 mb-1">Informasi Pembayaran</label>
-                        <textarea id="tour_payments" name="tour_payments" rows="4" 
-                            class="p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 transition"
-                            placeholder="Contoh: HTM 10.000-15.000 rupiah untuk dewasa, pembayaran bisa dilakukan dengan e-wallet, QRIS, dll">{{ old('tour_payments', $destination->tour_payments) }}</textarea>
-                        <p class="text-xs text-gray-500 mt-1">Informasi tentang metode pembayaran yang tersedia</p>
-                    </div>
-                    
-                    <div class="flex flex-col">
-                        <label for="has_ticket" class="text-sm font-semibold text-gray-700 mb-1">Memiliki Tiket</label>
-                        <select id="has_ticket" name="has_ticket" 
-                            class="p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 transition">
-                            <option value="1" {{ old('has_ticket', $destination->has_ticket) == 1 ? 'selected' : '' }}>Ya</option>
-                            <option value="0" {{ old('has_ticket', $destination->has_ticket) == 0 ? 'selected' : '' }}>Tidak</option>
-                        </select>
-                        <p class="text-xs text-gray-500 mt-1">Jika tidak, pengunjung tidak perlu melakukan pembayaran dan booking</p>
                     </div>
 
                     <div class="flex flex-col">
@@ -138,181 +112,131 @@
     </div>
 
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-        const hasTicketSelect = document.getElementById('has_ticket');
-        const priceInput = document.getElementById('price');
-        const stockInput = document.getElementById('stock');
-        const tourPaymentsInput = document.getElementById('tour_payments');
+        // Array to store removed images
+        const removedImages = [];
         
-        function toggleTicketFields() {
-            const hasTicket = hasTicketSelect.value === '1';
+        function removeImage(imagePath, index) {
+            // Show loading or disable button
+            const container = document.getElementById('image-container-' + index);
+            container.classList.add('opacity-50');
             
-            // Instead of hiding, disable the fields
-            priceInput.disabled = !hasTicket;
-            stockInput.disabled = !hasTicket;
-            tourPaymentsInput.disabled = !hasTicket;
-            
-            // Add visual cue to disabled fields
-            if (!hasTicket) {
-                priceInput.classList.add('bg-gray-100');
-                stockInput.classList.add('bg-gray-100');
-                tourPaymentsInput.classList.add('bg-gray-100');
-                
-                // Set default values for disabled fields
-                priceInput.value = "0";
-                stockInput.value = "0";
-                tourPaymentsInput.value = "";
-                
-                // Add a placeholder text
-                tourPaymentsInput.placeholder = "Tidak tersedia untuk destinasi tanpa tiket";
-            } else {
-                priceInput.classList.remove('bg-gray-100');
-                stockInput.classList.remove('bg-gray-100');
-                tourPaymentsInput.classList.remove('bg-gray-100');
-                
-                // Reset placeholder if coming from disabled state
-                if (tourPaymentsInput.placeholder === "Tidak tersedia untuk destinasi tanpa tiket") {
-                    tourPaymentsInput.placeholder = "Contoh: HTM 10.000-15.000 rupiah untuk dewasa, pembayaran bisa dilakukan dengan e-wallet, QRIS, dll";
-                }
-            }
-            
-            // Toggle required attribute
-            priceInput.required = hasTicket;
-            stockInput.required = hasTicket;
-        }
-        
-        // Initial toggle based on current value
-        toggleTicketFields();
-        
-        // Add event listener for changes
-        hasTicketSelect.addEventListener('change', toggleTicketFields);
-    });
-    
-    // Array to store removed images
-    const removedImages = [];
-    
-    function removeImage(imagePath, index) {
-        // Show loading or disable button
-        const container = document.getElementById('image-container-' + index);
-        container.classList.add('opacity-50');
-        
-        // AJAX call to delete the image physically from storage
-        fetch('{{ route("dashboard.destination.removeImage") }}', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-CSRF-TOKEN': '{{ csrf_token() }}'
-            },
-            body: JSON.stringify({
-                image_path: imagePath
+            // AJAX call to delete the image physically from storage
+            fetch('{{ route("dashboard.destination.removeImage") }}', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                },
+                body: JSON.stringify({
+                    image_path: imagePath
+                })
             })
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                // Add to removed images array for form submission
-                removedImages.push(imagePath);
-                
-                // Remove the container from UI with animation
-                setTimeout(() => {
-                    container.remove();
-                }, 300);
-                
-                // Update hidden input field for form submission
-                updateRemovedImagesField();
-                
-                // Show success message
-                showNotification('Gambar berhasil dihapus', 'success');
-            } else {
-                // Show error and revert opacity
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    // Add to removed images array for form submission
+                    removedImages.push(imagePath);
+                    
+                    // Remove the container from UI with animation
+                    setTimeout(() => {
+                        container.remove();
+                    }, 300);
+                    
+                    // Update hidden input field for form submission
+                    updateRemovedImagesField();
+                    
+                    // Show success message
+                    showNotification('Gambar berhasil dihapus', 'success');
+                } else {
+                    // Show error and revert opacity
+                    container.classList.remove('opacity-50');
+                    showNotification('Gagal menghapus gambar: ' + data.message, 'error');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
                 container.classList.remove('opacity-50');
-                showNotification('Gagal menghapus gambar: ' + data.message, 'error');
-            }
-        })
-        .catch(error => {
-            console.error('Error:', error);
-            container.classList.remove('opacity-50');
-            showNotification('Terjadi kesalahan saat menghapus gambar', 'error');
-        });
-    }
-    
-    function updateRemovedImagesField() {
-        // Get the container for removed images
-        const container = document.getElementById('removed-images-container');
-        container.innerHTML = ''; // Clear existing inputs
-        
-        // Add new hidden inputs for each removed image
-        removedImages.forEach(image => {
-            const input = document.createElement('input');
-            input.type = 'hidden';
-            input.name = 'removed_images[]';
-            input.value = image;
-            container.appendChild(input);
-        });
-    }
-    
-    function previewMainImage(event) {
-        const reader = new FileReader();
-        reader.onload = function() {
-            const previewImg = document.getElementById('main-image-preview');
-            if (previewImg) {
-                previewImg.src = reader.result;
-            } else {
-                const newImg = document.createElement('img');
-                newImg.src = reader.result;
-                newImg.id = 'main-image-preview';
-                newImg.classList.add('rounded', 'shadow', 'max-h-40', 'mt-3');
-                
-                const container = document.querySelector('label[for="image"]').parentNode;
-                container.appendChild(newImg);
-            }
+                showNotification('Terjadi kesalahan saat menghapus gambar', 'error');
+            });
         }
-        if (event.target.files[0]) {
-            reader.readAsDataURL(event.target.files[0]);
-        }
-    }
-    
-    function previewNewImages(event) {
-        const previewContainer = document.getElementById('new-images-preview');
-        previewContainer.innerHTML = '';
         
-        Array.from(event.target.files).forEach((file, idx) => {
+        function updateRemovedImagesField() {
+            // Get the container for removed images
+            const container = document.getElementById('removed-images-container');
+            container.innerHTML = ''; // Clear existing inputs
+            
+            // Add new hidden inputs for each removed image
+            removedImages.forEach(image => {
+                const input = document.createElement('input');
+                input.type = 'hidden';
+                input.name = 'removed_images[]';
+                input.value = image;
+                container.appendChild(input);
+            });
+        }
+        
+        function previewMainImage(event) {
             const reader = new FileReader();
             reader.onload = function() {
-                const imgContainer = document.createElement('div');
-                imgContainer.classList.add('relative', 'w-24', 'h-24');
-                
-                const imgElement = document.createElement('img');
-                imgElement.src = reader.result;
-                imgElement.classList.add('w-full', 'h-full', 'object-cover', 'rounded', 'shadow-sm');
-                
-                imgContainer.appendChild(imgElement);
-                previewContainer.appendChild(imgContainer);
+                const previewImg = document.getElementById('main-image-preview');
+                if (previewImg) {
+                    previewImg.src = reader.result;
+                } else {
+                    const newImg = document.createElement('img');
+                    newImg.src = reader.result;
+                    newImg.id = 'main-image-preview';
+                    newImg.classList.add('rounded', 'shadow', 'max-h-40', 'mt-3');
+                    
+                    const container = document.querySelector('label[for="image"]').parentNode;
+                    container.appendChild(newImg);
+                }
             }
-            reader.readAsDataURL(file);
-        });
-    }
-    
-    function showNotification(message, type = 'info') {
-        // Create notification element
-        const notification = document.createElement('div');
-        notification.className = `fixed bottom-4 right-4 p-4 rounded shadow-lg ${
-            type === 'success' ? 'bg-green-500' : 
-            type === 'error' ? 'bg-red-500' : 
-            'bg-blue-500'
-        } text-white`;
-        notification.innerText = message;
+            if (event.target.files[0]) {
+                reader.readAsDataURL(event.target.files[0]);
+            }
+        }
         
-        // Add to DOM
-        document.body.appendChild(notification);
+        function previewNewImages(event) {
+            const previewContainer = document.getElementById('new-images-preview');
+            previewContainer.innerHTML = '';
+            
+            Array.from(event.target.files).forEach((file, idx) => {
+                const reader = new FileReader();
+                reader.onload = function() {
+                    const imgContainer = document.createElement('div');
+                    imgContainer.classList.add('relative', 'w-24', 'h-24');
+                    
+                    const imgElement = document.createElement('img');
+                    imgElement.src = reader.result;
+                    imgElement.classList.add('w-full', 'h-full', 'object-cover', 'rounded', 'shadow-sm');
+                    
+                    imgContainer.appendChild(imgElement);
+                    previewContainer.appendChild(imgContainer);
+                }
+                reader.readAsDataURL(file);
+            });
+        }
         
-        // Remove after 3 seconds
-        setTimeout(() => {
-            notification.classList.add('opacity-0', 'transition-opacity');
+        function showNotification(message, type = 'info') {
+            // Create notification element
+            const notification = document.createElement('div');
+            notification.className = `fixed bottom-4 right-4 p-4 rounded shadow-lg ${
+                type === 'success' ? 'bg-green-500' : 
+                type === 'error' ? 'bg-red-500' : 
+                'bg-blue-500'
+            } text-white`;
+            notification.innerText = message;
+            
+            // Add to DOM
+            document.body.appendChild(notification);
+            
+            // Remove after 3 seconds
             setTimeout(() => {
-                notification.remove();
-            }, 300);
-        }, 3000);
-    }
+                notification.classList.add('opacity-0', 'transition-opacity');
+                setTimeout(() => {
+                    notification.remove();
+                }, 300);
+            }, 3000);
+        }
     </script>
 </x-layout-admin>
