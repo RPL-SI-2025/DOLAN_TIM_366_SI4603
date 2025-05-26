@@ -9,6 +9,11 @@ use App\Http\Controllers\ArticleController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\PromoController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\CheckoutController;
+use App\Http\Controllers\BookingController;
+use App\Http\Controllers\TicketController;
+use App\Http\Controllers\PaymentController;
+use App\Http\Controllers\OrderController;
 // use App\Http\Controllers\GalleryController;
 
 // Halaman register
@@ -27,6 +32,7 @@ Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::get('/homeuser', function () {
     return view('homeuser');
 })->middleware('auth')->name('homeuser');
+
 
 //Artikel
 Route::get('/articles', [ArticleController::class, 'publicIndex'])->name('articles.index');
@@ -64,6 +70,9 @@ Route::prefix('dashboard')->name('dashboard.')->group(function () {
     Route::get('articles/{article}/edit', [ArticleController::class, 'edit'])->name('articles.edit')->middleware(['auth', 'role:admin,super_admin']);
     Route::delete('articles/{article}', [ArticleController::class, 'destroy'])->name('articles.destroy')->middleware(['auth', 'role:admin,super_admin']);
 
+    // Ticket
+    Route::resource('tickets', TicketController::class)->middleware(['auth', 'role:admin,super_admin']);
+
 });
     // Profile
     Route::prefix('user/profile')->name('user.profile.')->middleware('auth')->group(function () {
@@ -77,3 +86,10 @@ Route::prefix('dashboard')->name('dashboard.')->group(function () {
 
 Route::get('destinations', [DestinationController::class, 'showAllDestinations'])->name('destination.index');
 Route::get('destinations/{id}', [DestinationController::class, 'showDestination'])->name('destinations.show');
+
+//Ticket Purchase
+Route::get('/tickets-for-sale', [TicketController::class, 'showAvailableTickets'])->name('tickets.available')->middleware('auth');
+Route::post('/purchase/ticket/{ticket}', [OrderController::class, 'purchaseTicket'])->name('purchase.ticket')->middleware('auth');
+
+// Midtrans 
+Route::get('/payment/checkout/{order}', [PaymentController::class, 'createTransaction'])->name('payment.checkout')->middleware('auth');

@@ -53,7 +53,7 @@
                   role="menuitem">Settings</a>
               </li>
               <li>
-                <form action="{{ route('logout') }}" method="POST">
+                <form action="{{ route('logout') }}" method="GET">
                   @csrf
                   <button type="submit"
                     class="block w-full px-4 py-2 text-sm text-left text-red-700 hover:bg-red-100">Sign
