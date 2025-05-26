@@ -1,4 +1,4 @@
-@extends('layouts.app') {{-- Or your main layout --}}
+@extends('layouts.app')
 
 @section('content')
 <div class="container">
@@ -9,7 +9,6 @@
     <button id="pay-button" class="btn btn-primary">Pay Now</button>
 </div>
 
-{{-- Midtrans Snap JS --}}
 <script src="{{ config('midtrans.is_production') ? 'https://app.midtrans.com/snap/snap.js' : 'https://app.sandbox.midtrans.com/snap/snap.js' }}" data-client-key="{{ config('midtrans.client_key') }}"></script>
 <script type="text/javascript">
     document.getElementById('pay-button').onclick = function(){
