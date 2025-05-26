@@ -16,7 +16,10 @@ class Destination extends Model
         'image',
         'stock',
         'price',
-        'additional_images'
+        'additional_images',
+        'tour_includes',
+        'tour_payments',
+        'has_ticket'
     ];
 
     protected $casts = [

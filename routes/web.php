@@ -51,7 +51,8 @@ Route::prefix('dashboard')->name('dashboard.')->group(function () {
         Route::put('destination/{id}', [DestinationController::class, 'update'])->name('destination.update')->middleware(['auth', 'role:admin,super_admin']);
         Route::delete('destination/{id}', [DestinationController::class, 'destroy'])->name('destination.destroy')->middleware(['auth', 'role:admin,super_admin']);
         Route::post('destination/remove-image', [DestinationController::class, 'removeImage'])->name('destination.removeImage')->middleware(['auth', 'role:admin,super_admin']);
-    
+        Route::get('destination/{id}', [DestinationController::class, 'show'])->name('destination.show')->middleware(['auth', 'role:admin,super_admin']);
+
     // Create Admin
     Route::get('/admin', [AdminController::class, 'index'])->name('admin.index')->middleware(['auth', 'role:super_admin']);
     Route::get('/admin/create', [AdminController::class, 'create'])->name('admin.create')->middleware(['auth', 'role:super_admin']);
