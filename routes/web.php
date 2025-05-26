@@ -9,6 +9,7 @@ use App\Http\Controllers\ArticleController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\PromoController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\WishlistController;
 // use App\Http\Controllers\GalleryController;
 
 // Halaman register
@@ -72,6 +73,14 @@ Route::prefix('dashboard')->name('dashboard.')->group(function () {
         Route::put('/', [ProfileController::class, 'update'])->name('update');
         Route::delete('/', [ProfileController::class, 'destroy'])->name('destroy');
 });
+
+Route::middleware('auth')->get('wishlist', [WishlistController::class, 'show'])->name('wishlist.show');
+Route::middleware('auth')->post('wishlist/add', [WishlistController::class, 'add'])->name('wishlist.add');
+Route::middleware('auth')->delete('wishlist/remove/{id}', [WishlistController::class, 'remove'])->name('wishlist.remove');
+Route::post('/wishlist/toggle', [WishlistController::class, 'toggle'])->name('wishlist.toggle');
+
+
+
 
 
 
