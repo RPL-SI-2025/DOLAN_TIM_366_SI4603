@@ -5,6 +5,7 @@
         <a href="/" class="hover:text-purple-600">Home</a>
         <a href=destinations class="hover:text-purple-600">Tours</a>
         <a href=wishlist class="hover:text-purple-600">Wishlist</a>
+        <a href=merchandise class="hover:text-purple-600">Merchandise</a>
         <a href="#gallery" class="hover:text-purple-600">Gallery</a>
         <a href="articles" class="hover:text-purple-600">Article</a>
         <a href="#contribute" class="hover:text-purple-600">Contribute</a>

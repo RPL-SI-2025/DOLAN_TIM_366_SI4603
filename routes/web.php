@@ -11,6 +11,10 @@ use App\Http\Controllers\PromoController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\WishlistController;
 // use App\Http\Controllers\GalleryController;
+use App\Http\Controllers\MerchandiseController;
+
+Route::get('/merchandise', [MerchandiseController::class, 'index'])->name('merchandise.index');
+Route::get('/merchandise/{id}', [MerchandiseController::class, 'show'])->name('merchandise.show');
 
 // Halaman register
 Route::get('/register', [RegistrationController::class, 'showRegistrationForm'])->name('registration');
@@ -79,10 +83,9 @@ Route::middleware('auth')->post('wishlist/add', [WishlistController::class, 'add
 Route::middleware('auth')->delete('wishlist/remove/{id}', [WishlistController::class, 'remove'])->name('wishlist.remove');
 Route::post('/wishlist/toggle', [WishlistController::class, 'toggle'])->name('wishlist.toggle');
 
-
-
-
-
+// Routes untuk Admin
+Route::get('/dashboard/merchandise', [MerchandiseController::class, 'indexAdmin'])->name('admin.merchandise.index');
+Route::get('/dashboard/merchandise/{id}', [MerchandiseController::class, 'showAdmin'])->name('admin.merchandise.show');
 
 Route::get('destinations', [DestinationController::class, 'showAllDestinations'])->name('destination.index');
 Route::get('destinations/{id}', [DestinationController::class, 'showDestination'])->name('destinations.show');
