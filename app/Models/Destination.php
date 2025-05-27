@@ -35,6 +35,7 @@ class Destination extends Model
     public function averageRating()
     {
         return $this->ratings()->avg('rating');
+    }
 
     public function tickets(): HasOne
     {
