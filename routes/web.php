@@ -91,6 +91,10 @@ Route::get('destinations/{id}', [DestinationController::class, 'showDestination'
 Route::get('/tickets-for-sale', [TicketController::class, 'showAvailableTickets'])->name('tickets.available')->middleware('auth');
 Route::post('/purchase/ticket/{ticket}', [OrderController::class, 'purchaseTicket'])->name('purchase.ticket')->middleware('auth');
 
+// New route for showing the ticket booking form for a specific destination
+Route::get('/booking/destination/{destination}', [TicketController::class, 'showTicketBookingPage'])->name('booking.show_ticket_form')->middleware('auth');
+
 // Midtrans 
 Route::get('/payment/checkout/{order}', [PaymentController::class, 'createTransaction'])->name('payment.checkout')->middleware('auth');
 Route::get('/payment/finish/{order}', [PaymentController::class, 'paymentFinish'])->name('payment.finish')->middleware('auth');
+Route::post('/payment/notifications', [PaymentController::class, 'notificationHandler'])->name('payment.notification'); // This should be an open route for Midtrans

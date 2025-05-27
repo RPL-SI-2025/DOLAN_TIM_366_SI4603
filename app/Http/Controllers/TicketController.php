@@ -89,4 +89,19 @@ class TicketController extends Controller
         $tickets = Ticket::with('destination')->whereNotNull('price')->where('price', '>', 0)->latest()->get(); 
         return view('tickets.purchase', compact('tickets'));
     }
+
+    public function showTicketBookingPage(Destination $destination)
+    {
+        $ticket = Ticket::where('destination_id', $destination->id)
+                        ->whereNotNull('price')
+                        ->where('price', '>', 0)
+                        ->first();
+
+        if (!$ticket) {
+            return redirect()->route('destinations.show', $destination->id)
+                             ->with('error', 'Sorry, no tickets are currently available for this destination.');
+        }
+
+        return view('booking.ticket_form', compact('destination', 'ticket'));
+    }
 }
