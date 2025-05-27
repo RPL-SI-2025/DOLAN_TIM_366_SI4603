@@ -52,7 +52,9 @@
                     <a href="{{ route('user.profile.edit') }}" class="inline-block bg-blue-600 dark:bg-blue-500 hover:bg-blue-700 dark:hover:bg-blue-600 text-white font-semibold text-sm md:text-base px-5 py-2 rounded-xl shadow-md transition duration-300 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-offset-1">
                         Edit Profil
                     </a>
-
+                    <a href="{{ route('logout') }}" class="inline-block bg-red-600 dark:bg-red-500 hover:bg-red-700 dark:hover:bg-red-600 text-white font-semibold text-sm md:text-base px-5 py-2 rounded-xl shadow-md transition duration-300 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-offset-1">
+                        Logout
+                    </a>
 
 
                     </div>
