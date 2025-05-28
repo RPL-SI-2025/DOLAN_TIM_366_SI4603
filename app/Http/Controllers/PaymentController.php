@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use App\Models\Order;
 use App\Models\Ticket;
@@ -22,7 +23,7 @@ class PaymentController extends Controller
 
     public function createTransaction(Request $request, Order $order)
     {
-        if ($order->user_id !== auth()->id()) {
+        if ($order->user_id !== Auth::id()) {
 
             abort(403, 'Unauthorized action.'); 
         }
@@ -40,9 +41,9 @@ class PaymentController extends Controller
         ];
         
         $product_name = '';
-        if ($order->product_type === \App\Models\Ticket::class) {
+        if ($order->product_type === Ticket::class) {
             $product_name = $order->product->ticket_name;
-        } elseif ($order->product_type === \App\Models\Merchandise::class) {
+        } elseif ($order->product_type === Merchandise::class) {
             $product_name = $order->product->name;
         }
 
