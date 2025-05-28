@@ -18,7 +18,4 @@ class Merchandise extends Model
         'location',
     ];
 
-    protected $casts = [
-        'size' => 'array', // Jika size disimpan sebagai JSON array
-    ];
 }

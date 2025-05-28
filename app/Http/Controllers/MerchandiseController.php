@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Dashboard;
+namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use App\Models\Merchandise;
@@ -27,15 +27,10 @@ class MerchandiseController extends Controller
             'stock' => 'required|integer|min:0',
             'price' => 'required|numeric',
             'detail' => 'nullable|string',
-            'size' => 'nullable|array',               // size nullable
-            'size.*' => 'string|max:50',
+            'size' => 'nullable|string|max:255', // size sebagai string dan nullable
             'location' => 'required|string|max:255',
             'image' => 'nullable|image|max:2048',
         ]);
-
-        if (!isset($validated['size'])) {
-            $validated['size'] = null; // atau [] jika ingin default array kosong
-        }
 
         if ($request->hasFile('image')) {
             $validated['image'] = $request->file('image')->store('merchandise-images', 'public');
@@ -63,15 +58,10 @@ class MerchandiseController extends Controller
             'stock' => 'required|integer|min:0',
             'price' => 'required|numeric',
             'detail' => 'nullable|string',
-            'size' => 'nullable|array',               // size nullable
-            'size.*' => 'string|max:50',
+            'size' => 'nullable|string|max:255', // size sebagai string dan nullable
             'location' => 'required|string|max:255',
             'image' => 'nullable|image|max:2048',
         ]);
-
-        if (!isset($validated['size'])) {
-            $validated['size'] = null; // atau [] jika ingin default array kosong
-        }
 
         if ($request->hasFile('image')) {
             if ($merchandise->image && Storage::disk('public')->exists($merchandise->image)) {
