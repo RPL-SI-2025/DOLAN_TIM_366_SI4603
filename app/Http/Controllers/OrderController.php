@@ -11,6 +11,13 @@ use Illuminate\Support\Facades\Validator;
 
 class OrderController extends Controller
 {
+    public function showOrder()
+    {
+        $orders = Order::all();
+        return view('orders.index', compact('orders'));
+    }
+    
+    
     public function purchaseTicket(Request $request, Ticket $ticket)
     {
         $validator = Validator::make($request->all(), [
