@@ -15,6 +15,10 @@ class Merchandise extends Model
         'price',
     ];
 
+    protected $casts = [
+        'size' => 'array', 
+    ];
+    
     public function orders(): MorphMany
     {
         return $this->morphMany(Order::class, 'product');
