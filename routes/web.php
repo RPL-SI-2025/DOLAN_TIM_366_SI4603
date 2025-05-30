@@ -16,6 +16,7 @@ use App\Http\Controllers\TicketController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\OrderController;
 // use App\Http\Controllers\GalleryController;
+use App\Http\Controllers\WishlistController;
 
 // Halaman register
 Route::get('/register', [RegistrationController::class, 'showRegistrationForm'])->name('registration');
@@ -118,3 +119,9 @@ Route::get('/orders', [OrderController::class, 'showOrder'])->name('orders.index
 Route::get('/payment/checkout/{order}', [PaymentController::class, 'createTransaction'])->name('payment.checkout')->middleware('auth');
 Route::get('/payment/finish/{order}', [PaymentController::class, 'paymentFinish'])->name('payment.finish')->middleware('auth');
 Route::post('/payment/notifications', [PaymentController::class, 'notificationHandler'])->name('payment.notification');
+
+//Wishlist
+Route::middleware('auth')->get('wishlist', [WishlistController::class, 'show'])->name('wishlist.show');
+Route::middleware('auth')->post('wishlist/add', [WishlistController::class, 'add'])->name('wishlist.add');
+Route::middleware('auth')->delete('wishlist/remove/{id}', [WishlistController::class, 'remove'])->name('wishlist.remove');
+Route::post('/wishlist/toggle', [WishlistController::class, 'toggle'])->name('wishlist.toggle');
