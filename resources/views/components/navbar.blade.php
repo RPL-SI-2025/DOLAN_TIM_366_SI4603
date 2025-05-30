@@ -4,6 +4,7 @@
       <nav class="hidden md:flex gap-6 text-gray-800 font-medium">
         <a href="{{ route('home') }}" class="hover:text-purple-600">Home</a>
         <a href="{{ route('destination.index') }}" class="hover:text-purple-600">Tours</a>
+        <a href=wishlist class="hover:text-purple-600">Wishlist</a>
         <a href="" class="hover:text-purple-600">Gallery</a>
         <a href="{{route('articles.index')}}" class="hover:text-purple-600">Article</a>
         <a href="#contribute" class="hover:text-purple-600">Contribute</a>
