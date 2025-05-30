@@ -17,6 +17,11 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->alias([
             'role' => RoleMiddleware::class,
         ]);
+
+        $middleware->validateCsrfTokens(except: [
+            'payment/notifications', 
+            'payment/notifications/*'
+        ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {
         //
