@@ -60,6 +60,9 @@ class PaymentController extends Controller
             'transaction_details' => $transaction_details,
             'customer_details' => $customer_details,
             'item_details' => $item_details,
+            'callbacks' => [
+                'finish' => route('payment.finish', $order->id),
+            ]
         ];
 
         try {
@@ -72,12 +75,48 @@ class PaymentController extends Controller
 
     public function paymentFinish(Request $request, Order $order)
     {
-        return redirect()->route('home')->with('success', 'Payment process initiated. Please wait for confirmation.');
+        $status = $request->query('status');
+        
+        if ($status === 'success') {
+            // Update order status to completed
+            $order->update(['status' => 'completed']);
+            
+            return redirect()->route('user.orders')->with('success', 'Payment successful! Your order has been completed.');
+        } elseif ($status === 'pending') {
+            return redirect()->route('home')->with('info', 'Payment is pending. Please wait for confirmation.');
+        } else {
+            // For error status
+            $order->update(['status' => 'cancelled']);
+            return redirect()->route('home')->with('error', 'Payment failed. Your order has been cancelled.');
+        }
     }
 
     public function notificationHandler(Request $request)
     {
         $payload = $request->all();
+        
+        $order_id = $payload['order_id'] ?? null;
+        $status_code = $payload['status_code'] ?? null;
+        $transaction_status = $payload['transaction_status'] ?? null;
+        
+        if ($order_id) {
+            $actual_order_id = explode('-', $order_id)[0];
+            $order = Order::find($actual_order_id);
+            
+            if ($order) {
+                if ($transaction_status == 'capture' || $transaction_status == 'settlement') {
+                    // Payment successful
+                    $order->update(['status' => 'completed']);
+                } elseif ($transaction_status == 'pending') {
+                    // Payment pending
+                    $order->update(['status' => 'pending']);
+                } elseif ($transaction_status == 'deny' || $transaction_status == 'expire' || $transaction_status == 'cancel') {
+                    // Payment failed/cancelled
+                    $order->update(['status' => 'cancelled']);
+                }
+            }
+        }
+        
         return response()->json(['status' => 'ok']);
     }
 }

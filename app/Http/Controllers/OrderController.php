@@ -51,4 +51,36 @@ class OrderController extends Controller
                 ->with('error', 'Could not create order. Please try again. ' . $e->getMessage());
         }
     }
+
+    public function userOrders(Request $request)
+    {
+        $type = $request->get('type', 'all');
+        
+        $query = Order::where('user_id', Auth::id())
+                     ->with(['product', 'user'])
+                     ->whereHas('product')
+                     ->orderBy('created_at', 'desc');
+        
+        // Filter berdasarkan type
+        if ($type === 'ticket') {
+            $query->where('product_type', Ticket::class);
+        } elseif ($type === 'merchandise') {
+            $query->where('product_type', 'App\\Models\\Merchandise');
+        }
+        
+        $orders = $query->paginate(10);
+        
+        return view('user.orders.index', compact('orders', 'type'));
+    }
+
+    public function userOrderDetail($id)
+    {
+        $order = Order::where('user_id', Auth::id())
+                     ->where('id', $id)
+                     ->with(['product', 'user'])
+                     ->whereHas('product')
+                     ->firstOrFail();
+        
+        return view('user.orders.show', compact('order'));
+    }
 }
