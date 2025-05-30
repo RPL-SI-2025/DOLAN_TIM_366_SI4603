@@ -1,48 +1,71 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>{{ $merchandise->name }} | Dolan</title>
-    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+
+    <!-- Tailwind CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet" />
+
+    <!-- Flowbite CSS -->
+    <link href="https://unpkg.com/flowbite@1.6.5/dist/flowbite.min.css" rel="stylesheet" />
 </head>
-<body class="bg-gray-100 font-sans min-h-screen flex flex-col">
+<body class="bg-gray-50 font-sans min-h-screen flex flex-col">
 
     <!-- Navbar -->
     <x-navbar />
 
-    <!-- Merchandise Detail (Full Screen) -->
-    <main class="flex-grow">
-        <div class="min-h-screen flex items-center justify-center px-4 py-10">
-            <div class="w-full max-w-6xl bg-white shadow-2xl rounded-3xl overflow-hidden grid grid-cols-1 md:grid-cols-2">
-                
-                <!-- Gambar -->
-                <div class="h-72 md:h-auto">
-                    <img src="{{ asset($merchandise->image) }}" alt="{{ $merchandise->name }}" class="w-full h-full object-cover">
-                </div>
+    <!-- Main Content -->
+    <main class="container mx-auto flex-grow px-4 py-8 max-w-5xl">
+        <div class="bg-white rounded-3xl shadow-md p-6 md:p-10">
+            <div class="grid md:grid-cols-2 gap-10 items-start">
 
-                <!-- Info Detail -->
-                <div class="p-8 flex flex-col justify-between">
-                    <div class="overflow-y-auto max-h-[70vh] pr-2">
-                        <h1 class="text-4xl font-extrabold text-gray-800 mb-3">{{ $merchandise->name }}</h1>
-                        <p class="text-3xl text-purple-600 font-bold mb-2">Rp {{ number_format($merchandise->price, 0, ',', '.') }}</p>
+                <div class="w-full rounded-xl overflow-hidden shadow-md">
+                <img src="{{ asset('storage/' . $merchandise->image) }}" 
+                    alt="{{ $merchandise->name }}" 
+                    class="w-full h-auto object-contain rounded-xl" />
+            </div>
+
+                <!-- Product Details -->
+                <div class="flex flex-col justify-between space-y-6">
+                    <div>
+                        <h1 class="text-3xl md:text-4xl font-extrabold text-gray-800 mb-2">
+                            {{ $merchandise->name }}
+                        </h1>
+                        <p class="text-xl md:text-2xl font-bold text-green-600 mb-4">
+                            Rp {{ number_format($merchandise->price, 0, ',', '.') }}
+                        </p>
                         <p class="text-sm text-gray-500 mb-4">📍 {{ $merchandise->location }}</p>
 
-                        <div class="text-gray-700 text-base leading-relaxed mb-6 whitespace-pre-line">
+                        <p class="text-gray-700 whitespace-pre-line leading-relaxed text-sm md:text-base mb-4">
                             {{ $merchandise->detail }}
+                        </p>
+
+                        <div>
+                            <label class="block mb-2 font-medium text-gray-700">Ukuran Tersedia:</label>
+                            <div class="flex flex-wrap gap-2">
+                                @foreach ($merchandise->size ?? ['-'] as $size)
+                                    <span class="bg-purple-100 text-purple-800 text-sm font-medium px-3 py-1 rounded-lg">
+                                        {{ $size }}
+                                    </span>
+                                @endforeach
+                            </div>
                         </div>
 
-                        <p class="text-sm text-gray-600 mb-8">Stok tersedia: <span class="font-semibold">{{ $merchandise->stock }}</span></p>
+                        <p class="text-sm text-gray-600 mt-4">
+                            Stok tersedia: <span class="font-semibold">{{ $merchandise->stock }}</span>
+                        </p>
                     </div>
 
-                    <!-- Tombol -->
-                    <div class="flex flex-col sm:flex-row gap-4 pt-4">
-                        <a href="/checkout/{{ $merchandise->id }}"
-                           class="bg-green-600 text-white px-6 py-3 rounded-xl hover:bg-green-700 transition text-sm font-semibold text-center w-full sm:w-auto">
+                    <!-- Action Buttons -->
+                    <div class="flex flex-col sm:flex-row gap-4">
+                        <a href="/checkout/{{ $merchandise->id }}" 
+                           class="w-full sm:w-auto inline-flex items-center justify-center px-6 py-3 text-white bg-green-600 hover:bg-green-700 rounded-xl font-semibold text-base transition-all">
                             🛒 Checkout Sekarang
                         </a>
-                        <a href="/merchandise"
-                           class="bg-gray-200 text-gray-700 px-6 py-3 rounded-xl hover:bg-gray-300 transition text-sm font-medium text-center w-full sm:w-auto">
+                        <a href="/merchandise" 
+                           class="w-full sm:w-auto inline-flex items-center justify-center px-6 py-3 bg-gray-100 text-gray-800 hover:bg-gray-200 rounded-xl font-medium text-base transition-all">
                             ← Kembali ke Daftar Merchandise
                         </a>
                     </div>
@@ -51,5 +74,7 @@
         </div>
     </main>
 
+    <!-- Flowbite JS -->
+    <script src="https://unpkg.com/flowbite@1.6.5/dist/flowbite.bundle.js"></script>
 </body>
 </html>
