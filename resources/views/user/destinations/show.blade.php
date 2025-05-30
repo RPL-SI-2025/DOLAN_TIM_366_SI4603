@@ -44,8 +44,11 @@
 
               @php
               $inWishlist = \App\Models\Wishlist::where('user_id', Auth::id())
-                            ->where('destination_id', $destinations->id)
-                            ->exists();
+                              ->where('destination_id', $destinations->id)
+                              ->exists();
+
+              $activeColor = '#6B21A8';
+              $inactiveColor = '#D1D5DB';
               @endphp
       
               <form id="wishlistForm-{{ $destinations->id }}">
@@ -53,19 +56,19 @@
               <input type="hidden" name="destination_id" value="{{ $destinations->id }}">
 
               <button type="button"
-                  onclick="toggleWishlist({{ $destinations->id }})"
-                  id="wishlistBtn-{{ $destinations->id }}"
-                  class="p-4 rounded-lg transition ml-auto bg-purple-700 hover:bg-purple-800 border-2 border-navy-900 inline-flex items-center justify-center"
-                  style="border-color: {{ $inWishlist ? '#D8B4FE' : '#1E3A8A' }};">
+              onclick="toggleWishlist({{ $destinations->id }})"
+              id="wishlistBtn-{{ $destinations->id }}"
+              class="p-4 rounded-lg transition ml-auto bg-purple-700 hover:bg-purple-800 border-2 border-navy-900 inline-flex items-center justify-center"
+              style="border-color: {{ $inWishlist ? $activeColor : $inactiveColor }};">
             <svg xmlns="http://www.w3.org/2000/svg"
                 width="24" height="24"
-                fill="{{ $inWishlist ? '#D8B4FE' : '#1E3A8A' }}"
+                fill="{{ $inWishlist ? $activeColor : $inactiveColor }}"
                 id="bookmarkIcon-{{ $destinations->id }}"
                 class="bi {{ $inWishlist ? 'bi-bookmark-fill' : 'bi-bookmark' }}"
                 viewBox="0 0 16 16">
               <path d="M3 0a1 1 0 0 0-1 1v14l5-3 5 3V1a1 1 0 0 0-1-1H3z"/>
             </svg>
-            </button>
+          </button>
             </form>
             </div>
 
@@ -170,44 +173,45 @@
       </div>
     </section>
 
-    <script>
-     function toggleWishlist(destinationId) {
-  const form = document.getElementById('wishlistForm-' + destinationId);
-  const data = new FormData(form);
-  const icon = document.getElementById('bookmarkIcon-' + destinationId);
+ <script>
+  function toggleWishlist(destinationId) {
+    const form = document.getElementById('wishlistForm-' + destinationId);
+    const data = new FormData(form);
+    const icon = document.getElementById('bookmarkIcon-' + destinationId);
+    const button = document.getElementById('wishlistBtn-' + destinationId);
 
-  fetch('{{ route("wishlist.toggle") }}', {
-    method: 'POST',
-    headers: {
-      'X-CSRF-TOKEN': '{{ csrf_token() }}',
-    },
-    body: data
-  })
-  .then(response => response.json())
-  .then(data => {
-    if (data.success) {
-      Swal.fire('Berhasil!', data.message, 'success');
+    fetch('{{ route("wishlist.toggle") }}', {
+      method: 'POST',
+      headers: {
+        'X-CSRF-TOKEN': '{{ csrf_token() }}',
+      },
+      body: data
+    })
+    .then(response => response.json())
+    .then(data => {
+      if (data.success) {
+        Swal.fire('Berhasil!', data.message, 'success');
 
-      if (data.in_wishlist) {
-        icon.classList.remove('bi-bookmark');
-        icon.classList.add('bi-bookmark-fill');
-        icon.setAttribute('fill', '#6B21A8'); 
+        if (data.in_wishlist) {
+          icon.classList.remove('bi-bookmark');
+          icon.classList.add('bi-bookmark-fill');
+          icon.setAttribute('fill', '#6B21A8');       // warna aktif
+          button.style.borderColor = '#6B21A8';       // border warna aktif
+        } else {
+          icon.classList.remove('bi-bookmark-fill');
+          icon.classList.add('bi-bookmark');
+          icon.setAttribute('fill', '#D1D5DB');       // warna nonaktif
+          button.style.borderColor = '#D1D5DB';       // border warna nonaktif
+        }
       } else {
-        icon.classList.remove('bi-bookmark-fill');
-        icon.classList.add('bi-bookmark');
-        icon.setAttribute('fill', '#D1D5DB'); 
+        Swal.fire('Oops!', data.message, 'error');
       }
-    } else {
-      Swal.fire('Oops!', data.message, 'error');
-    }
-  })
-  .catch(() => {
-    Swal.fire('Error!', 'Terjadi kesalahan. Coba lagi nanti.', 'error');
-  });
-}
-
-
-    </script>
+    })
+    .catch(() => {
+      Swal.fire('Error!', 'Terjadi kesalahan. Coba lagi nanti.', 'error');
+    });
+  }
+</script>
 
   </main>
   
