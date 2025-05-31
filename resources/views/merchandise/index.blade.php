@@ -43,40 +43,48 @@
 
     <div class="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
 
-        <!-- Section with title, subtitle, and cards -->
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mt-5">
-                @if($merchandises->isEmpty())
-                    <p class="text-center text-gray-500 dark:text-gray-400">No merchandise available at the moment.</p>
-                @else
-                    @foreach ($merchandises as $item)
-                        <div class="max-w-sm drop-shadow-lg bg-white border border-gray-200 rounded-lg shadow-sm dark:bg-gray-800 dark:border-gray-700 overflow-hidden transition duration-300 ease-in-out hover:shadow-xl">
-                            <a href="{{ route('merchandise.show', $item->id) }}">
-                                <img src="{{ asset($item->image) }}" alt="{{ $item->name }}" class="rounded-t-lg w-full h-52 object-cover">
-                            </a>
-                            <div class="p-5">
-                                <a href="{{ route('merchandise.show', $item->id) }}">
-                                    <div class="p-5">
-                                    <a href="{{ route('merchandise.show', $item->id) }}">
-                                        <h4 class="text-2xl font-bold tracking-tight text-gray-900 dark:text-white">{{ $item->name }}</h4>
-                                        <h5 class="mb-2 text-xl font-bold tracking-tight text-purple-900 dark:text-white flex items-center gap-2">
-                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-purple-600 dark:text-purple-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                                            <path stroke-linecap="round" stroke-linejoin="round" d="M12 11c1.104 0 2-.895 2-2s-.896-2-2-2-2 .895-2 2 .896 2 2 2z" />
-                                            <path stroke-linecap="round" stroke-linejoin="round" d="M12 21s8-4.5 8-10a8 8 0 10-16 0c0 5.5 8 10 8 10z" />
-                                        </svg>
-                                        {{ $item->location }}
-                                        </h5>
-                                    </a>
-                                <div class="flex items-center mb-2">
-                                    <p class="text-xs font-normal text-gray-700 dark:text-gray-400">Rp {{ number_format($item->price, 0, ',', '.') }}</p>
-                                </div>
-                                <a href="{{ route('merchandise.show', $item->id) }}" class="inline-block text-white bg-gradient-to-br from-purple-400 to-black hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-gray-200 dark:focus:ring-purple-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2">
-                                    Lihat Detail
-                                </a>
-                            </div>
-                        </div>
-                    @endforeach
-                @endif
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 mt-5">
+  @if($merchandises->isEmpty())
+    <p class="text-center text-gray-500 dark:text-gray-400">No merchandise available at the moment.</p>
+  @else
+    @foreach ($merchandises as $item)
+      <div
+        class="w-full max-w-sm drop-shadow-lg bg-white border border-gray-200 rounded-lg shadow-sm dark:bg-gray-800 dark:border-gray-700 overflow-hidden transition duration-300 ease-in-out hover:shadow-xl mx-auto flex flex-col">
+        <a href="{{ route('merchandise.show', $item->id) }}" class="block flex-shrink-0">
+          <img src="{{ asset('storage/' . $item->image) }}" alt="{{ $item->name }}"
+            class="w-full h-64 object-cover" />
+        </a>
+        <div class="p-5 flex flex-col flex-grow justify-between">
+          <div>
+            <a href="{{ route('merchandise.show', $item->id) }}">
+              <h4 class="text-2xl font-bold tracking-tight text-gray-900 dark:text-white">{{ $item->name }}</h4>
+              <h5
+                class="mb-2 text-xl font-bold tracking-tight text-purple-900 dark:text-white flex items-center gap-2">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-purple-600 dark:text-purple-400"
+                  fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                  <path stroke-linecap="round" stroke-linejoin="round"
+                    d="M12 11c1.104 0 2-.895 2-2s-.896-2-2-2-2 .895-2 2 .896 2 2 2z" />
+                  <path stroke-linecap="round" stroke-linejoin="round"
+                    d="M12 21s8-4.5 8-10a8 8 0 10-16 0c0 5.5 8 10 8 10z" />
+                </svg>
+                {{ $item->location }}
+              </h5>
+            </a>
+            <div class="flex items-center mb-2">
+              <p class="text-xs font-normal text-gray-700 dark:text-gray-400">Rp
+                {{ number_format($item->price, 0, ',', '.') }}</p>
             </div>
+          </div>
+          <a href="{{ route('merchandise.show', $item->id) }}"
+            class="inline-block text-white bg-gradient-to-br from-purple-400 to-black hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-gray-200 dark:focus:ring-purple-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center mt-4">
+            Lihat Detail
+          </a>
+        </div>
+      </div>
+    @endforeach
+  @endif
+</div>
+
             </div>
             </div>
     </main>
