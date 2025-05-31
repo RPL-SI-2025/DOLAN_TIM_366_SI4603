@@ -13,13 +13,12 @@ class Ticket extends Model
         'price',
         'destination_id',
         'stock',
+        'ticket_date'
     ];
 
-    /**
-     * The attributes that should be cast.
-     *
-     * @var array<string, string>
-     */
+    protected $casts = [
+        'ticket_date' => 'date',
+    ];
 
     public function destination(): BelongsTo
     {
@@ -45,23 +44,14 @@ class Ticket extends Model
         return false;
     }
 
-    public function restoreStock($quantity): void
-    {
-        $this->increment('stock', $quantity);
-    }
-
     public function getStockStatusAttribute(): string
     {
         if ($this->stock <= 0) {
             return 'Out of Stock';
         } elseif ($this->stock <= 10) {
-            return 'Limited Stock';
+            return 'Low Stock';
+        } else {
+            return 'In Stock';
         }
-        return 'Available';
-    }
-
-    public function scopeAvailable($query)
-    {
-        return $query->where('stock', '>', 0);
     }
 }

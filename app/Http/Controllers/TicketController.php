@@ -18,8 +18,30 @@ class TicketController extends Controller
 
     public function create(Request $request)
     {
-        $destinations = Destination::all();
+        $destinations = Destination::where('has_ticket', true)
+                                  ->whereDoesntHave('ticket')
+                                  ->get();
+        
         $selectedDestinationId = $request->query('destination_id');
+        
+        if ($selectedDestinationId) {
+            $destination = Destination::find($selectedDestinationId);
+            if (!$destination) {
+                return redirect()->route('dashboard.tickets.create')
+                    ->with('error', 'Destinasi tidak ditemukan.');
+            }
+            
+            if ($destination->hasTicket()) {
+                return redirect()->route('dashboard.tickets.index')
+                    ->with('error', 'Destinasi "' . $destination->name . '" sudah memiliki tiket.');
+            }
+            
+            if (!$destination->has_ticket) {
+                return redirect()->route('dashboard.tickets.create')
+                    ->with('error', 'Destinasi "' . $destination->name . '" tidak memerlukan tiket.');
+            }
+        }
+        
         return view('dashboard.tickets.create', compact('destinations', 'selectedDestinationId'));
     }
 
@@ -28,13 +50,32 @@ class TicketController extends Controller
         $validator = Validator::make($request->all(), [
             'ticket_name' => 'required|string|max:255',
             'price' => 'required|numeric|min:0',
-            'destination_id' => 'required|exists:destinations,id',
+            'destination_id' => [
+                'required',
+                'exists:destinations,id',
+                function ($attribute, $value, $fail) {
+                    $destination = Destination::find($value);
+                    if ($destination && $destination->hasTicket()) {
+                        $fail('Destinasi ini sudah memiliki tiket.');
+                    }
+                    if ($destination && !$destination->has_ticket) {
+                        $fail('Destinasi ini tidak memerlukan tiket.');
+                    }
+                },
+            ],
             'stock' => 'required|integer|min:0',
         ]);
 
         if ($validator->fails()) {
             return redirect()->route('dashboard.tickets.create')
                 ->withErrors($validator)
+                ->withInput();
+        }
+
+        $destination = Destination::find($request->destination_id);
+        if ($destination->hasTicket()) {
+            return redirect()->route('dashboard.tickets.create')
+                ->with('error', 'Destinasi ini sudah memiliki tiket.')
                 ->withInput();
         }
 
@@ -52,7 +93,13 @@ class TicketController extends Controller
 
     public function edit(Ticket $ticket)
     {
-        $destinations = Destination::all();
+        $destinations = Destination::where('has_ticket', true)
+                                  ->where(function($query) use ($ticket) {
+                                      $query->whereDoesntHave('ticket')
+                                            ->orWhere('id', $ticket->destination_id);
+                                  })
+                                  ->get();
+        
         return view('dashboard.tickets.edit', compact('ticket', 'destinations'));
     }
 
@@ -61,7 +108,19 @@ class TicketController extends Controller
         $validator = Validator::make($request->all(), [
             'ticket_name' => 'required|string|max:255',
             'price' => 'required|numeric|min:0',
-            'destination_id' => 'required|exists:destinations,id',
+            'destination_id' => [
+                'required',
+                'exists:destinations,id',
+                function ($attribute, $value, $fail) use ($ticket) {
+                    $destination = Destination::find($value);
+                    if ($destination && $destination->hasTicket() && $destination->ticket->id !== $ticket->id) {
+                        $fail('Destinasi ini sudah memiliki tiket lain.');
+                    }
+                    if ($destination && !$destination->has_ticket) {
+                        $fail('Destinasi ini tidak memerlukan tiket.');
+                    }
+                },
+            ],
             'stock' => 'required|integer|min:0',
         ]);
 
@@ -95,7 +154,10 @@ class TicketController extends Controller
     public function showAvailableTickets()
     {
         $tickets = Ticket::with('destination')
-                        ->available()
+                        ->whereHas('destination', function($query) {
+                            $query->where('has_ticket', true);
+                        })
+                        ->where('stock', '>', 0)
                         ->whereNotNull('price')
                         ->where('price', '>', 0)
                         ->latest()
@@ -105,11 +167,8 @@ class TicketController extends Controller
 
     public function showTicketBookingPage(Destination $destination)
     {
-        $ticket = Ticket::where('destination_id', $destination->id)
-                        ->available()
-                        ->whereNotNull('price')
-                        ->where('price', '>', 0)
-                        ->first();
+        // Gunakan relasi hasOne
+        $ticket = $destination->getAvailableTicket();
 
         if (!$ticket) {
             return redirect()->route('destinations.show', $destination->id)
