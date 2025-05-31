@@ -12,13 +12,14 @@ class Merchandise extends Model
 
     protected $fillable = [
         'name',
+        'stock',
+        'image',
+        'detail',
+        'size',
         'price',
+        'location',
     ];
 
-    protected $casts = [
-        'size' => 'array', 
-    ];
-    
     public function orders(): MorphMany
     {
         return $this->morphMany(Order::class, 'product');
