@@ -128,13 +128,6 @@
                                             IDR {{ number_format($ticket->price, 0, ',', '.') }}
                                         </span>
                                     </div>
-                                    
-                                    @if($ticket->ticket_date)
-                                        <div class="flex justify-between items-center">
-                                            <span class="text-gray-600">Valid Date:</span>
-                                            <span class="font-semibold text-gray-900">{{ $ticket->ticket_date->format('D, d M Y') }}</span>
-                                        </div>
-                                    @endif
                                 </div>
                             </div>
 
@@ -162,7 +155,7 @@
                                     Complete Your Booking
                                 </h3>
 
-                                <form action="{{ route('purchase.ticket', $ticket->id) }}" method="POST" class="space-y-6">
+                                <form action="{{ route('tickets.purchase', $ticket->id) }}" method="POST" class="space-y-6">
                                     @csrf
                                     
                                     <!-- Quantity Selection -->
@@ -176,8 +169,9 @@
                                                    name="quantity" 
                                                    value="{{ old('quantity', 1) }}" 
                                                    min="1" 
-                                                   max="10"
-                                                   class="w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-purple-500 text-lg font-semibold"
+                                                   max="{{ min(10, $ticket->stock) }}"
+                                                   {{ $ticket->stock <= 0 ? 'disabled' : '' }}
+                                                   class="w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-purple-500 text-lg font-semibold {{ $ticket->stock <= 0 ? 'bg-gray-100' : '' }}"
                                                    onchange="updateTotal()">
                                             <div class="absolute inset-y-0 right-0 flex items-center pr-4">
                                                 <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -195,6 +189,26 @@
                                         @endif
                                     </div>
 
+                                    <!-- Stock Information -->
+                                    <div class="bg-blue-50 p-4 rounded-lg border border-blue-200 mb-4">
+                                        <div class="flex items-center justify-between">
+                                            <span class="text-blue-800 font-medium">Stock Available:</span>
+                                            <div class="flex items-center">
+                                                <span class="text-blue-900 font-bold text-lg mr-2">{{ number_format($ticket->stock) }}</span>
+                                                <span class="px-2 py-1 text-xs rounded-full
+                                                    {{ $ticket->stock <= 0 ? 'bg-red-100 text-red-800' : 
+                                                       ($ticket->stock <= 10 ? 'bg-yellow-100 text-yellow-800' : 'bg-green-100 text-green-800') }}">
+                                                    {{ $ticket->stock_status }}
+                                                </span>
+                                            </div>
+                                        </div>
+                                        @if($ticket->stock <= 10 && $ticket->stock > 0)
+                                            <p class="text-yellow-700 text-sm mt-2">Limited stock available! Book now before it's sold out.</p>
+                                        @elseif($ticket->stock <= 0)
+                                            <p class="text-red-700 text-sm mt-2">Sorry, this ticket is currently out of stock.</p>
+                                        @endif
+                                    </div>
+
                                     <!-- Total Price Display -->
                                     <div class="bg-gray-50 p-4 rounded-lg border">
                                         <div class="flex justify-between items-center">
@@ -207,11 +221,19 @@
 
                                     <!-- Submit Button -->
                                     <button type="submit" 
-                                            class="w-full bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 text-white font-bold py-4 px-6 rounded-xl shadow-lg transform transition duration-200 hover:scale-105 focus:outline-none focus:ring-4 focus:ring-purple-300 flex items-center justify-center">
-                                        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"></path>
-                                        </svg>
-                                        Proceed to Payment
+                                            {{ $ticket->stock <= 0 ? 'disabled' : '' }}
+                                            class="w-full px-8 py-4 {{ $ticket->stock <= 0 ? 'bg-gray-400 cursor-not-allowed' : 'bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700' }} text-white font-bold rounded-xl shadow-lg transform transition duration-200 {{ $ticket->stock > 0 ? 'hover:scale-105' : '' }} focus:outline-none focus:ring-4 focus:ring-purple-300 flex items-center justify-center">
+                                        @if($ticket->stock <= 0)
+                                            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728L5.636 5.636m12.728 12.728L18.364 5.636M5.636 18.364l12.728-12.728"></path>
+                                            </svg>
+                                            Out of Stock
+                                        @else
+                                            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"></path>
+                                            </svg>
+                                            Book Now - {{ number_format($ticket->stock) }} Available
+                                        @endif
                                     </button>
                                 </form>
                             </div>
@@ -255,7 +277,7 @@
 <script>
 function updateTotal() {
     const quantity = document.getElementById('quantity').value;
-    const price = {{ $ticket ? $ticket->price : 0 }};
+    const price = parseFloat('{{ $ticket ? $ticket->price : 0 }}');
     const total = quantity * price;
     
     document.getElementById('total-price').textContent = 

@@ -118,7 +118,7 @@ Route::get('destinations', [DestinationController::class, 'showAllDestinations']
 Route::get('destinations/{id}', [DestinationController::class, 'showDestination'])->name('destinations.show');
 
 // Purchase Order
-Route::post('/purchase/ticket/{ticket}', [OrderController::class, 'purchaseTicket'])->name('purchase.ticket')->middleware('auth');
+Route::post('/tickets/{ticket}/purchase', [OrderController::class, 'purchaseTicket'])->name('tickets.purchase')->middleware('auth');
 Route::get('/booking/destination/{destination}', [TicketController::class, 'showTicketBookingPage'])->name('tickets.show_ticket_form')->middleware('auth');
 Route::get('/orders', [OrderController::class, 'showOrder'])->name('orders.index')->middleware('auth');
 

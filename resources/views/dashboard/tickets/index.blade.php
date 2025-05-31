@@ -35,6 +35,7 @@
                             <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Destinasi</th>
                             <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Harga</th>
                             <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Tanggal</th>
+                            <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Stock</th>
                             <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Aksi</th>
                         </tr>
                     </thead>
@@ -62,6 +63,16 @@
                                     @else
                                         <span class="text-gray-500">-</span>
                                     @endif
+                                </td>
+                                <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-900">
+                                    <div class="flex items-center">
+                                        <span class="font-medium">{{ number_format($ticket->stock) }}</span>
+                                        <span class="ml-2 px-2 py-1 text-xs rounded-full
+                                            {{ $ticket->stock <= 0 ? 'bg-red-100 text-red-800' : 
+                                               ($ticket->stock <= 10 ? 'bg-yellow-100 text-yellow-800' : 'bg-green-100 text-green-800') }}">
+                                            {{ $ticket->stock_status }}
+                                        </span>
+                                    </div>
                                 </td>
                                 <td class="px-4 py-3 whitespace-nowrap text-sm font-medium">
                                     <div class="flex space-x-2">
@@ -97,7 +108,7 @@
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="6" class="px-4 py-3 text-center text-gray-500">
+                                <td colspan="7" class="px-4 py-3 text-center text-gray-500">
                                     Belum ada tiket yang dibuat.
                                 </td>
                             </tr>

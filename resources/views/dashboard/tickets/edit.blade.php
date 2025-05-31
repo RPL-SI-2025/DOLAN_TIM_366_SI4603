@@ -52,6 +52,13 @@
             </div>
 
             <div>
+                <label for="stock" class="block text-sm font-medium text-gray-700 mb-1">Stock</label>
+                <input type="number" name="stock" id="stock" value="{{ old('stock', $ticket->stock) }}" required min="0"
+                       class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 transition">
+                <p class="text-xs text-gray-500 mt-1">Jumlah tiket yang tersedia untuk dijual</p>
+            </div>
+
+            <div>
                 <label for="ticket_date" class="block text-sm font-medium text-gray-700 mb-1">Tanggal Tiket (Opsional)</label>
                 <input type="date" name="ticket_date" id="ticket_date" 
                        value="{{ old('ticket_date', $ticket->ticket_date ? $ticket->ticket_date->format('Y-m-d') : '') }}"

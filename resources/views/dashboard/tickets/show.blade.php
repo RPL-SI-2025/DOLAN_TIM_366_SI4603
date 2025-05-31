@@ -74,6 +74,19 @@
                                     <span class="text-gray-600">Terakhir Update:</span>
                                     <span class="font-semibold text-gray-900">{{ $ticket->updated_at->format('d M Y, H:i') }}</span>
                                 </div>
+
+                                <!-- Add stock information in the ticket info section -->
+                                <div class="flex justify-between items-center">
+                                    <span class="text-gray-600">Stock Tersedia:</span>
+                                    <div class="flex items-center">
+                                        <span class="font-semibold text-gray-900 mr-2">{{ number_format($ticket->stock) }}</span>
+                                        <span class="px-2 py-1 text-xs rounded-full
+                                            {{ $ticket->stock <= 0 ? 'bg-red-100 text-red-800' : 
+                                               ($ticket->stock <= 10 ? 'bg-yellow-100 text-yellow-800' : 'bg-green-100 text-green-800') }}">
+                                            {{ $ticket->stock_status }}
+                                        </span>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>

@@ -29,7 +29,7 @@ class TicketController extends Controller
             'ticket_name' => 'required|string|max:255',
             'price' => 'required|numeric|min:0',
             'destination_id' => 'required|exists:destinations,id',
-            'ticket_date' => 'nullable|date',
+            'stock' => 'required|integer|min:0',
         ]);
 
         if ($validator->fails()) {
@@ -62,7 +62,7 @@ class TicketController extends Controller
             'ticket_name' => 'required|string|max:255',
             'price' => 'required|numeric|min:0',
             'destination_id' => 'required|exists:destinations,id',
-            'ticket_date' => 'nullable|date',
+            'stock' => 'required|integer|min:0',
         ]);
 
         if ($validator->fails()) {
@@ -79,6 +79,13 @@ class TicketController extends Controller
 
     public function destroy(Ticket $ticket)
     {
+        $pendingOrders = $ticket->orders()->where('status', 'pending')->count();
+        
+        if ($pendingOrders > 0) {
+            return redirect()->route('dashboard.tickets.index')
+                ->with('error', 'Cannot delete ticket. There are pending orders for this ticket.');
+        }
+
         $ticket->delete();
 
         return redirect()->route('dashboard.tickets.index')
@@ -87,13 +94,19 @@ class TicketController extends Controller
 
     public function showAvailableTickets()
     {
-        $tickets = Ticket::with('destination')->whereNotNull('price')->where('price', '>', 0)->latest()->get(); 
+        $tickets = Ticket::with('destination')
+                        ->available()
+                        ->whereNotNull('price')
+                        ->where('price', '>', 0)
+                        ->latest()
+                        ->get(); 
         return view('tickets.purchase', compact('tickets'));
     }
 
     public function showTicketBookingPage(Destination $destination)
     {
         $ticket = Ticket::where('destination_id', $destination->id)
+                        ->available()
                         ->whereNotNull('price')
                         ->where('price', '>', 0)
                         ->first();
