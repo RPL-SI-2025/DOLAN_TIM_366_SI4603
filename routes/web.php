@@ -13,8 +13,8 @@ use App\Http\Controllers\WishlistController;
 // use App\Http\Controllers\GalleryController;
 use App\Http\Controllers\MerchandiseController;
 
-Route::get('/merchandise', [MerchandiseController::class, 'index'])->name('merchandise.index');
-Route::get('/merchandise/{id}', [MerchandiseController::class, 'show'])->name('merchandise.show');
+Route::get('/merchandise', [MerchandiseController::class, 'publicIndex'])->name('merchandise.index');
+Route::get('/merchandise/{merchandise}', [MerchandiseController::class, 'publicShow'])->name('merchandise.show');
 
 // Halaman register
 Route::get('/register', [RegistrationController::class, 'showRegistrationForm'])->name('registration');
@@ -70,14 +70,13 @@ Route::prefix('dashboard')->name('dashboard.')->group(function () {
     Route::delete('articles/{article}', [ArticleController::class, 'destroy'])->name('articles.destroy')->middleware(['auth', 'role:admin,super_admin']);
 
     //Merchandise
-    Route::get('merchandise', [MerchandiseController::class, 'indexAdmin'])->name('merchandise.index')->middleware(['auth', 'role:admin,super_admin']);
+    // Merchandise
+    Route::get('merchandise', [MerchandiseController::class, 'index'])->name('merchandise.index')->middleware(['auth', 'role:admin,super_admin']);
     Route::get('merchandise/create', [MerchandiseController::class, 'create'])->name('merchandise.create')->middleware(['auth', 'role:admin,super_admin']);
     Route::post('merchandise', [MerchandiseController::class, 'store'])->name('merchandise.store')->middleware(['auth', 'role:admin,super_admin']);
     Route::get('merchandise/{merchandise}/edit', [MerchandiseController::class, 'edit'])->name('merchandise.edit')->middleware(['auth', 'role:admin,super_admin']);
     Route::put('merchandise/{merchandise}', [MerchandiseController::class, 'update'])->name('merchandise.update')->middleware(['auth', 'role:admin,super_admin']);
     Route::delete('merchandise/{merchandise}', [MerchandiseController::class, 'destroy'])->name('merchandise.destroy')->middleware(['auth', 'role:admin,super_admin']);
-    Route::get('/dashboard/merchandise/{merchandise}', [MerchandiseController::class, 'showAdmin'])->name('merchandise.show')->middleware(['auth', 'role:admin,super_admin']);
-
 });
     // Profile
     Route::prefix('user/profile')->name('user.profile.')->middleware('auth')->group(function () {

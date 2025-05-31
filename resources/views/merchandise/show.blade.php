@@ -52,10 +52,15 @@
                         <div>
                             <label class="block mb-2 font-medium text-gray-700">Ukuran Tersedia:</label>
                             <div class="flex flex-wrap gap-2">
-                                @foreach ($merchandise->size ?? ['-'] as $size)
-                                    <span class="bg-purple-100 text-purple-800 text-sm font-medium px-3 py-1 rounded-lg">
-                                        {{ $size }}
-                                    </span>
+                                @php
+                                    $sizes = explode(',', $merchandise->size ?? '-');
+                                @endphp
+                                @foreach ($sizes as $size)
+                                    @if(trim($size) !== '')
+                                        <span class="bg-purple-100 text-purple-800 text-sm font-medium px-3 py-1 rounded-lg">
+                                            {{ trim($size) }}
+                                        </span>
+                                    @endif
                                 @endforeach
                             </div>
                         </div>
