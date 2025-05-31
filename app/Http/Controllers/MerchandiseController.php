@@ -15,6 +15,17 @@ class MerchandiseController extends Controller
         return view('dashboard.merchandise.index', compact('merchandises'));
     }
 
+    public function publicIndex()
+    {
+        $merchandises = Merchandise::all();
+        return view('merchandise.index', compact('merchandises'));
+    }
+
+    public function publicShow(Merchandise $merchandise)
+    {
+        return view('merchandise.show', compact('merchandise'));
+    }
+
     public function create()
     {
         return view('dashboard.merchandise.create');

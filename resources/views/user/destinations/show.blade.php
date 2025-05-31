@@ -33,6 +33,36 @@
           <div class="text-black order-2 lg:order-2">
             <h2 class="text-3xl font-bold mt-4">Tour Description</h2>
             <p class="mt-4 text-lg font-light">{{ $destinations->description }}</p>
+            </div>
+            @php
+              $inWishlist = \App\Models\Wishlist::where('user_id', Auth::id())
+                              ->where('destination_id', $destinations->id)
+                              ->exists();
+
+              $activeColor = '#6B21A8';
+              $inactiveColor = '#D1D5DB';
+              @endphp
+      
+              <form id="wishlistForm-{{ $destinations->id }}">
+              @csrf
+              <input type="hidden" name="destination_id" value="{{ $destinations->id }}">
+
+              <button type="button"
+              onclick="toggleWishlist({{ $destinations->id }})"
+              id="wishlistBtn-{{ $destinations->id }}"
+              class="p-4 rounded-lg transition ml-auto bg-purple-700 hover:bg-purple-800 border-2 border-navy-900 inline-flex items-center justify-center"
+              style="border-color: {{ $inWishlist ? $activeColor : $inactiveColor }};">
+            <svg xmlns="http://www.w3.org/2000/svg"
+                width="24" height="24"
+                fill="{{ $inWishlist ? $activeColor : $inactiveColor }}"
+                id="bookmarkIcon-{{ $destinations->id }}"
+                class="bi {{ $inWishlist ? 'bi-bookmark-fill' : 'bi-bookmark' }}"
+                viewBox="0 0 16 16">
+              <path d="M3 0a1 1 0 0 0-1 1v14l5-3 5 3V1a1 1 0 0 0-1-1H3z"/>
+            </svg>
+          </button>
+            </form>
+            </div>
             <div class="flex flex-col lg:flex-row lg:items-center lg:space-x-4 mt-4">
               <p class="text-4xl font-bold leading-tight mr-10"><span class="font-bold text-black">IDR {{ number_format($destinations->price, 0, ',', '.') }}</span></p>
               <div class="flex flex-col space-y-2 lg:ml-5">
@@ -185,6 +215,45 @@
         </div>
       </div>
     </section>
+ <script>
+  function toggleWishlist(destinationId) {
+    const form = document.getElementById('wishlistForm-' + destinationId);
+    const data = new FormData(form);
+    const icon = document.getElementById('bookmarkIcon-' + destinationId);
+    const button = document.getElementById('wishlistBtn-' + destinationId);
+
+    fetch('{{ route("wishlist.toggle") }}', {
+      method: 'POST',
+      headers: {
+        'X-CSRF-TOKEN': '{{ csrf_token() }}',
+      },
+      body: data
+    })
+    .then(response => response.json())
+    .then(data => {
+      if (data.success) {
+        Swal.fire('Berhasil!', data.message, 'success');
+
+        if (data.in_wishlist) {
+          icon.classList.remove('bi-bookmark');
+          icon.classList.add('bi-bookmark-fill');
+          icon.setAttribute('fill', '#6B21A8');       // warna aktif
+          button.style.borderColor = '#6B21A8';       // border warna aktif
+        } else {
+          icon.classList.remove('bi-bookmark-fill');
+          icon.classList.add('bi-bookmark');
+          icon.setAttribute('fill', '#D1D5DB');       // warna nonaktif
+          button.style.borderColor = '#D1D5DB';       // border warna nonaktif
+        }
+      } else {
+        Swal.fire('Oops!', data.message, 'error');
+      }
+    })
+    .catch(() => {
+      Swal.fire('Error!', 'Terjadi kesalahan. Coba lagi nanti.', 'error');
+    });
+  }
+</script>
   </main>
       <!-- Footer Section -->
       <footer class="bg-purple-100 text-center py-6 text-sm text-purple-600 mt-12">
