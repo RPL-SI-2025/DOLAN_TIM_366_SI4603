@@ -51,7 +51,7 @@
                     @foreach ($merchandises as $item)
                         <div class="max-w-sm drop-shadow-lg bg-white border border-gray-200 rounded-lg shadow-sm dark:bg-gray-800 dark:border-gray-700 overflow-hidden transition duration-300 ease-in-out hover:shadow-xl">
                             <a href="{{ route('merchandise.show', $item->id) }}">
-                                <img src="{{ asset($item->image) }}" alt="{{ $item->name }}" class="rounded-t-lg w-full h-52 object-cover">
+                                <img src="{{ asset('storage/' . $item->image) }}" >
                             </a>
                             <div class="p-5">
                                 <a href="{{ route('merchandise.show', $item->id) }}">
