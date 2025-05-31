@@ -78,6 +78,15 @@ Route::prefix('dashboard')->name('dashboard.')->group(function () {
     Route::get('articles/{article}/edit', [ArticleController::class, 'edit'])->name('articles.edit')->middleware(['auth', 'role:admin,super_admin']);
     Route::delete('articles/{article}', [ArticleController::class, 'destroy'])->name('articles.destroy')->middleware(['auth', 'role:admin,super_admin']);
 
+    // Merchandise
+    Route::get('merchandise', [MerchandiseController::class, 'index'])->name('merchandise.index')->middleware(['auth', 'role:admin,super_admin']);
+    Route::get('merchandise/create', [MerchandiseController::class, 'create'])->name('merchandise.create')->middleware(['auth', 'role:admin,super_admin']);
+    Route::post('merchandise', [MerchandiseController::class, 'store'])->name('merchandise.store')->middleware(['auth', 'role:admin,super_admin']);
+    Route::get('merchandise/{merchandise}/edit', [MerchandiseController::class, 'edit'])->name('merchandise.edit')->middleware(['auth', 'role:admin,super_admin']);
+    Route::put('merchandise/{merchandise}', [MerchandiseController::class, 'update'])->name('merchandise.update')->middleware(['auth', 'role:admin,super_admin']);
+    Route::delete('merchandise/{merchandise}', [MerchandiseController::class, 'destroy'])->name('merchandise.destroy')->middleware(['auth', 'role:admin,super_admin']);
+    });
+
     // Ratings
     Route::get('ratings', [RatingController::class, 'index'])->name('ratings.index')->middleware(['auth', 'role:admin,super_admin']);
     Route::get('ratings/{rating}', [RatingController::class, 'show'])->name('ratings.show')->middleware(['auth', 'role:admin,super_admin']);
@@ -129,5 +138,5 @@ Route::middleware('auth')->delete('wishlist/remove/{id}', [WishlistController::c
 Route::post('/wishlist/toggle', [WishlistController::class, 'toggle'])->name('wishlist.toggle');
 
 //Merchandise
-Route::get('/merchandise', [MerchandiseController::class, 'index'])->name('merchandise.index');
-Route::get('/merchandise/{id}', [MerchandiseController::class, 'show'])->name('merchandise.show');
+Route::get('/merchandise', [MerchandiseController::class, 'publicIndex'])->name('merchandise.index');
+Route::get('/merchandise/{merchandise}', [MerchandiseController::class, 'publicShow'])->name('merchandise.show');
