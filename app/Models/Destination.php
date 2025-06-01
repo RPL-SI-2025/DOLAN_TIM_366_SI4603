@@ -20,7 +20,8 @@ class Destination extends Model
         'additional_images',
         'tour_includes',
         'tour_payments',
-        'has_ticket'
+        'has_ticket',
+        'status' // kolom status baru
     ];
 
     protected $casts = [
@@ -41,6 +42,7 @@ class Destination extends Model
     {
         return $this->hasOne(Ticket::class);
     }
+    
     public function hasTicket(): bool
     {
         return $this->ticket()->exists();

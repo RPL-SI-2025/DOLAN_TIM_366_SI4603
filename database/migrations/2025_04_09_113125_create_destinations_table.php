@@ -19,6 +19,8 @@ return new class extends Migration
             $table->string('image')->nullable();
             $table->integer('stock')->default(0); // jumlah tiket tersedia
             $table->decimal('price', 10, 2)->default(0); // harga tiket
+            $table->string('status')->nullable(); // tambahkan kolom status
+
             $table->timestamps();
         });
     }
