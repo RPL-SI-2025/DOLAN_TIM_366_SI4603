@@ -81,6 +81,10 @@ class PaymentController extends Controller
             // Update order status to completed
             $order->update(['status' => 'completed']);
             
+            if ($order->product) {
+            $order->product->reduceStock($order->quantity);
+        }
+            
             return redirect()->route('user.orders')->with('success', 'Payment successful! Your order has been completed.');
         } elseif ($status === 'pending') {
             return redirect()->route('home')->with('info', 'Payment is pending. Please wait for confirmation.');
@@ -107,6 +111,9 @@ class PaymentController extends Controller
                 if ($transaction_status == 'capture' || $transaction_status == 'settlement') {
                     // Payment successful
                     $order->update(['status' => 'completed']);
+                    if ($order->product) {
+                    $order->product->reduceStock($order->quantity);
+                    }
                 } elseif ($transaction_status == 'pending') {
                     // Payment pending
                     $order->update(['status' => 'pending']);
