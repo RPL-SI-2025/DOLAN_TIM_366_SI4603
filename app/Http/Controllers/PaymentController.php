@@ -28,6 +28,16 @@ class PaymentController extends Controller
             abort(403, 'Unauthorized action.'); 
         }
 
+        if ($order->status !== 'pending') {
+            if ($order->status === 'completed') {
+                return redirect()->route('user.orders')->with('info', 'This order has already been completed.');
+            } elseif ($order->status === 'cancelled') {
+                return redirect()->route('user.orders')->with('error', 'This order has been cancelled and cannot be paid for.');
+            } else {
+                return redirect()->route('user.orders')->with('error', 'This order is not available for payment.');
+            }
+        }
+
         $order->load('product', 'user');
 
         $transaction_details = [
@@ -75,6 +85,14 @@ class PaymentController extends Controller
 
     public function paymentFinish(Request $request, Order $order)
     {
+        if ($order->status === 'cancelled') {
+            return redirect()->route('user.orders')->with('error', 'This order has been cancelled and cannot be processed.');
+        }
+
+        if ($order->status === 'completed') {
+            return redirect()->route('user.orders')->with('info', 'This order has already been completed.');
+        }
+
         $status = $request->query('status');
         
         if ($status === 'success') {
@@ -82,8 +100,8 @@ class PaymentController extends Controller
             $order->update(['status' => 'completed']);
             
             if ($order->product) {
-            $order->product->reduceStock($order->quantity);
-        }
+                $order->product->reduceStock($order->quantity);
+            }
             
             return redirect()->route('user.orders')->with('success', 'Payment successful! Your order has been completed.');
         } elseif ($status === 'pending') {
