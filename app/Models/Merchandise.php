@@ -12,7 +12,12 @@ class Merchandise extends Model
 
     protected $fillable = [
         'name',
+        'stock',
+        'image',
+        'detail',
+        'size',
         'price',
+        'location',
     ];
 
     public function orders(): MorphMany

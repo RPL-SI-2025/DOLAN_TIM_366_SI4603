@@ -9,6 +9,7 @@ use App\Http\Controllers\ArticleController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\PromoController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\MerchandiseController;
 use App\Http\Controllers\RatingController;
 use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\BookingController;
@@ -16,6 +17,8 @@ use App\Http\Controllers\TicketController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\OrderController;
 // use App\Http\Controllers\GalleryController;
+use App\Http\Controllers\WishlistController;
+
 
 // Halaman register
 Route::get('/register', [RegistrationController::class, 'showRegistrationForm'])->name('registration');
@@ -84,14 +87,13 @@ Route::prefix('dashboard')->name('dashboard.')->group(function () {
     Route::put('tickets/{ticket}', [TicketController::class, 'update'])->name('tickets.update');
     Route::delete('tickets/{ticket}', [TicketController::class, 'destroy'])->name('tickets.destroy');
 
-    // Ticket
-    Route::get('tickets', [TicketController::class, 'index'])->name('tickets.index');
-    Route::get('tickets/create', [TicketController::class, 'create'])->name('tickets.create');
-    Route::post('tickets', [TicketController::class, 'store'])->name('tickets.store');
-    Route::get('tickets/{ticket}', [TicketController::class, 'show'])->name('tickets.show');
-    Route::get('tickets/{ticket}/edit', [TicketController::class, 'edit'])->name('tickets.edit');
-    Route::put('tickets/{ticket}', [TicketController::class, 'update'])->name('tickets.update');
-    Route::delete('tickets/{ticket}', [TicketController::class, 'destroy'])->name('tickets.destroy');
+    // Merchandise
+    Route::get('merchandise', [MerchandiseController::class, 'index'])->name('merchandise.index')->middleware(['auth', 'role:admin,super_admin']);
+    Route::get('merchandise/create', [MerchandiseController::class, 'create'])->name('merchandise.create')->middleware(['auth', 'role:admin,super_admin']);
+    Route::post('merchandise', [MerchandiseController::class, 'store'])->name('merchandise.store')->middleware(['auth', 'role:admin,super_admin']);
+    Route::get('merchandise/{merchandise}/edit', [MerchandiseController::class, 'edit'])->name('merchandise.edit')->middleware(['auth', 'role:admin,super_admin']);
+    Route::put('merchandise/{merchandise}', [MerchandiseController::class, 'update'])->name('merchandise.update')->middleware(['auth', 'role:admin,super_admin']);
+    Route::delete('merchandise/{merchandise}', [MerchandiseController::class, 'destroy'])->name('merchandise.destroy')->middleware(['auth', 'role:admin,super_admin']);
 
     // Ratings
     Route::get('ratings', [RatingController::class, 'index'])->name('ratings.index')->middleware(['auth', 'role:admin,super_admin']);
@@ -139,3 +141,13 @@ Route::get('/orders', [OrderController::class, 'showOrder'])->name('orders.index
 Route::get('/payment/checkout/{order}', [PaymentController::class, 'createTransaction'])->name('payment.checkout')->middleware('auth');
 Route::get('/payment/finish/{order}', [PaymentController::class, 'paymentFinish'])->name('payment.finish')->middleware('auth');
 Route::post('/payment/notification', [PaymentController::class, 'notificationHandler'])->name('payment.notification');
+
+//Wishlist
+Route::middleware('auth')->get('wishlist', [WishlistController::class, 'show'])->name('wishlist.show');
+Route::middleware('auth')->post('wishlist/add', [WishlistController::class, 'add'])->name('wishlist.add');
+Route::middleware('auth')->delete('wishlist/remove/{id}', [WishlistController::class, 'remove'])->name('wishlist.remove');
+Route::post('/wishlist/toggle', [WishlistController::class, 'toggle'])->name('wishlist.toggle');
+
+//Merchandise
+Route::get('/merchandise', [MerchandiseController::class, 'publicIndex'])->name('merchandise.index');
+Route::get('/merchandise/{merchandise}', [MerchandiseController::class, 'publicShow'])->name('merchandise.show');
