@@ -58,7 +58,7 @@
                                 </td>
                                 <td class="px-4 py-3">
                                     @if ($destination->image)
-                                        <img src="{{ asset($destination->image) }}" 
+                                        <img src="{{ asset('storage/' . $destination->image) }}" 
                                              alt="{{ $destination->name }}" 
                                              class="w-24 h-24 object-cover rounded shadow-sm">
                                     @else
@@ -69,7 +69,7 @@
                                     @if ($destination->additional_images && is_array($destination->additional_images) && count($destination->additional_images) > 0)
                                         <div class="flex space-x-2">
                                             @foreach (array_slice($destination->additional_images, 0, 3) as $index => $image)
-                                                <img src="{{ asset($image) }}" 
+                                                <img src="{{ asset('storage/' . $image) }}" 
                                                      alt="Additional Image {{ $index + 1 }}" 
                                                      class="w-16 h-16 object-cover rounded shadow-sm">
                                             @endforeach

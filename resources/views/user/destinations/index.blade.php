@@ -51,7 +51,7 @@
             @foreach($destinations as $destination)
             <div class="max-w-sm drop-shadow-lg bg-white border border-gray-200 rounded-lg shadow-sm dark:bg-gray-800 dark:border-gray-700">
                 <a href="#">
-                <img class="rounded-t-lg w-full" src="{{ asset($destination->image)}}" alt="{{ $destination->name }}" />
+                <img class="rounded-t-lg w-full" src="{{ asset('storage/' . $destination->image) }}" alt="{{ $destination->name }}" />
                 </a>
                 <div class="p-5">
                 <a href="#">

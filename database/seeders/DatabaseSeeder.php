@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\Ticket;
 use App\Models\User;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
@@ -67,11 +68,11 @@ class DatabaseSeeder extends Seeder
 
         // Call other seeders
         $this->call([
-            DestinationSeeder::class,
-            ArticleSeeder::class,
-            PromoSeeder::class,
+            // DestinationSeeder::class,
+            // ArticleSeeder::class,
+            // PromoSeeder::class,
             BadgeSeeder::class
-
+            // TicketSeeder::class,
         ]);
     }
 }

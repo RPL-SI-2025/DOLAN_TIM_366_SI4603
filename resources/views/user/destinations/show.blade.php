@@ -38,7 +38,7 @@
           <h1 class="text-5xl font-extrabold text-purple-800 lg:col-span-2">{{ $destinations->name }}</h1>
 
           <div class="flex justify-start order-1 lg:order-1">
-            <img src="{{asset($destinations->image)}}" alt="{{ $destinations->name }}" class="w-full h-auto max-w-md rounded-lg shadow-md">
+            <img src="{{ asset('storage/' . $destinations->image) }}" alt="{{ $destinations->name }}" class="w-full h-auto max-w-md rounded-lg shadow-md">
           </div>
 
           <div class="text-black order-2 lg:order-2">
@@ -127,8 +127,8 @@
           @if (!empty($destinations->additional_images))
             @foreach (array_slice($destinations->additional_images, 0, 3) as $index => $image)
               <div class="bg-white rounded-lg shadow-md p-4 max-w-xs">
-                <a href="{{ asset($image) }}" data-fancybox="gallery" data-caption="Tour Highlight {{ $index + 1 }}">
-                  <img src="{{ asset($image) }}" alt="Additional Image" class="w-full h-auto rounded-lg mb-2">
+                <a href="{{ asset('storage/' . $image) }}" data-fancybox="gallery" data-caption="Tour Highlight {{ $index + 1 }}">
+                  <img src="{{ asset('storage/' . $image) }}" alt="Additional Image" class="w-full h-auto rounded-lg mb-2">
                 </a>
                 <h3 class="text-xl font-bold mb-2 text-center">Tour Highlight</h3>
               </div>
@@ -168,7 +168,7 @@
             @foreach ($other_destinations->take(2) as $other_destination)
             <div class="max-w-sm drop-shadow-lg bg-white border border-gray-200 rounded-lg shadow-sm">
               <a href="{{ route('destinations.show', $other_destination->id) }}">
-              <img class="rounded-t-lg w-full" src="{{ asset($other_destination->image) }}" alt="{{ $other_destination->name }}" />
+              <img class="rounded-t-lg w-full" src="{{ asset('storage/' . $other_destination->image) }}" alt="{{ $other_destination->name }}" />
               </a>
               <div class="p-5">
               <a href="{{ route('destinations.show', $other_destination->id) }}">

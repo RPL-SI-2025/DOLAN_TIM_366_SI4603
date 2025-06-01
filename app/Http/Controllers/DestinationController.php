@@ -3,15 +3,16 @@
 namespace App\Http\Controllers;
 
 use App\Models\Destination;
-use App\Models\Badge;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Validator;
 
 class DestinationController extends Controller
 {
-    protected $mainImagePath = 'images/destinations';
-    protected $additionalImagePath = 'images/additional_destinations';
+    private $mainImagePath = 'destinations';
+    private $additionalImagePath = 'destinations/additional';
 
     public function index()
     {
@@ -83,20 +84,16 @@ public function store(Request $request)
         $validated['tour_payments'] = null;
     }
 
-    // Upload gambar utama
+    // Upload gambar utama menggunakan Storage
     if ($request->hasFile('image')) {
-        $imageName = time() . '_' . $request->file('image')->getClientOriginalName();
-        $request->file('image')->move(public_path($this->mainImagePath), $imageName);
-        $validated['image'] = $this->mainImagePath . '/' . $imageName;
+        $validated['image'] = $request->file('image')->store($this->mainImagePath, 'public');
     }
 
-    // Upload gambar tambahan
+    // Upload gambar tambahan menggunakan Storage
     if ($request->hasFile('additional_images')) {
         $additionalImages = [];
         foreach ($request->file('additional_images') as $file) {
-            $imgName = time() . '_' . rand(1000, 9999) . '_' . $file->getClientOriginalName();
-            $file->move(public_path($this->additionalImagePath), $imgName);
-            $additionalImages[] = $this->additionalImagePath . '/' . $imgName;
+            $additionalImages[] = $file->store($this->additionalImagePath, 'public');
         }
         $validated['additional_images'] = $additionalImages;
     } else {
@@ -148,16 +145,14 @@ public function store(Request $request)
         $destination = Destination::findOrFail($id);
 
         try {
-            // Handle main image update
+            // Handle main image update menggunakan Storage
             if ($request->hasFile('image')) {
                 // Delete old image if exists
-                if ($destination->image && File::exists(public_path($destination->image))) {
-                    File::delete(public_path($destination->image));
+                if ($destination->image && Storage::disk('public')->exists($destination->image)) {
+                    Storage::disk('public')->delete($destination->image);
                 }
                 
-                $imageName = time() . '_' . $request->file('image')->getClientOriginalName();
-                $request->file('image')->move(public_path($this->mainImagePath), $imageName);
-                $validated['image'] = $this->mainImagePath . '/' . $imageName;
+                $validated['image'] = $request->file('image')->store($this->mainImagePath, 'public');
             }
 
             // Handle additional images
@@ -175,8 +170,8 @@ public function store(Request $request)
             if ($request->has('removed_images') && is_array($request->removed_images)) {
                 foreach ($request->removed_images as $imageToRemove) {
                     // Check if file exists before deleting
-                    if (File::exists(public_path($imageToRemove))) {
-                        File::delete(public_path($imageToRemove));
+                    if (Storage::disk('public')->exists($imageToRemove)) {
+                        Storage::disk('public')->delete($imageToRemove);
                     }
                     
                     // Remove from the final images array
@@ -190,9 +185,7 @@ public function store(Request $request)
             // Add new additional images
             if ($request->hasFile('additional_images')) {
                 foreach ($request->file('additional_images') as $file) {
-                    $imgName = time() . '_' . rand(1000, 9999) . '_' . $file->getClientOriginalName();
-                    $file->move(public_path($this->additionalImagePath), $imgName);
-                    $finalAdditionalImages[] = $this->additionalImagePath . '/' . $imgName;
+                    $finalAdditionalImages[] = $file->store($this->additionalImagePath, 'public');
                 }
             }
 
@@ -213,16 +206,16 @@ public function store(Request $request)
 
         $destination = Destination::findOrFail($id);
 
-        // Delete main image if exists
-        if ($destination->image && File::exists(public_path($destination->image))) {
-            File::delete(public_path($destination->image));
+        // Delete main image if exists menggunakan Storage
+        if ($destination->image && Storage::disk('public')->exists($destination->image)) {
+            Storage::disk('public')->delete($destination->image);
         }
         
-        // Delete all additional images if they exist
+        // Delete all additional images if they exist menggunakan Storage
         if (!empty($destination->additional_images) && is_array($destination->additional_images)) {
             foreach ($destination->additional_images as $image) {
-                if (File::exists(public_path($image))) {
-                    File::delete(public_path($image));
+                if (Storage::disk('public')->exists($image)) {
+                    Storage::disk('public')->delete($image);
                 }
             }
         }
@@ -246,9 +239,9 @@ public function store(Request $request)
         }
 
         try {
-            // Check if file exists before attempting to delete
-            if (File::exists(public_path($imagePath))) {
-                File::delete(public_path($imagePath));
+            // Check if file exists before attempting to delete menggunakan Storage
+            if (Storage::disk('public')->exists($imagePath)) {
+                Storage::disk('public')->delete($imagePath);
                 return response()->json(['success' => true, 'message' => 'Gambar berhasil dihapus.']);
             } else {
                 return response()->json(['success' => false, 'message' => 'File tidak ditemukan.'], 404);

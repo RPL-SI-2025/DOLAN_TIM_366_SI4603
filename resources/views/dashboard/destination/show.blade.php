@@ -1,4 +1,3 @@
-
 <x-layout-admin>
         <x-slot name="title">Detail Destinasi - {{ $destination->name }}</x-slot>
         
@@ -27,7 +26,7 @@
             <!-- Header with main image -->
             <div class="relative h-64 md:h-80 bg-gray-200">
                 @if($destination->image)
-                    <img src="{{ asset($destination->image) }}" alt="{{ $destination->name }}" class="w-full h-full object-cover">
+                    <img src="{{ asset('storage/' . $destination->image) }}" alt="{{ $destination->name }}" class="w-full h-full object-cover">
                 @else
                     <div class="w-full h-full flex items-center justify-center text-gray-500">
                         <span>Tidak ada gambar utama</span>
@@ -87,8 +86,8 @@
                             @if($destination->additional_images && is_array($destination->additional_images) && count($destination->additional_images) > 0)
                                 <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
                                     @foreach($destination->additional_images as $image)
-                                        <a href="{{ asset($image) }}" target="_blank" class="block h-32 bg-gray-100 rounded overflow-hidden">
-                                            <img src="{{ asset($image) }}" alt="Galeri {{ $destination->name }}" class="w-full h-full object-cover hover:opacity-90 transition">
+                                        <a href="{{ asset('storage/' . $image) }}" target="_blank" class="block h-32 bg-gray-100 rounded overflow-hidden">
+                                            <img src="{{ asset('storage/' . $image) }}" alt="Galeri {{ $destination->name }}" class="w-full h-full object-cover hover:opacity-90 transition">
                                         </a>
                                     @endforeach
                                 </div>
