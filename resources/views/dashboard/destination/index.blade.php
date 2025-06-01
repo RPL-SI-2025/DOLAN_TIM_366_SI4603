@@ -38,21 +38,9 @@
                                 <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-600">{{ $destination->stock }}</td>
                                 <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-600">Rp{{ number_format($destination->price, 0, ',', '.') }}</td>
                                 <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-600">
-                                    <div class="flex flex-col space-y-1">
-                                        <span class="px-2 py-1 text-xs rounded-full {{ $destination->has_ticket ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800' }}">
-                                            {{ $destination->has_ticket ? 'Ya' : 'Tidak' }}
-                                        </span>
-                                        @if($destination->has_ticket)
-                                            @if($destination->hasTicket())
-                                                <span class="text-xs text-blue-600">✓ Tiket sudah dibuat</span>
-                                            @else
-                                                <a href="{{ route('dashboard.tickets.create', ['destination_id' => $destination->id]) }}" 
-                                                   class="text-xs text-orange-600 hover:text-orange-800">
-                                                    → Buat tiket
-                                                </a>
-                                            @endif
-                                        @endif
-                                    </div>
+                                    <span class="px-2 py-1 text-xs rounded-full {{ $destination->has_ticket ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800' }}">
+                                        {{ $destination->has_ticket ? 'Ya' : 'Tidak' }}
+                                    </span>
                                 </td>
                                 <td class="px-4 py-3">
                                     @if ($destination->image)

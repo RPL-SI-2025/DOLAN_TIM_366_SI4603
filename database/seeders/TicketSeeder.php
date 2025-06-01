@@ -17,15 +17,13 @@ class TicketSeeder extends Seeder
         Ticket::create([
             'ticket_name' => 'Tiket Masuk Reguler - Weekday',
             'price' => 55000,
-            'destination_id' => 11,
-            'stock' => 100,
+            'destination_id' => 1,
         ]);
 
         Ticket::create([
             'ticket_name' => 'Tiket Masuk Reguler - Weekend',
             'price' => 85000,
-            'destination_id' => 12,
-            'stock' => 50,
+            'destination_id' => 2,
         ]);
     }
 }
