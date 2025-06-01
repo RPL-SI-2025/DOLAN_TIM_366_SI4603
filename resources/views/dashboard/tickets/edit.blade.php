@@ -57,13 +57,6 @@
                        class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 transition">
                 <p class="text-xs text-gray-500 mt-1">Jumlah tiket yang tersedia untuk dijual</p>
             </div>
-
-            <div>
-                <label for="ticket_date" class="block text-sm font-medium text-gray-700 mb-1">Tanggal Tiket (Opsional)</label>
-                <input type="date" name="ticket_date" id="ticket_date" 
-                       value="{{ old('ticket_date', $ticket->ticket_date ? $ticket->ticket_date->format('Y-m-d') : '') }}"
-                       class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 transition">
-            </div>
             
             <div class="pt-4 flex space-x-4">
                 <button type="submit" class="flex-1 py-3 bg-green-500 text-white font-semibold rounded-lg transition hover:bg-green-600 focus:ring-2 focus:ring-green-300">
