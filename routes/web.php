@@ -113,9 +113,6 @@ Route::prefix('user')->name('user.')->middleware('auth')->group(function () {
     //Order List
     Route::get('/my-orders', [OrderController::class, 'userOrders'])->name('orders');
     Route::get('/my-orders/{id}', [OrderController::class, 'userOrderDetail'])->name('orders.show');
-    //Order List
-    Route::get('/my-orders', [OrderController::class, 'userOrders'])->name('orders');
-    Route::get('/my-orders/{id}', [OrderController::class, 'userOrderDetail'])->name('orders.show');
 });
 
     // Profile
