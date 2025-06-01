@@ -72,10 +72,17 @@
 
                     <!-- Action Buttons -->
                     <div class="flex flex-col sm:flex-row gap-4">
-                        <a href="/checkout/{{ $merchandise->id }}" 
-                           class="w-full sm:w-auto inline-flex items-center justify-center px-6 py-3 text-white bg-purple-600 hover:bg-purple-700 rounded-xl font-semibold text-base transition-all">
-                            🛒 Checkout Sekarang
-                        </a>
+                        @if($merchandise->stock > 0)
+                            <a href="{{ route('merchandise.purchase_form', $merchandise->id) }}" 
+                               class="w-full sm:w-auto inline-flex items-center justify-center px-6 py-3 text-white bg-purple-600 hover:bg-purple-700 rounded-xl font-semibold text-base transition-all">
+                                🛒 Checkout Sekarang
+                            </a>
+                        @else
+                            <button disabled
+                                    class="w-full sm:w-auto inline-flex items-center justify-center px-6 py-3 text-gray-500 bg-gray-300 rounded-xl font-semibold text-base cursor-not-allowed">
+                                Stok Habis
+                            </button>
+                        @endif
                         <a href="/merchandise" 
                            class="w-full sm:w-auto inline-flex items-center justify-center px-6 py-3 bg-gray-100 text-gray-800 hover:bg-gray-200 rounded-xl font-medium text-base transition-all">
                             ← Kembali ke Daftar Merchandise
