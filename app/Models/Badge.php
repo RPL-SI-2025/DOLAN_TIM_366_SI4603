@@ -2,15 +2,14 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class Badge extends Model
 {
-    protected $fillable = ['name', 'description', 'discount', 'user_id'];
-    protected $table = 'badge';
+    protected $fillable = ['name', 'description', 'icon'];
 
-
-    public function user()
+    public function users(): BelongsToMany
     {
-        return $this->belongsTo(User::class, 'user_id');
+        return $this->belongsToMany(User::class)->withTimestamps();
     }
 }

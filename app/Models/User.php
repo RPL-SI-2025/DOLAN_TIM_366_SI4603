@@ -69,4 +69,16 @@ class User extends Authenticatable
     {
         return $this->hasMany(Rating::class);
     }
+
+    // app/Models/User.php
+public function badges(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
+{
+    return $this->belongsToMany(Badge::class)->withTimestamps();
+}
+
+// app/Models/Badge.php
+public function users()
+{
+    return $this->belongsToMany(User::class)->withTimestamps();
+}
 }
