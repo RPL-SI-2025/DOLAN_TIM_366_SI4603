@@ -22,15 +22,40 @@ class RatingController extends Controller
     public function create(Destination $destination)
     {
         if (!auth()->user()->isUser()) {
-            return redirect()->back()->with('error', 'Unauthorized access');
+            return response()->json(['error' => 'Unauthorized access'], 403);
         }
-        return view('user.ratings.create', compact('destination'));
+
+        // Check if user already has a rating for this destination
+        $existingRating = Rating::where('user_id', auth()->id())
+                               ->where('destination_id', $destination->id)
+                               ->first();
+
+        if ($existingRating) {
+            return response()->json([
+                'error' => 'You have already rated this destination. You can edit your existing rating.',
+                'existing_rating' => $existingRating
+            ], 400);
+        }
+
+        return response()->json(['destination' => $destination]);
     }
 
     public function store(Request $request, Destination $destination)
     {
         if (!auth()->user()->isUser()) {
-            return redirect()->back()->with('error', 'Unauthorized access');
+            return response()->json(['error' => 'Unauthorized access'], 403);
+        }
+
+        // Check if user already has a rating for this destination
+        $existingRating = Rating::where('user_id', auth()->id())
+                               ->where('destination_id', $destination->id)
+                               ->first();
+
+        if ($existingRating) {
+            return response()->json([
+                'error' => 'You have already rated this destination. You can edit your existing rating.',
+                'existing_rating' => $existingRating
+            ], 400);
         }
 
         $validated = $request->validate([
@@ -44,8 +69,10 @@ class RatingController extends Controller
             'feedback' => $validated['feedback'],
         ]);
 
-        return redirect()->route('destinations.show', $destination)
-            ->with('success', 'Rating submitted successfully');
+        return response()->json([
+            'success' => 'Rating submitted successfully',
+            'rating' => $rating->load('user')
+        ]);
     }
 
     public function show(Rating $rating)
@@ -58,16 +85,17 @@ class RatingController extends Controller
 
     public function edit(Rating $rating)
     {
-        if (auth()->id() !== $rating->user_id) {
-            return redirect()->back()->with('error', 'Unauthorized access');
+        if (!auth()->user()->isUser() || auth()->id() !== $rating->user_id) {
+            return response()->json(['error' => 'Unauthorized access'], 403);
         }
-        return view('user.ratings.edit', compact('rating'));
+
+        return response()->json(['rating' => $rating]);
     }
 
     public function update(Request $request, Rating $rating)
     {
-        if (auth()->id() !== $rating->user_id) {
-            return redirect()->back()->with('error', 'Unauthorized access');
+        if (!auth()->user()->isUser() || auth()->id() !== $rating->user_id) {
+            return response()->json(['error' => 'Unauthorized access'], 403);
         }
 
         $validated = $request->validate([
@@ -77,8 +105,10 @@ class RatingController extends Controller
 
         $rating->update($validated);
 
-        return redirect()->route('user.ratings.show', $rating)
-            ->with('success', 'Rating updated successfully');
+        return response()->json([
+            'success' => 'Rating updated successfully',
+            'rating' => $rating->load('user')
+        ]);
     }
 
     public function destroy(Rating $rating)
@@ -97,4 +127,10 @@ class RatingController extends Controller
         $ratings = $destination->ratings()->with('user')->latest()->paginate(10);
         return view('dashboard.ratings.by_destination', compact('destination', 'ratings'));
     }
-} 
+
+    public function getAllRatings(Destination $destination)
+    {
+        $ratings = $destination->ratings()->with('user')->latest()->get();
+        return response()->json(['ratings' => $ratings]);
+    }
+}

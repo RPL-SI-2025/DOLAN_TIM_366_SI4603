@@ -40,10 +40,26 @@ class DatabaseSeeder extends Seeder
             'role' => 'user',
         ]);
 
-         User::create([
+        User::create([
             'name' => 'Bento2',
             'email' => 'user2@gmail.com',
             'password' => 'user2123456',
+            'phone' => '123456',
+            'role' => 'user',
+        ]);
+
+        User::create([
+            'name' => 'Bento3',
+            'email' => 'user3@gmail.com',
+            'password' => 'user3123456',
+            'phone' => '123456',
+            'role' => 'user',
+        ]);
+
+        User::create([
+            'name' => 'Bento4',
+            'email' => 'user4@gmail.com',
+            'password' => 'user4123456',
             'phone' => '123456',
             'role' => 'user',
         ]);
