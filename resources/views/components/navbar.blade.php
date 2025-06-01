@@ -15,10 +15,8 @@
       Dashboard
       </a>
       @elseif (Auth::check() && (Auth::user()->isUser()))
-      <a href={{route('user.profile.show')}} class="ml-4 bg-purple-600 text-white px-5 py-2 rounded-full hover:bg-purple-700 transition">
-      Profile
-
-      </a>
+      <a href={{route('user.profile.show')}} class="ml-4 bg-purple-600 text-white px-5 py-2 rounded-full hover:bg-purple-700 transition">Profile</a>
+      <a href="{{ route('user.orders') }}" class="text-gray-700 hover:text-purple-600">My Orders</a>
       @else
       <a href={{route('registration')}} class="ml-4 bg-purple-600 text-white px-5 py-2 rounded-full hover:bg-purple-700 transition">
       Register
