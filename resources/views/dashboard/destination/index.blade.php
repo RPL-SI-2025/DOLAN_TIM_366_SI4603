@@ -1,6 +1,13 @@
 <x-layout-admin>
     <x-slot name="title">Daftar Destinasi</x-slot>
     
+    <div class="mb-6 flex justify-end">
+    <a href="{{ route('dashboard.destination.pending') }}"
+       class="bg-purple-600 text-white px-4 py-2 rounded hover:bg-purple-700 transition">
+       Lihat Destinasi Pending
+    </a>
+</div>
+
     <div class="px-6 py-4">
         <div class="flex justify-between items-center mb-6">
             <h1 class="text-2xl font-bold text-gray-800">Daftar Destinasi Wisata</h1>

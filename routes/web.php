@@ -150,3 +150,21 @@ Route::post('/wishlist/toggle', [WishlistController::class, 'toggle'])->name('wi
 //Merchandise
 Route::get('/merchandise', [MerchandiseController::class, 'publicIndex'])->name('merchandise.index');
 Route::get('/merchandise/{merchandise}', [MerchandiseController::class, 'publicShow'])->name('merchandise.show');
+
+//crowdsourcing
+Route::post('/user/destinations/store', [DestinationController::class, 'store'])->name('user.destinations.store');
+Route::get('/user/destinations/create', [DestinationController::class, 'createForUser'])
+     ->middleware('auth')
+     ->name('user.destinations.create');
+
+Route::patch('/dashboard/destinations/update-status/{id}', [DestinationController::class, 'updateStatus'])
+     ->middleware('auth')
+     ->name('dashboard.destination.updateStatus');
+
+Route::get('/dashboard/destinations/pending', function () {
+    return view('dashboard.destination.pending');
+})->middleware('auth')->name('dashboard.destination.pending');
+
+Route::get('/user/destinations', [DestinationController::class, 'userDestinations'])
+    ->middleware('auth')
+    ->name('user.destinations.index');
