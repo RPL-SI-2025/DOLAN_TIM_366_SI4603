@@ -18,6 +18,7 @@ use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\OrderController;
 // use App\Http\Controllers\GalleryController;
 use App\Http\Controllers\WishlistController;
+use App\Http\Controllers\BadgeController;
 
 
 // Halaman register

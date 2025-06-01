@@ -290,7 +290,7 @@ public function store(Request $request)
         return view('user.destinations.show', compact('destinations', 'other_destinations'));
     }
 
-    public function updateStatus(Request $request, $id)
+public function updateStatus(Request $request, $id)
 {
     $request->validate([
         'status' => 'required|string|in:approved,denied',
@@ -303,22 +303,25 @@ public function store(Request $request)
         $user = $destination->user;
         $user->points += 10;
         $user->save();
-    }
-        // Cek apakah sudah punya badge
-        if (!$user->badges()->where('name', 'Kontributor Pertama')->exists()) {
-            $badge = Badge::firstOrCreate([
-                'name' => 'Kontributor Pertama'
-            ], [
-                'description' => 'Mendapatkan persetujuan untuk destinasi pertama',
-                'icon' => 'icons/first_contributor.png', // opsional
-            ]);
 
-            $user->badges()->attach($badge->id);
+        $levels = [
+            10  => 1,
+            100 => 2,
+            200 => 3,
+        ];
+
+        // Cek setiap level, attach badge jika user sudah mencapai threshold dan belum memiliki badge
+        foreach ($levels as $threshold => $badgeId) {
+            if ($user->points >= $threshold) {
+                if (!$user->badges()->where('badges.id', $badgeId)->exists()) {
+                    $user->badges()->attach($badgeId);
+                }
+            }
         }
+    }
 
     return redirect()->back()->with('success', 'Status berhasil diubah menjadi ' . $request->status);
 }
-
 public function userDestinations()
 {
     $destinations = Destination::where('user_id', Auth::id())->get();

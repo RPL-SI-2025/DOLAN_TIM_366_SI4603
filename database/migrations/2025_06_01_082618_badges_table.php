@@ -9,8 +9,9 @@ return new class extends Migration
     /**
      * Run the migrations.
      */
-    public function up()
+public function up()
 {
+    Schema::dropIfExists('badges'); // tambahkan ini jika diperlukan
     Schema::create('badges', function (Blueprint $table) {
         $table->id();
         $table->string('name');

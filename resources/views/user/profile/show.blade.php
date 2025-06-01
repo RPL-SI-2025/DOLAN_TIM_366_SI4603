@@ -56,34 +56,57 @@
             <p class="text-3xl text-blue-600 font-semibold mt-2">{{ $user->points }} poin</p>
           </div>
 
-          <!-- Badge -->
-          <div class="pt-6">
-            <h4 class="text-xl font-bold text-gray-800 dark:text-white mb-2">🎖️ Badge yang Dimiliki</h4>
+            <!-- Badge -->
+            <div class="pt-6">
+            <h4 class="text-xl font-bold text-gray-800 dark:text-white mb-2 flex items-center gap-2">
+              <span class="text-2xl">🎖️</span> Badge yang Dimiliki
+            </h4>
 
             @if($user->badges->isEmpty())
-              <p class="text-gray-500 italic">Belum memiliki badge</p>
-            @else
-              <p class="text-gray-500 text-sm mb-4">Total badge: {{ $user->badges->count() }}</p>
-
-              <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
-                @foreach($user->badges as $badge)
-                  <div class="bg-gray-100 dark:bg-gray-700 rounded-xl p-4 shadow flex items-center space-x-4">
-                    @if ($badge->icon)
-                      <img src="{{ asset($badge->icon) }}" alt="{{ $badge->name }}" class="w-10 h-10 object-contain">
-                    @else
-                      <div class="w-10 h-10 bg-indigo-500 text-white flex items-center justify-center rounded-full font-bold">
-                        {{ strtoupper(substr($badge->name, 0, 1)) }}
-                      </div>
-                    @endif
-                    <div>
-                      <p class="text-gray-800 dark:text-white font-semibold">{{ $badge->name }}</p>
-                      <p class="text-gray-500 text-sm">{{ $badge->description }}</p>
+              <div class="flex items-center gap-2 bg-gray-50 dark:bg-gray-700 rounded-lg p-4 mt-2">
+              <svg class="w-6 h-6 text-gray-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                <span class="text-gray-500 italic">Belum memiliki badge</span>
+                </div>
+              @else
+                <div class="flex items-center justify-between mb-4">
+                <p class="text-gray-500 text-sm">Total badge: <span class="font-semibold text-blue-600">{{ $user->badges->count() }}</span></p>
+                <div class="flex -space-x-2">
+                  @foreach($user->badges->take(3) as $badge)
+                  @if ($badge->icon)
+                    <img src="{{ asset($badge->icon) }}" alt="{{ $badge->name }}" class="w-8 h-8 object-contain rounded-full border-2 border-white shadow">
+                  @else
+                    <div class="w-8 h-8 bg-indigo-500 text-white flex items-center justify-center rounded-full font-bold border-2 border-white shadow">
+                    {{ strtoupper(substr($badge->name, 0, 1)) }}
                     </div>
+                  @endif
+                  @endforeach
+                  @if($user->badges->count() > 3)
+                  <span class="w-8 h-8 bg-gray-300 dark:bg-gray-600 text-gray-700 dark:text-gray-200 flex items-center justify-center rounded-full text-xs font-semibold border-2 border-white shadow">+{{ $user->badges->count() - 3 }}</span>
+                  @endif
+                </div>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+                @foreach($user->badges as $badge)
+                  <div class="bg-gradient-to-br from-indigo-50 via-purple-50 to-pink-50 dark:from-gray-800 dark:via-gray-700 dark:to-gray-800 rounded-xl p-4 shadow hover:shadow-lg transition flex items-center gap-4">
+                  @if ($badge->icon)
+                    <img src="{{ asset($badge->icon) }}" alt="{{ $badge->name }}" class="w-12 h-12 object-contain rounded-full border-2 border-indigo-400 dark:border-indigo-600 shadow flex-shrink-0">
+                  @else
+                    <div class="w-12 h-12 bg-indigo-500 text-white flex items-center justify-center rounded-full font-bold text-lg border-2 border-indigo-400 dark:border-indigo-600 shadow flex-shrink-0">
+                    {{ strtoupper(substr($badge->name, 0, 1)) }}
+                    </div>
+                  @endif
+                  <div class="flex flex-col min-w-0">
+                    <span class="font-semibold text-gray-800 dark:text-white break-words">{{ $badge->name }}</span>
+                    <span class="text-gray-500 text-xs mt-1 break-words">{{ $badge->description }}</span>
+                  </div>
                   </div>
                 @endforeach
+                </div>
               </div>
             @endif
-          </div>
 
           <!-- Aksi -->
           <div class="pt-6 space-x-4">
