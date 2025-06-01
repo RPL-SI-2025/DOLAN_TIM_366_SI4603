@@ -4,9 +4,9 @@
       <nav class="hidden md:flex gap-6 text-gray-800 font-medium">
         <a href="{{ route('home') }}" class="hover:text-purple-600">Home</a>
         <a href="{{ route('destination.index') }}" class="hover:text-purple-600">Tours</a>
-        <a href=wishlist class="hover:text-purple-600">Wishlist</a>
+        <a href="{{ route('wishlist.show') }}" class="hover:text-purple-600">Wishlist</a>
         <a href="" class="hover:text-purple-600">Gallery</a>
-        <a href=merchandise class="hover:text-purple-600">Merchandise</a>
+        <a href="{{ route('merchandise.index') }}" class="hover:text-purple-600">Merchandise</a>
         <a href="{{route('articles.index')}}" class="hover:text-purple-600">Article</a>
         <a href="#contribute" class="hover:text-purple-600">Contribute</a>
       </nav>
@@ -15,9 +15,8 @@
       Dashboard
       </a>
       @elseif (Auth::check() && (Auth::user()->isUser()))
-      <a href={{route('user.profile.show')}} class="ml-4 bg-purple-600 text-white px-5 py-2 rounded-full hover:bg-purple-700 transition">
-      Profile
-
+      <a href={{route('user.profile.show')}} class="ml-4 bg-purple-600 text-white px-5 py-2 rounded-full hover:bg-purple-700 transition">Profile</a>
+      <a href="{{ route('user.orders') }}" class="text-gray-700 hover:text-purple-600">My Orders</a>
       </a>
       @else
       <a href={{route('registration')}} class="ml-4 bg-purple-600 text-white px-5 py-2 rounded-full hover:bg-purple-700 transition">

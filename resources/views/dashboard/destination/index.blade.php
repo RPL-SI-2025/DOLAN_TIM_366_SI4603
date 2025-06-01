@@ -1,6 +1,13 @@
 <x-layout-admin>
     <x-slot name="title">Daftar Destinasi</x-slot>
     
+    <div class="mb-6 flex justify-end">
+    <a href="{{ route('dashboard.destination.pending') }}"
+       class="bg-purple-600 text-white px-4 py-2 rounded hover:bg-purple-700 transition">
+       Lihat Destinasi Pending
+    </a>
+</div>
+
     <div class="px-6 py-4">
         <div class="flex justify-between items-center mb-6">
             <h1 class="text-2xl font-bold text-gray-800">Daftar Destinasi Wisata</h1>
@@ -38,9 +45,21 @@
                                 <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-600">{{ $destination->stock }}</td>
                                 <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-600">Rp{{ number_format($destination->price, 0, ',', '.') }}</td>
                                 <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-600">
-                                    <span class="px-2 py-1 text-xs rounded-full {{ $destination->has_ticket ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800' }}">
-                                        {{ $destination->has_ticket ? 'Ya' : 'Tidak' }}
-                                    </span>
+                                    <div class="flex flex-col space-y-1">
+                                        <span class="px-2 py-1 text-xs rounded-full {{ $destination->has_ticket ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800' }}">
+                                            {{ $destination->has_ticket ? 'Ya' : 'Tidak' }}
+                                        </span>
+                                        @if($destination->has_ticket)
+                                            @if($destination->hasTicket())
+                                                <span class="text-xs text-blue-600">✓ Tiket sudah dibuat</span>
+                                            @else
+                                                <a href="{{ route('dashboard.tickets.create', ['destination_id' => $destination->id]) }}" 
+                                                   class="text-xs text-orange-600 hover:text-orange-800">
+                                                    → Buat tiket
+                                                </a>
+                                            @endif
+                                        @endif
+                                    </div>
                                 </td>
                                 <td class="px-4 py-3">
                                     @if ($destination->image)

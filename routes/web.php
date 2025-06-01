@@ -86,7 +86,14 @@ Route::prefix('dashboard')->name('dashboard.')->group(function () {
     Route::put('merchandise/{merchandise}', [MerchandiseController::class, 'update'])->name('merchandise.update')->middleware(['auth', 'role:admin,super_admin']);
     Route::delete('merchandise/{merchandise}', [MerchandiseController::class, 'destroy'])->name('merchandise.destroy')->middleware(['auth', 'role:admin,super_admin']);
 
-
+    // Ticket
+    Route::get('tickets', [TicketController::class, 'index'])->name('tickets.index');
+    Route::get('tickets/create', [TicketController::class, 'create'])->name('tickets.create');
+    Route::post('tickets', [TicketController::class, 'store'])->name('tickets.store');
+    Route::get('tickets/{ticket}', [TicketController::class, 'show'])->name('tickets.show');
+    Route::get('tickets/{ticket}/edit', [TicketController::class, 'edit'])->name('tickets.edit');
+    Route::put('tickets/{ticket}', [TicketController::class, 'update'])->name('tickets.update');
+    Route::delete('tickets/{ticket}', [TicketController::class, 'destroy'])->name('tickets.destroy');
 
     // Ratings
     Route::get('ratings', [RatingController::class, 'index'])->name('ratings.index')->middleware(['auth', 'role:admin,super_admin']);
@@ -103,10 +110,12 @@ Route::prefix('user')->name('user.')->middleware('auth')->group(function () {
     Route::get('ratings/{rating}/edit', [RatingController::class, 'edit'])->name('ratings.edit');
     Route::put('ratings/{rating}', [RatingController::class, 'update'])->name('ratings.update');
 
-    // Ticket
-    Route::resource('tickets', TicketController::class)->middleware(['auth', 'role:admin,super_admin']);
-
+    //Order List
+    Route::get('/my-orders', [OrderController::class, 'userOrders'])->name('orders');
+    Route::get('/my-orders/{id}', [OrderController::class, 'userOrderDetail'])->name('orders.show');
 });
+
+    
 
     // Profile
     Route::prefix('user/profile')->name('user.profile.')->middleware('auth')->group(function () {
@@ -131,15 +140,14 @@ Route::get('destinations', [DestinationController::class, 'showAllDestinations']
 Route::get('destinations/{id}', [DestinationController::class, 'showDestination'])->name('destinations.show');
 
 // Purchase Order
-Route::get('/tickets-for-sale', [TicketController::class, 'showAvailableTickets'])->name('tickets.available')->middleware('auth');
-Route::post('/purchase/ticket/{ticket}', [OrderController::class, 'purchaseTicket'])->name('purchase.ticket')->middleware('auth');
+Route::post('/tickets/{ticket}/purchase', [OrderController::class, 'purchaseTicket'])->name('tickets.purchase')->middleware('auth');
 Route::get('/booking/destination/{destination}', [TicketController::class, 'showTicketBookingPage'])->name('tickets.show_ticket_form')->middleware('auth');
 Route::get('/orders', [OrderController::class, 'showOrder'])->name('orders.index')->middleware('auth');
 
 // Midtrans 
 Route::get('/payment/checkout/{order}', [PaymentController::class, 'createTransaction'])->name('payment.checkout')->middleware('auth');
 Route::get('/payment/finish/{order}', [PaymentController::class, 'paymentFinish'])->name('payment.finish')->middleware('auth');
-Route::post('/payment/notifications', [PaymentController::class, 'notificationHandler'])->name('payment.notification');
+Route::post('/payment/notification', [PaymentController::class, 'notificationHandler'])->name('payment.notification');
 
 //Wishlist
 Route::middleware('auth')->get('wishlist', [WishlistController::class, 'show'])->name('wishlist.show');
@@ -150,3 +158,23 @@ Route::post('/wishlist/toggle', [WishlistController::class, 'toggle'])->name('wi
 //Merchandise
 Route::get('/merchandise', [MerchandiseController::class, 'publicIndex'])->name('merchandise.index');
 Route::get('/merchandise/{merchandise}', [MerchandiseController::class, 'publicShow'])->name('merchandise.show');
+Route::get('/merchandise/{merchandise}/purchase', [MerchandiseController::class, 'showPurchaseForm'])->name('merchandise.purchase_form');
+Route::post('/merchandise/{merchandise}/purchase', [OrderController::class, 'purchaseMerchandise'])->name('merchandise.purchase')->middleware('auth');
+
+//crowdsourcing
+Route::post('/user/destinations/store', [DestinationController::class, 'store'])->name('user.destinations.store');
+Route::get('/user/destinations/create', [DestinationController::class, 'createForUser'])
+     ->middleware('auth')
+     ->name('user.destinations.create');
+
+Route::patch('/dashboard/destinations/update-status/{id}', [DestinationController::class, 'updateStatus'])
+     ->middleware('auth')
+     ->name('dashboard.destination.updateStatus');
+
+Route::get('/dashboard/destinations/pending', function () {
+    return view('dashboard.destination.pending');
+})->middleware('auth')->name('dashboard.destination.pending');
+
+Route::get('/user/destinations', [DestinationController::class, 'userDestinations'])
+    ->middleware('auth')
+    ->name('user.destinations.index');

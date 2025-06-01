@@ -96,4 +96,14 @@ class MerchandiseController extends Controller
 
         return redirect()->route('dashboard.merchandise.index')->with('success', 'Merchandise berhasil dihapus.');
     }
+
+    public function showPurchaseForm(Merchandise $merchandise)
+    {
+        if ($merchandise->stock <= 0) {
+            return redirect()->route('merchandise.show', $merchandise->id)
+                ->with('error', 'Sorry, this merchandise is currently out of stock.');
+        }
+
+        return view('merchandise.merch_form', compact('merchandise'));
+    }
 }
