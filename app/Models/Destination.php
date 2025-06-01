@@ -36,7 +36,6 @@ class Destination extends Model
     {
         return $this->ratings()->avg('rating');
     }
-
     public function tickets(): HasOne
     {
         return $this->hasOne(Ticket::class);

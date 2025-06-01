@@ -103,7 +103,14 @@ Route::prefix('user')->name('user.')->middleware('auth')->group(function () {
         Route::delete('/', [ProfileController::class, 'destroy'])->name('destroy');
 });
 
-
+// Rating routes
+Route::middleware('auth')->group(function () {
+    Route::get('/destinations/{destination}/ratings/create', [RatingController::class, 'create'])->name('destinations.ratings.create');
+    Route::post('/destinations/{destination}/ratings', [RatingController::class, 'store'])->name('destinations.ratings.store');
+    Route::get('/ratings/{rating}/edit', [RatingController::class, 'edit'])->name('ratings.edit');
+    Route::put('/ratings/{rating}', [RatingController::class, 'update'])->name('ratings.update');
+    Route::get('/destinations/{destination}/ratings/all', [RatingController::class, 'getAllRatings'])->name('destinations.ratings.all');
+});
 
 Route::get('destinations', [DestinationController::class, 'showAllDestinations'])->name('destination.index');
 Route::get('destinations/{id}', [DestinationController::class, 'showDestination'])->name('destinations.show');

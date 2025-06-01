@@ -8,9 +8,16 @@
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.css" />
   <script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.umd.js"></script>
+  <meta name="csrf-token" content="{{ csrf_token() }}">
   <style>
     body {
       font-family: 'Poppins', sans-serif;
+    }
+    .modal {
+      display: none;
+    }
+    .modal.show {
+      display: flex !important;
     }
   </style>
   @vite(['resources/css/app.css', 'resources/js/app.js'])
@@ -149,15 +156,16 @@
             </div>
             @auth
               @if(auth()->user()->isUser())
-                <a href="{{ route('user.ratings.create', $destinations) }}" class="px-6 py-3 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition">
+                <button onclick="openRatingModal()" class="px-6 py-3 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition">
                   Write a Review
-                </a>
+                </button>
               @endif
             @endauth
           </div>
-          <div class="space-y-6">
-            @forelse($destinations->ratings()->with('user')->latest()->get() as $rating)
-              <div class="border-b pb-6">
+          <div class="space-y-6" id="ratings-container">
+            @php $ratingsToShow = $destinations->ratings()->with('user')->latest()->take(3)->get(); @endphp
+            @forelse($ratingsToShow as $rating)
+              <div class="border-b pb-6" data-rating-id="{{ $rating->id }}">
                 <div class="flex justify-between items-start">
                   <div>
                     <h4 class="font-bold">{{ $rating->user->name }}</h4>
@@ -173,7 +181,7 @@
                     </div>
                   </div>
                   @if(auth()->check() && auth()->id() === $rating->user_id)
-                    <a href="{{ route('user.ratings.edit', $rating) }}" class="text-purple-600 hover:text-purple-800">Edit</a>
+                    <button onclick="editRating({{ $rating->id }})" class="text-purple-600 hover:text-purple-800">Edit</button>
                   @endif
                 </div>
                 <p class="mt-4 text-gray-700">{{ $rating->feedback }}</p>
@@ -182,14 +190,35 @@
               <p class="text-center text-gray-500">No reviews yet. Be the first to review this destination!</p>
             @endforelse
           </div>
+          @if($destinations->ratings()->count() > 3)
+            <div class="mt-6 text-center">
+              <button onclick="showAllRatings()" class="text-purple-600 hover:text-purple-800 font-medium">
+                Show All Reviews ({{ $destinations->ratings()->count() }})
+              </button>
+            </div>
+          @endif
         </div>
       </div>
     </section>
   </main>
-      <!-- Footer Section -->
-      <footer class="bg-purple-100 text-center py-6 text-sm text-purple-600 mt-12">
-        <p>&copy; {{ date('Y') }} Dolan. Website ini dikelola oleh tim Dolan Wisata.</p>
-    </footer>
 
+  <!-- Include Modal Views -->
+  @include('user.ratings.modal')
+  @include('user.ratings.show-all-modal')
+
+  <!-- Scripts should be at the bottom -->
+  <script>
+    // Set global variables for JavaScript
+    window.destinationId = {{ $destinations->id }};
+    window.currentUserId = {{ auth()->check() ? auth()->id() : 'null' }};
+  </script>
+  
+  <!-- Include Rating JavaScript as separate script tag -->
+  <script src="{{ Vite::asset('resources/js/rating-modal.js') }}"></script>
+
+  <!-- Footer Section -->
+  <footer class="bg-purple-100 text-center py-6 text-sm text-purple-600 mt-12">
+    <p>&copy; {{ date('Y') }} Dolan. Website ini dikelola oleh tim Dolan Wisata.</p>
+  </footer>
 </body>
 </html>
