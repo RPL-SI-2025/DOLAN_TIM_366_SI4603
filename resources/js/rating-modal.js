@@ -13,12 +13,28 @@ function openRatingModal() {
     })
     .then(response => response.json())
     .then(data => {
-        if (data.error) {
-            showNotification(data.error, 'error');
-            if (data.existing_rating) {
-                editRating(data.existing_rating.id);
-            }
+        if (data.error === 'existing_rating_found') {
+            // Show confirmation dialog menggunakan SweetAlert2
+            Swal.fire({
+                title: 'Edit Rating?',
+                text: 'Anda sudah pernah memberikan rating. Ingin mengeditnya?',
+                icon: 'question',
+                showCancelButton: true,
+                confirmButtonColor: '#6B21A8',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Ya, Edit',
+                cancelButtonText: 'Batal'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    // User confirmed, open edit modal
+                    editRating(data.existing_rating.id);
+                }
+                // If user cancels, do nothing
+            });
+        } else if (data.error) {
+            console.error('Error:', data.error);
         } else {
+            // No existing rating, show new rating modal
             document.getElementById('modalTitle').textContent = 'Rate & Review';
             document.getElementById('ratingForm').reset();
             document.getElementById('submitBtn').textContent = 'Submit';
@@ -29,14 +45,11 @@ function openRatingModal() {
             const modal = document.getElementById('ratingModal');
             modal.style.display = 'flex';
             modal.classList.add('show');
-            
-            // Prevent body scroll when modal is open
             document.body.style.overflow = 'hidden';
         }
     })
     .catch(error => {
         console.error('Error:', error);
-        showNotification('An error occurred', 'error');
     });
 }
 
@@ -268,3 +281,68 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 });
+
+function submitRating() {
+    const form = document.getElementById('ratingForm');
+    const formData = new FormData(form);
+    
+    // Determine if this is create or update
+    const isUpdate = currentRatingId !== null;
+    const url = isUpdate 
+        ? `/ratings/${currentRatingId}` 
+        : `/destinations/${window.destinationId}/ratings`;
+    
+    const method = isUpdate ? 'PUT' : 'POST';
+    
+    // Convert FormData to regular data for PUT requests
+    const data = {};
+    for (let [key, value] of formData.entries()) {
+        data[key] = value;
+    }
+    
+    const headers = {
+        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+    };
+    
+    fetch(url, {
+        method: method,
+        headers: headers,
+        body: JSON.stringify(data)
+    })
+    .then(response => response.json())
+    .then(data => {
+        // Handle error terlebih dahulu
+        if (data.error) {
+            showNotification(data.error, 'error');
+            return;
+        }
+        
+        // Handle success - cek apakah ada success message dari backend
+        if (data.success) {
+            // Untuk create rating - pesan dari backend
+            showNotification(data.success, 'success');
+        } else if (data.rating && isUpdate) {
+            // Untuk update rating - pesan dari frontend
+            showNotification('Rating berhasil diperbarui', 'success');
+        } else if (data.rating) {
+            // Fallback jika ada rating tapi tidak ada success message
+            showNotification('Rating berhasil disimpan', 'success');
+        }
+        
+        // Update UI dan tutup modal
+        if (data.rating) {
+            updateRatingDisplay(data.rating);
+            closeModal();
+            
+            setTimeout(() => {
+                location.reload();
+            }, 1500);
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        showNotification('Terjadi kesalahan', 'error');
+    });
+}

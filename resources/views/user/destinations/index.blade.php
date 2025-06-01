@@ -50,19 +50,44 @@
             @else
             @foreach($destinations as $destination)
             <div class="max-w-sm drop-shadow-lg bg-white border border-gray-200 rounded-lg shadow-sm dark:bg-gray-800 dark:border-gray-700">
-                <a href="#">
-                <img class="rounded-t-lg w-full" src="{{ asset('storage/' . $destination->image) }}" alt="{{ $destination->name }}" />
+                <a href="{{ route('destinations.show', $destination->id) }}">
+                    <img class="rounded-t-lg w-full h-48 object-cover" src="{{ asset('storage/' . $destination->image) }}" alt="{{ $destination->name }}" />
                 </a>
                 <div class="p-5">
-                <a href="#">
-                    <h4 class="text-2xl font-bold tracking-tight text-gray-900 dark:text-white">{{ $destination->name }}</h4>
-                    <h5 class="mb-2 text-xl font-bold tracking-tight text-purple-900 dark:text-white">{{ $destination->location }}</h5>
-                </a>
-                <div class="flex items-center mb-2">
-                    <p class="text-xs font-normal text-gray-700 dark:text-gray-400">Rp. {{ $destination->price }}</p>
-                </div>
+                    <a href="{{ route('destinations.show', $destination->id) }}">
+                        <h4 class="text-2xl font-bold tracking-tight text-gray-900 dark:text-white">{{ $destination->name }}</h4>
+                        <h5 class="mb-2 text-xl font-bold tracking-tight text-purple-900 dark:text-white">{{ $destination->location }}</h5>
+                    </a>
+                    
+                    <!-- Price Display Logic -->
+                    <div class="flex items-center mb-3">
+                        @if($destination->has_ticket && $destination->price > 0)
+                            <p class="text-lg font-semibold text-gray-800 dark:text-gray-300">
+                                IDR {{ number_format($destination->price, 0, ',', '.') }}
+                            </p>
+                        @elseif($destination->has_ticket && $destination->price == 0)
+                            <p class="text-lg font-medium text-gray-600 dark:text-gray-400">
+                                Contact for pricing
+                            </p>
+                        @else
+                            <p class="text-lg font-medium text-green-600 dark:text-green-400">
+                                .
+                            </p>
+                        @endif
+                    </div>
 
-                <a href="{{ route('destinations.show', $destination->id) }}" class="inline-block text-white bg-gradient-to-br from-purple-400 to-black hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-gray-200 dark:focus:ring-purple-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2">Book Now</a>
+                    <!-- Button Logic -->
+                    @if($destination->has_ticket && $destination->price > 0)
+                        <a href="{{ route('destinations.show', $destination->id) }}" 
+                           class="inline-block text-white bg-gradient-to-br from-purple-400 to-black hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-gray-200 dark:focus:ring-purple-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2">
+                            Book Now
+                        </a>
+                    @else
+                        <a href="{{ route('destinations.show', $destination->id) }}" 
+                            class="inline-block text-white bg-gradient-to-br from-purple-400 to-black hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-gray-200 dark:focus:ring-purple-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2">    
+                            Learn More
+                        </a>
+                    @endif
                 </div>
             </div>
             @endforeach

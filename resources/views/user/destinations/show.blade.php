@@ -9,6 +9,7 @@
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.css" />
   <script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.umd.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <meta name="csrf-token" content="{{ csrf_token() }}">
   <style>
     body {
       font-family: 'Poppins', sans-serif;
@@ -79,9 +80,15 @@
             </div>
 
             <div class="flex flex-col lg:flex-row lg:items-center lg:space-x-4 mt-4">
-              <p class="text-4xl font-bold leading-tight mr-10">
-                <span class="font-bold text-black">IDR {{ number_format($destinations->price, 0, ',', '.') }}</span>
-              </p>
+              @if($destinations->has_ticket && $destinations->price > 0)
+                <p class="text-4xl font-bold leading-tight mr-10">
+                  <span class="font-bold text-black">IDR {{ number_format($destinations->price, 0, ',', '.') }}</span>
+                </p>
+              @else
+                <p class="text-2xl font-medium leading-tight mr-10">
+                  <span class="text-gray-600">{{ $destinations->has_ticket ? 'Contact for pricing' : '' }}</span>
+                </p>
+              @endif
             </div>
 
             <div class="mt-8 flex space-x-4">
@@ -100,7 +107,7 @@
 
                 <a href="{{ $destinations->contact_link }}" class="px-8 py-4 bg-gradient-to-r from-purple-500 to-black text-white font-bold rounded-lg hover:bg-gradient-to-r hover:from-purple-600 hover:to-black transition flex items-center">
                   Contact Us
-                  <svg fill="#ffffff" height="24px" width="24px" version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 512 512" enable-background="new 0 0 512 512" xml:space="preserve" stroke="#ffffff" transform="rotate(0)matrix(-1, 0, 0, 1, 0, 0)" class="ml-2">
+                  <svg fill="#ffffff" height="24px" width="24px" version="1.1" id="Layer_1" xmlns="http://www.w3.org/1999/xhtml" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 512 512" enable-background="new 0 0 512 512" xml:space="preserve" stroke="#ffffff" transform="rotate(0)matrix(-1, 0, 0, 1, 0, 0)" class="ml-2">
                     <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
                     <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
                     <g id="SVGRepo_iconCarrier">
@@ -108,11 +115,12 @@
                     </g>
                   </svg>
                 </a>
-                @if($destinations->has_ticket == 1)
-               <a href="{{ route('tickets.show_ticket_form', ['destination' => $destinations->id]) }}" class="px-8 py-4 bg-gradient-to-r from-purple-500 to-black text-white font-bold rounded-lg hover:bg-gradient-to-r hover:from-purple-600 hover:to-black transition flex items-center">
-                Book Now
-              </a>
-              @endif
+                
+                @if($destinations->has_ticket && $destinations->price > 0)
+                  <a href="{{ route('tickets.show_ticket_form', ['destination' => $destinations->id]) }}" class="px-8 py-4 bg-gradient-to-r from-purple-500 to-black text-white font-bold rounded-lg hover:bg-gradient-to-r hover:from-purple-600 hover:to-black transition flex items-center">
+                    Book Now
+                  </a>
+                @endif
               </div>
             </div>
           </div>
@@ -171,11 +179,24 @@
               <img class="rounded-t-lg w-full" src="{{ asset('storage/' . $other_destination->image) }}" alt="{{ $other_destination->name }}" />
               </a>
               <div class="p-5">
-              <a href="{{ route('destinations.show', $other_destination->id) }}">
-                <h4 class="text-2xl font-bold tracking-tight text-gray-900">{{ $other_destination->name }}</h4>
-                <h5 class="mb-2 text-xl font-bold tracking-tight text-purple-900">{{ $other_destination->location }}</h5>
-              </a>
-              <a href="{{ route('destinations.show', $other_destination->id) }}" class="inline-block text-white bg-gradient-to-br from-purple-400 to-black hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-gray-200 dark:focus:ring-purple-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2">Book Now</a>
+                <a href="{{ route('destinations.show', $other_destination->id) }}">
+                  <h4 class="text-2xl font-bold tracking-tight text-gray-900">{{ $other_destination->name }}</h4>
+                  <h5 class="mb-2 text-xl font-bold tracking-tight text-purple-900">{{ $other_destination->location }}</h5>
+                </a>
+                
+                @if($other_destination->has_ticket && $other_destination->price > 0)
+                  <p class="text-lg font-semibold text-gray-800 mb-3">
+                    IDR {{ number_format($other_destination->price, 0, ',', '.') }}
+                  </p>
+                @elseif($other_destination->has_ticket)
+                  <p class="text-lg font-medium text-gray-600 mb-3">Contact for pricing</p>
+                @else
+                  <p class="text-lg font-medium text-green-600 mb-3"></p>
+                @endif
+                
+                <a href="{{ route('destinations.show', $other_destination->id) }}" class="inline-block text-white bg-gradient-to-br from-purple-400 to-black hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-gray-200 dark:focus:ring-purple-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2">
+                  {{ $other_destination->has_ticket && $other_destination->price > 0 ? 'Book Now' : 'Learn More' }}
+                </a>
               </div>
             </div>
             @endforeach
@@ -209,7 +230,7 @@
             @forelse($ratingsToShow as $rating)
               <div class="border-b pb-6" data-rating-id="{{ $rating->id }}">
                 <div class="flex justify-between items-start">
-                  <div>
+                  <div class="flex-1">
                     <h4 class="font-bold">{{ $rating->user->name }}</h4>
                     <div class="flex items-center mt-1">
                       <div class="flex text-yellow-400">
@@ -221,13 +242,21 @@
                       </div>
                       <span class="text-gray-500 ml-2">{{ $rating->created_at->format('M d, Y') }}</span>
                     </div>
+                    <!-- Tambahkan feedback di sini -->
+                    @if($rating->feedback)
+                      <p class="mt-3 text-gray-700 leading-relaxed">{{ $rating->feedback }}</p>
+                    @endif
                   </div>
                   @if(auth()->check() && auth()->id() === $rating->user_id)
-                    <button onclick="editRating({{ $rating->id }})" class="text-purple-600 hover:text-purple-800">Edit</button>
+                    <button onclick="editRating({{ $rating->id }})" class="text-purple-600 hover:text-purple-800 ml-4">Edit</button>
                   @endif
                 </div>
               </div>
-            @endforeach
+            @empty
+              <div class="text-center py-8">
+                <p class="text-gray-500">Belum ada review untuk destinasi ini.</p>
+              </div>
+            @endforelse
           </div>
           @if($destinations->ratings()->count() > 3)
             <div class="mt-6 text-center">
