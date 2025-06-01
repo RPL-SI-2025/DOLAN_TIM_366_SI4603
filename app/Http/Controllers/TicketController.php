@@ -167,7 +167,6 @@ class TicketController extends Controller
 
     public function showTicketBookingPage(Destination $destination)
     {
-        // Gunakan relasi hasOne
         $ticket = $destination->getAvailableTicket();
 
         if (!$ticket) {
@@ -175,6 +174,6 @@ class TicketController extends Controller
                              ->with('error', 'Sorry, no tickets are currently available for this destination.');
         }
 
-        return view('tickets.ticket_form', compact('destination', 'ticket'));
+        return view('user.destinations.ticket_form', compact('destination', 'ticket'));
     }
 }
