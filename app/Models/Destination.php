@@ -37,8 +37,21 @@ class Destination extends Model
         return $this->ratings()->avg('rating');
     }
 
-    public function tickets(): HasOne
+    public function ticket(): HasOne
     {
         return $this->hasOne(Ticket::class);
+    }
+    public function hasTicket(): bool
+    {
+        return $this->ticket()->exists();
+    }
+
+    public function getAvailableTicket()
+    {
+        return $this->ticket()
+                    ->where('stock', '>', 0)
+                    ->whereNotNull('price')
+                    ->where('price', '>', 0)
+                    ->first();
     }
 }
