@@ -70,6 +70,8 @@ class DatabaseSeeder extends Seeder
             DestinationSeeder::class,
             ArticleSeeder::class,
             PromoSeeder::class,
+            BadgeSeeder::class
+
         ]);
     }
 }

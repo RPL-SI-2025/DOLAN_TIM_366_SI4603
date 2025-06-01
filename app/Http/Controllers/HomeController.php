@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Destination;
 use App\Models\Promo;
+use Illuminate\Http\Request;
 
 class HomeController extends Controller
 {

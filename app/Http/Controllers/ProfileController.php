@@ -31,7 +31,7 @@ class ProfileController extends Controller
             'avatar'  => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048', // Validasi file gambar
         ]);
 
-        $user = Auth::user();
+        $user = User::find(Auth::id());
 
         $user->update([
             'name'    => $request->name,
@@ -56,10 +56,11 @@ class ProfileController extends Controller
 
     public function destroy(Request $request)
     {
-        $user = Auth::user();
+        $authUser = Auth::user();
+        $user = User::find($authUser->id);
 
         // Hapus foto profil dari storage kalau ada
-        if ($user->profile_photo_path) {
+        if ($user && $user->profile_photo_path) {
             Storage::disk('public')->delete($user->profile_photo_path);
         }
 
@@ -67,7 +68,9 @@ class ProfileController extends Controller
         Auth::logout();
 
         // Hapus akun
-        $user->delete();
+        if ($user) {
+            $user->delete();
+        }
 
         return redirect('/')->with('success', 'Akun berhasil dihapus.');
     }

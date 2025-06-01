@@ -20,7 +20,9 @@ class Destination extends Model
         'additional_images',
         'tour_includes',
         'tour_payments',
-        'has_ticket'
+        'has_ticket',
+        'status',
+        'user_id',
     ];
 
     protected $casts = [
@@ -36,8 +38,28 @@ class Destination extends Model
     {
         return $this->ratings()->avg('rating');
     }
-    public function tickets(): HasOne
+  
+    public function ticket(): HasOne
     {
         return $this->hasOne(Ticket::class);
     }
+    
+    public function hasTicket(): bool
+    {
+        return $this->ticket()->exists();
+    }
+
+    public function getAvailableTicket()
+    {
+        return $this->ticket()
+                    ->where('stock', '>', 0)
+                    ->whereNotNull('price')
+                    ->where('price', '>', 0)
+                    ->first();
+    }
+
+    public function user()
+{
+    return $this->belongsTo(User::class);
+}
 }

@@ -17,7 +17,11 @@ class User extends Authenticatable
      *
      * @var list<string>
      */
-
+    public function wishlists()
+    {
+        return $this->hasMany(Wishlist::class);
+    }
+    
     public function isUser(): bool {
         return $this->role === 'user';
     }
@@ -53,16 +57,34 @@ class User extends Authenticatable
      *
      * @return array<string, string>
      */
-    protected function casts(): array
-    {
-        return [
-            'email_verified_at' => 'datetime',
-            'password' => 'hashed',
-        ];
-    }
+protected $casts = [
+    'email_verified_at' => 'datetime',
+    'password'          => 'hashed',
+    'points'            => 'integer',
+];
 
     public function ratings()
     {
         return $this->hasMany(Rating::class);
     }
+
+public function badges(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
+{
+    return $this->belongsToMany(Badge::class)->withTimestamps();
+}
+
+// app/Models/Badge.php
+public function users()
+{
+    return $this->belongsToMany(User::class)->withTimestamps();
+}
+
+public function getPointsAttribute($value)
+{
+    // Jika $value null, ambil nilai dari key "Points" pada atribut asli
+    if ($value === null && isset($this->attributes['Points'])) {
+        return $this->attributes['Points'];
+    }
+    return $value ?? 0;
+}
 }

@@ -8,6 +8,7 @@
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet"/>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet"/>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
   <style>
     body {
       font-family: 'Poppins', sans-serif;
@@ -59,10 +60,20 @@
 </head>
 <body class="text-gray-800">
 
-<x-navbar>
+<x-navbar></x-navbar>
 
-</x-navbar>
-
+  @if(session('success'))
+    <script>
+      Swal.fire({
+        icon: 'success',
+        title: 'Sukses!',
+        text: '{{ session("success") }}',
+        showConfirmButton: false,
+        timer: 3000
+      });
+    </script>
+  @endif
+  
   <!-- Main Content -->
   <main class="container mx-auto px-4 py-16 text-center">
     <!-- Promo Section -->
