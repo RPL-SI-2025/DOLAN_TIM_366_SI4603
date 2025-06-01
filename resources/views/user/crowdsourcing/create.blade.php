@@ -6,9 +6,16 @@
     <title>Tambah Destinasi Baru</title>
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2/dist/tailwind.min.css" rel="stylesheet">
 </head>
+<x-navbar></x-navbar>
+
+
+
 <body class="bg-gray-50">
-    <div class="container mx-auto p-6 bg-white shadow-lg rounded-xl max-w-4xl">
-        <h2 class="text-2xl font-semibold text-indigo-600 mb-8 text-center">Tambah Destinasi Baru</h2>
+    <div class="container mx-auto p-6 bg-white shadow-lg rounded-xl max-w-4xl mt-10">
+        <h2 class="text-2xl font-semibold text-indigo-600 text-center">Tambah Destinasi Baru</h2>
+        <p class="text-gray-600 mb-6 text-center">
+            Silakan lengkapi formulir di bawah ini untuk mengajukan destinasi wisata baru. Permintaan Anda akan diproses dan menunggu persetujuan dari admin sebelum ditampilkan di sistem.
+        </p>
 
         @if ($errors->any())
             <div class="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 mb-6" role="alert">
@@ -21,12 +28,6 @@
             </div>
         @endif
 
-@if(session('success'))
-    <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative" role="alert">
-        <strong class="font-bold">Sukses!</strong>
-        <span class="block sm:inline">{{ session('success') }}</span>
-    </div>
-@endif
 
 <form action="{{ route('user.destinations.store') }}" method="POST" enctype="multipart/form-data">
     @csrf
@@ -63,38 +64,6 @@
 
                 <!-- Right Column -->
                 <div class="space-y-6">
-                    <div class="flex flex-col">
-                        <label for="has_ticket" class="text-sm font-semibold text-gray-700 mb-1">Memiliki Tiket</label>
-                        <select id="has_ticket" name="has_ticket" 
-                            class="p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 transition">
-                            <option value="0" {{ old('has_ticket', '0') == '0' ? 'selected' : '' }}>Tidak</option>
-                            <option value="1" {{ old('has_ticket') == '1' ? 'selected' : '' }}>Ya</option>
-                        </select>
-                        <p class="text-xs text-gray-500 mt-1">Jika tidak, maka destinasi akan memiliki status pending & tiket tidak tersedia.</p>
-                    </div>
-                    
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <div class="flex flex-col">
-                            <label for="stock" class="text-sm font-semibold text-gray-700 mb-1">Stok</label>
-                            <input type="number" id="stock" name="stock" value="{{ old('stock', 0) }}" 
-                                class="p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 transition">
-                        </div>
-
-                        <div class="flex flex-col">
-                            <label for="price" class="text-sm font-semibold text-gray-700 mb-1">Harga</label>
-                            <input type="number" id="price" name="price" value="{{ old('price', 0) }}" 
-                                class="p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 transition">
-                        </div>
-                    </div>
-                    
-                    <div class="flex flex-col">
-                        <label for="tour_payments" class="text-sm font-semibold text-gray-700 mb-1">Informasi Pembayaran</label>
-                        <textarea id="tour_payments" name="tour_payments" rows="4" 
-                            class="p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 transition"
-                            placeholder="Contoh: Pembayaran via e-wallet, QRIS, dll">{{ old('tour_payments') }}</textarea>
-                        <p class="text-xs text-gray-500 mt-1">Informasi tentang metode pembayaran yang tersedia</p>
-                    </div>
-
                     <div class="flex flex-col">
                         <label for="image" class="text-sm font-semibold text-gray-700 mb-1">Gambar Utama</label>
                         <input type="file" id="image" name="image" accept="image/*" required

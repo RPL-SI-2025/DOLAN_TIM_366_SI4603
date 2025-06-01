@@ -104,7 +104,7 @@ public function store(Request $request)
 
     try {
         $destination = Destination::create($validated);
-        return redirect()->route('home')
+        return redirect()->route('user.destinations.index')
                          ->with('success', 'Destinasi berhasil ditambahkan! Terima kasih telah mengirimkan destinasi.');
     } catch (\Exception $e) {
         return redirect()->back()
@@ -278,7 +278,7 @@ public function store(Request $request)
 
     public function showAllDestinations()
     {
-        $destinations = Destination::all();
+        $destinations = Destination::where('status', 'approved')->get();
         return view('user.destinations.index', compact('destinations'));
     }
 

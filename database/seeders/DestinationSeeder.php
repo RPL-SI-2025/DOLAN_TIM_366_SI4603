@@ -22,6 +22,7 @@ class DestinationSeeder extends Seeder
             'stock' => 100,
             'price' => 250000,
             'has_ticket' => true,
+            'status' => 'approved',
         ]);
 
         Destination::create([
@@ -36,13 +37,14 @@ class DestinationSeeder extends Seeder
             'stock' => 50,
             'price' => 350000,
             'has_ticket' => true,
+            'status' => 'approved',
         ]);
 
         Destination::create([
             'name' => 'Danau Toba',
             'description' => 'Danau vulkanik terbesar di Indonesia, dengan pemandangan yang luar biasa dan pulau di tengahnya.',
             'location' => 'Sumatera Utara, Indonesia',
-            'image' => 'images/destinations/danau_toba.jpg',  // Path baru untuk gambar utama
+            'image' => 'images/destinations/danau_toba.jpg',
             'additional_images' => [
                 'images/additional_destinations/danau_toba_1.jpg',
                 'images/additional_destinations/danau_toba_2.jpg',
@@ -50,6 +52,7 @@ class DestinationSeeder extends Seeder
             'stock' => 75,
             'price' => 300000,
             'has_ticket' => false,
+            'status' => 'approved',
         ]);
         
         // Tambahkan data lainnya sesuai kebutuhan

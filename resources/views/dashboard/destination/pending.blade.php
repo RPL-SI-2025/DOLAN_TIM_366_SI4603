@@ -2,7 +2,7 @@
     <x-slot name="title">Destinasi Pending</x-slot>
     
     <div class="mt-10">
-        <h2 class="text-xl font-bold text-gray-800 mb-4">Destinasi Pending dari User</h2>
+        <h2 class="text-xl font-bold text-gray-800 mb-4">Permintaan Destinasi Wisata dari User</h2>
         <div class="overflow-hidden bg-white shadow-md rounded-lg">
             <div class="overflow-x-auto">
                 <table class="min-w-full divide-y divide-gray-200">
@@ -31,7 +31,10 @@
                                             @csrf
                                             @method('PATCH')
                                             <input type="hidden" name="status" value="approved">
-                                            <button type="submit" class="bg-green-500 text-white px-3 py-1 rounded hover:bg-green-600 transition">
+                                            <button type="submit" class="inline-flex items-center px-4 py-2 bg-green-600 hover:bg-green-700 text-white text-sm font-semibold rounded-lg shadow-md transition focus:outline-none focus:ring-2 focus:ring-green-400 focus:ring-opacity-50">
+                                                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/>
+                                                </svg>
                                                 Approve
                                             </button>
                                         </form>
@@ -39,7 +42,10 @@
                                             @csrf
                                             @method('PATCH')
                                             <input type="hidden" name="status" value="denied">
-                                            <button type="submit" class="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600 transition">
+                                            <button type="submit" class="inline-flex items-center px-4 py-2 bg-red-600 hover:bg-red-700 text-white text-sm font-semibold rounded-lg shadow-md transition focus:outline-none focus:ring-2 focus:ring-red-400 focus:ring-opacity-50">
+                                                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/>
+                                                </svg>
                                                 Deny
                                             </button>
                                         </form>

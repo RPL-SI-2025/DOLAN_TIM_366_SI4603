@@ -1,12 +1,6 @@
 <x-layout-admin>
     <x-slot name="title">Daftar Destinasi</x-slot>
-    
-    <div class="mb-6 flex justify-end">
-    <a href="{{ route('dashboard.destination.pending') }}"
-       class="bg-purple-600 text-white px-4 py-2 rounded hover:bg-purple-700 transition">
-       Lihat Destinasi Pending
-    </a>
-</div>
+
 
     <div class="px-6 py-4">
         <div class="flex justify-between items-center mb-6">
@@ -33,6 +27,7 @@
                             <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Tiket</th>
                             <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Gambar Utama</th>
                             <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Gambar Tambahan</th>
+                            <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
                             <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Aksi</th>
                         </tr>
                     </thead>
@@ -87,6 +82,12 @@
                                     @else
                                         <span class="text-sm text-gray-500 italic">Tidak ada gambar tambahan</span>
                                     @endif
+                                </td>
+                                <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-600">
+                                    <span class="px-2 py-1 text-xs rounded-full 
+                                        {{ $destination->status == 'approved' ? 'bg-green-100 text-green-800' : ($destination->status == 'pending' ? 'bg-yellow-100 text-yellow-800' : 'bg-red-100 text-red-800') }}">
+                                        {{ ucfirst($destination->status) }}
+                                    </span>
                                 </td>
                                 <td class="px-4 py-3 whitespace-nowrap text-sm font-medium">
                                     <div class="flex space-x-3">

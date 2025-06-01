@@ -60,9 +60,7 @@
 </head>
 <body class="text-gray-800">
 
-<x-navbar>
-
-</x-navbar>
+<x-navbar></x-navbar>
 
   @if(session('success'))
     <script>
