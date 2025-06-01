@@ -17,7 +17,11 @@ class User extends Authenticatable
      *
      * @var list<string>
      */
-
+    public function wishlists()
+    {
+        return $this->hasMany(Wishlist::class);
+    }
+    
     public function isUser(): bool {
         return $this->role === 'user';
     }

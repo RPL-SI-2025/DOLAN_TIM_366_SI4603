@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Order;
 use App\Models\Ticket;
+use App\Models\Merchandise;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 
@@ -16,7 +17,6 @@ class OrderController extends Controller
         $orders = Order::all();
         return view('orders.index', compact('orders'));
     }
-    
     
     public function purchaseTicket(Request $request, Ticket $ticket)
     {
@@ -67,6 +67,53 @@ class OrderController extends Controller
         }
     }
 
+    public function purchaseMerchandise(Request $request, Merchandise $merchandise)
+    {
+        $request->validate([
+            'quantity' => 'required|integer|min:1|max:10',
+        ]);
+
+        if (!$merchandise->isAvailable($request->quantity)) {
+            return redirect()->back()
+                ->with('error', 'Sorry, only ' . $merchandise->stock . ' items are currently available.');
+        }
+
+        try {
+            $order = null;
+            
+            $merchandise->getConnection()->transaction(function () use ($request, $merchandise, &$order) {
+                $merchandise->refresh();
+                
+                if (!$merchandise->isAvailable($request->quantity)) {
+                    throw new \Exception('Insufficient stock available.');
+                }
+
+                $order = Order::create([
+                    'user_id' => Auth::id(),
+                    'product_id' => $merchandise->id,
+                    'product_type' => Merchandise::class,
+                    'quantity' => $request->quantity,
+                    'total_amount' => $merchandise->price * $request->quantity,
+                    'status' => 'pending',
+                ]);
+
+                $merchandise->decrement('stock', $request->quantity);
+            });
+
+            if (!$order) {
+                return redirect()->back()
+                    ->with('error', 'Failed to create order. Please try again.');
+            }
+
+            return redirect()->route('payment.checkout', ['order' => $order->id])
+                ->with('success', 'Order created successfully! Please complete your payment.');
+
+        } catch (\Exception $e) {
+            return redirect()->back()
+                ->with('error', 'Something went wrong. Please try again.');
+        }
+    }
+
     public function userOrders(Request $request)
     {
         $type = $request->get('type', 'all');
@@ -76,11 +123,10 @@ class OrderController extends Controller
                      ->whereHas('product')
                      ->orderBy('created_at', 'desc');
         
-        // Filter berdasarkan type
         if ($type === 'ticket') {
             $query->where('product_type', Ticket::class);
         } elseif ($type === 'merchandise') {
-            $query->where('product_type', 'App\\Models\\Merchandise');
+            $query->where('product_type', Merchandise::class);
         }
         
         $orders = $query->paginate(10);

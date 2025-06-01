@@ -21,7 +21,8 @@ class Destination extends Model
         'tour_includes',
         'tour_payments',
         'has_ticket',
-        'status' // kolom status baru
+        'status',
+        'user_id',
     ];
 
     protected $casts = [
@@ -56,4 +57,9 @@ class Destination extends Model
                     ->where('price', '>', 0)
                     ->first();
     }
+
+    public function user()
+{
+    return $this->belongsTo(User::class);
+}
 }
