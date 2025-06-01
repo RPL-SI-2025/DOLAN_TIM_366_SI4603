@@ -80,13 +80,7 @@ class DestinationController extends Controller
         }
 
         try {
-            $destination = Destination::create($validated);
-
-            if (isset($validated['has_ticket']) && $validated['has_ticket'] == 1) {
-                return redirect()->route('dashboard.tickets.create', ['destination_id' => $destination->id])
-                                 ->with('success', 'Destinasi berhasil ditambahkan. Sekarang buat tiketnya.');
-            }
-
+            Destination::create($validated);
             return redirect()->route('dashboard.destination.index')->with('success', 'Destinasi berhasil ditambahkan.');
         } catch (\Exception $e) {
             return redirect()->back()->with('error', 'Gagal menambahkan destinasi: ' . $e->getMessage())->withInput();

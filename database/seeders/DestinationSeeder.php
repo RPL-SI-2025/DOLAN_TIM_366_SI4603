@@ -21,7 +21,6 @@ class DestinationSeeder extends Seeder
             ],
             'stock' => 100,
             'price' => 250000,
-            'has_ticket' => true,
         ]);
 
         Destination::create([
@@ -35,7 +34,6 @@ class DestinationSeeder extends Seeder
             ],
             'stock' => 50,
             'price' => 350000,
-            'has_ticket' => true,
         ]);
 
         Destination::create([
@@ -49,7 +47,6 @@ class DestinationSeeder extends Seeder
             ],
             'stock' => 75,
             'price' => 300000,
-            'has_ticket' => false,
         ]);
         
         // Tambahkan data lainnya sesuai kebutuhan

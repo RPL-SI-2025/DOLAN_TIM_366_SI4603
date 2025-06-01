@@ -4,7 +4,6 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class Destination extends Model
@@ -25,11 +24,10 @@ class Destination extends Model
     ];
 
     protected $casts = [
-        'additional_images' => 'array',
-        'has_ticket' => 'boolean',
+        'additional_images' => 'array', // Casting additional_images menjadi array
     ];
 
-    public function ratings(): HasMany
+    public function ratings()
     {
         return $this->hasMany(Rating::class);
     }
@@ -39,21 +37,8 @@ class Destination extends Model
         return $this->ratings()->avg('rating');
     }
 
-    public function ticket(): HasOne
+    public function tickets(): HasOne
     {
         return $this->hasOne(Ticket::class);
-    }
-    public function hasTicket(): bool
-    {
-        return $this->ticket()->exists();
-    }
-
-    public function getAvailableTicket()
-    {
-        return $this->ticket()
-                    ->where('stock', '>', 0)
-                    ->whereNotNull('price')
-                    ->where('price', '>', 0)
-                    ->first();
     }
 }
