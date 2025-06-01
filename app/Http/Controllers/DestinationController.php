@@ -50,8 +50,13 @@ class DestinationController extends Controller
             'tour_includes' => 'nullable|string',
             'tour_payments' => 'nullable|string',
             'has_ticket' => 'nullable|boolean',
+            'status' => 'nullable|string|max:255', // penambahan field status
+
         ]);
 
+        if (in_array(Auth::user()->role, ['admin', 'super_admin'])) {
+        $validated['status'] = 'approved';
+    }
         // Set appropriate values when has_ticket is false
         if (isset($validated['has_ticket']) && $validated['has_ticket'] == 0) {
             $validated['stock'] = 0;
@@ -122,6 +127,8 @@ class DestinationController extends Controller
             'tour_includes' => 'nullable|string',
             'tour_payments' => 'nullable|string',
             'has_ticket' => 'nullable|boolean',
+            'status' => 'nullable|string|max:255', // penambahan field status
+
         ]);
 
         // Set appropriate values when has_ticket is false
