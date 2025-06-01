@@ -32,6 +32,6 @@ class RegistrationController extends Controller
 
         $request->session()->put('success', 'Registration success!');
 
-        return redirect('/');
+        return redirect('/login')->with('success', 'Registration success! Please login.');
     }
 }

@@ -15,13 +15,12 @@
 
 <x-sidebar/>
 
-<div class="p-4 sm:ml-64">
+<div class="p-4 sm:ml-64 min-h-screen overflow-auto">
    <div class="p-4 rounded-lg mt-14">
       {{ $slot }}
    </div>
 </div>
-
-
+<script src="https://cdn.jsdelivr.net/npm/flowbite@3.1.2/dist/flowbite.min.js"></script>
 </body>
 
 </html>

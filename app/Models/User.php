@@ -17,6 +17,19 @@ class User extends Authenticatable
      *
      * @var list<string>
      */
+
+    public function isUser(): bool {
+        return $this->role === 'user';
+    }
+    
+    public function isAdmin(): bool {
+        return $this->role === 'admin';
+    }
+    
+    public function isSuperAdmin(): bool {
+        return $this->role === 'super_admin';
+    }
+
     protected $fillable = [
         'name',
         'email',
@@ -47,9 +60,9 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
-    public function badges()
+
+    public function ratings()
     {
-        return $this->hasMany(Badge::class, 'user_id');
+        return $this->hasMany(Rating::class);
     }
-    
 }
