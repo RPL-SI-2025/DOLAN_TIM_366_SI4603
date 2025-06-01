@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Destination;
+use App\Models\Badge;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\File;
@@ -297,6 +298,23 @@ public function store(Request $request)
 
     $destination = Destination::findOrFail($id);
     $destination->update(['status' => $request->status]);
+
+    if ($request->status === 'approved') {
+        $user = $destination->user;
+        $user->points += 10;
+        $user->save();
+    }
+        // Cek apakah sudah punya badge
+        if (!$user->badges()->where('name', 'Kontributor Pertama')->exists()) {
+            $badge = Badge::firstOrCreate([
+                'name' => 'Kontributor Pertama'
+            ], [
+                'description' => 'Mendapatkan persetujuan untuk destinasi pertama',
+                'icon' => 'icons/first_contributor.png', // opsional
+            ]);
+
+            $user->badges()->attach($badge->id);
+        }
 
     return redirect()->back()->with('success', 'Status berhasil diubah menjadi ' . $request->status);
 }

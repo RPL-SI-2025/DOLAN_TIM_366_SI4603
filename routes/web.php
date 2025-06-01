@@ -123,7 +123,16 @@ Route::prefix('user')->name('user.')->middleware('auth')->group(function () {
         Route::get('/edit', [ProfileController::class, 'edit'])->name('edit');
         Route::put('/', [ProfileController::class, 'update'])->name('update');
         Route::delete('/', [ProfileController::class, 'destroy'])->name('destroy');
-});
+    
+    // Badges
+        Route::get('/badges', [BadgeController::class, 'index'])->name('badges.index');
+        Route::get('/badges/create', [BadgeController::class, 'create'])->name('badges.create');
+        Route::post('/badges/store', [BadgeController::class, 'store'])->name('badges.store');
+        Route::get('/badges/{id}/edit', [BadgeController::class, 'edit'])->name('badges.edit');
+        Route::put('/badges/{id}', [BadgeController::class, 'update'])->name('badges.update');
+        Route::delete('/badges/{id}', [BadgeController::class, 'destroy'])->name('badges.destroy');
+    });
+
 
 
 
