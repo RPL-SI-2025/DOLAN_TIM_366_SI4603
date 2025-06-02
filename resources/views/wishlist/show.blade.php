@@ -48,7 +48,7 @@
       @foreach($wishlists as $wishlist)
       <div class="max-w-sm drop-shadow-lg bg-white border border-gray-200 rounded-lg shadow-sm dark:bg-gray-800 dark:border-gray-700">
         <a href="{{ route('destinations.show', $wishlist->destination_id) }}">
-          <img class="rounded-t-lg w-full h-48 object-cover" src="{{ asset($wishlist->destination->image)}}" alt="{{ $wishlist->destination_name }}" />
+          <img src="{{ asset('storage/' . $wishlist->destination->image) }}" alt="{{ $wishlist->destination->name }}" class="w-full h-auto max-w-md rounded-lg shadow-md">
         </a>
         <div class="p-5">
           <h4 class="text-2xl font-bold tracking-tight text-gray-900 dark:text-white">{{ $wishlist->destination_name }}</h4>

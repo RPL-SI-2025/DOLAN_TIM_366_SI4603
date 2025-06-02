@@ -2,6 +2,17 @@
     <x-slot name="title">Daftar Tiket</x-slot>
 
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+        <!-- Back button -->
+        <div class="mb-4">
+            <a href="{{ route('dashboard.destination.index') }}" 
+               class="inline-flex items-center text-gray-600 hover:text-gray-800 transition-colors">
+                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+                </svg>
+                Kembali ke Daftar Destinasi
+            </a>
+        </div>
+
         <div class="flex items-center justify-between mb-6">
             <h1 class="text-2xl font-semibold text-gray-800">Daftar Tiket</h1>
             <a href="{{ route('dashboard.tickets.create') }}"

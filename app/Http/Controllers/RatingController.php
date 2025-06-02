@@ -22,15 +22,29 @@ class RatingController extends Controller
     public function create(Destination $destination)
     {
         if (!auth()->user()->isUser()) {
-            return redirect()->back()->with('error', 'Unauthorized access');
+            return response()->json(['error' => 'Unauthorized access'], 403);
         }
-        return view('user.ratings.create', compact('destination'));
+
+        // Check if user already has a rating for this destination
+        $existingRating = Rating::where('user_id', auth()->id())
+                               ->where('destination_id', $destination->id)
+                               ->first();
+
+        if ($existingRating) {
+            return response()->json([
+                'error' => 'existing_rating_found',
+                'existing_rating' => $existingRating,
+                'message' => 'You have already rated this destination. Would you like to edit your existing rating?'
+            ], 400);
+        }
+
+        return response()->json(['destination' => $destination]);
     }
 
     public function store(Request $request, Destination $destination)
     {
         if (!auth()->user()->isUser()) {
-            return redirect()->back()->with('error', 'Unauthorized access');
+            return response()->json(['error' => 'Unauthorized access'], 403);
         }
 
         $validated = $request->validate([
@@ -38,14 +52,22 @@ class RatingController extends Controller
             'feedback' => 'required|string|max:1000',
         ]);
 
-        $rating = $destination->ratings()->create([
-            'user_id' => auth()->id(),
-            'rating' => $validated['rating'],
-            'feedback' => $validated['feedback'],
-        ]);
+        // Langsung gunakan updateOrCreate tanpa pesan berbeda
+        $rating = $destination->ratings()->updateOrCreate(
+            [
+                'user_id' => auth()->id(),
+                'destination_id' => $destination->id
+            ],
+            [
+                'rating' => $validated['rating'],
+                'feedback' => $validated['feedback'],
+            ]
+        );
 
-        return redirect()->route('destinations.show', $destination)
-            ->with('success', 'Rating submitted successfully');
+        return response()->json([
+            'success' => 'Rating berhasil disimpan',
+            'rating' => $rating->load('user')
+        ]);
     }
 
     public function show(Rating $rating)
@@ -58,16 +80,17 @@ class RatingController extends Controller
 
     public function edit(Rating $rating)
     {
-        if (auth()->id() !== $rating->user_id) {
-            return redirect()->back()->with('error', 'Unauthorized access');
+        if (!auth()->user()->isUser() || auth()->id() !== $rating->user_id) {
+            return response()->json(['error' => 'Unauthorized access'], 403);
         }
-        return view('user.ratings.edit', compact('rating'));
+
+        return response()->json(['rating' => $rating]);
     }
 
     public function update(Request $request, Rating $rating)
     {
-        if (auth()->id() !== $rating->user_id) {
-            return redirect()->back()->with('error', 'Unauthorized access');
+        if (!auth()->user()->isUser() || auth()->id() !== $rating->user_id) {
+            return response()->json(['error' => 'Unauthorized access'], 403);
         }
 
         $validated = $request->validate([
@@ -77,8 +100,10 @@ class RatingController extends Controller
 
         $rating->update($validated);
 
-        return redirect()->route('user.ratings.show', $rating)
-            ->with('success', 'Rating updated successfully');
+        // Hapus pesan success dari sini untuk menghindari duplikasi
+        return response()->json([
+            'rating' => $rating->load('user')
+        ]);
     }
 
     public function destroy(Rating $rating)
@@ -97,4 +122,10 @@ class RatingController extends Controller
         $ratings = $destination->ratings()->with('user')->latest()->paginate(10);
         return view('dashboard.ratings.by_destination', compact('destination', 'ratings'));
     }
-} 
+
+    public function getAllRatings(Destination $destination)
+    {
+        $ratings = $destination->ratings()->with('user')->latest()->get();
+        return response()->json(['ratings' => $ratings]);
+    }
+}

@@ -57,21 +57,7 @@
                             <option value="1" {{ old('has_ticket', '1') == '1' ? 'selected' : '' }}>Ya</option>
                             <option value="0" {{ old('has_ticket') == '0' ? 'selected' : '' }}>Tidak</option>
                         </select>
-                        <p class="text-xs text-gray-500 mt-1">Jika tidak, pengunjung tidak perlu melakukan pembayaran dan booking</p>
-                    </div>
-                    
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <div class="flex flex-col">
-                            <label for="stock" class="text-sm font-semibold text-gray-700 mb-1">Stok</label>
-                            <input type="number" id="stock" name="stock" value="{{ old('stock', 0) }}" 
-                                class="p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 transition">
-                        </div>
-
-                        <div class="flex flex-col">
-                            <label for="price" class="text-sm font-semibold text-gray-700 mb-1">Harga</label>
-                            <input type="number" id="price" name="price" value="{{ old('price', 0) }}" 
-                                class="p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 transition">
-                        </div>
+                        <p class="text-xs text-gray-500 mt-1">Jika ya, tiket akan dibuat terpisah di menu tiket</p>
                     </div>
                     
                     <div class="flex flex-col">
@@ -137,45 +123,24 @@
 
         document.addEventListener('DOMContentLoaded', function() {
             const hasTicketSelect = document.getElementById('has_ticket');
-            const priceInput = document.getElementById('price');
-            const stockInput = document.getElementById('stock');
             const tourPaymentsInput = document.getElementById('tour_payments');
             
             function toggleTicketFields() {
                 const hasTicket = hasTicketSelect.value === '1';
                 
-                // Instead of hiding, disable the fields
-                priceInput.disabled = !hasTicket;
-                stockInput.disabled = !hasTicket;
                 tourPaymentsInput.disabled = !hasTicket;
                 
-                // Add visual cue to disabled fields
                 if (!hasTicket) {
-                    priceInput.classList.add('bg-gray-100');
-                    stockInput.classList.add('bg-gray-100');
                     tourPaymentsInput.classList.add('bg-gray-100');
-                    
-                    // Set default values for disabled fields
-                    priceInput.value = "0";
-                    stockInput.value = "0";
                     tourPaymentsInput.value = "";
-                    
-                    // Add a placeholder text
                     tourPaymentsInput.placeholder = "Tidak tersedia untuk destinasi tanpa tiket";
                 } else {
-                    priceInput.classList.remove('bg-gray-100');
-                    stockInput.classList.remove('bg-gray-100');
                     tourPaymentsInput.classList.remove('bg-gray-100');
-                    
-                    // Reset placeholder
                     tourPaymentsInput.placeholder = "Contoh: HTM 10.000-15.000 rupiah untuk dewasa, pembayaran bisa dilakukan dengan e-wallet, QRIS, dll";
                 }
             }
             
-            // Initial toggle based on default value
             toggleTicketFields();
-            
-            // Add event listener for changes
             hasTicketSelect.addEventListener('change', toggleTicketFields);
         });
     </script>

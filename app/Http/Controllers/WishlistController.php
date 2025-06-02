@@ -36,6 +36,7 @@ class WishlistController extends Controller
     $wishlist = new Wishlist();
     $wishlist->user_id = Auth::id(); // Menyimpan ID pengguna yang login
     $wishlist->destination_name = $destination->name; // Menyimpan nama destinasi
+    $wishlist->destination_image = $destination->image;
     $wishlist->destination_id = $request->destination_id; // Menyimpan ID destinasi
     $wishlist->save();
 
@@ -99,6 +100,7 @@ class WishlistController extends Controller
             'user_id' => $userId,
             'destination_id' => $destinationId,
             'destination_name' => $destination->name,
+            'destination_image' => $destination->image,
         ]);
 
         return response()->json([

@@ -5,13 +5,22 @@
     <div class="px-6 py-4">
         <div class="flex justify-between items-center mb-6">
             <h1 class="text-2xl font-bold text-gray-800">Daftar Destinasi Wisata</h1>
-            <a href="{{ route('dashboard.destination.create') }}" 
-               class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition flex items-center gap-2">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                    <path fill-rule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clip-rule="evenodd" />
-                </svg>
-                Tambah Destinasi
-            </a>
+            <div class="flex gap-3">
+                <a href="{{ route('dashboard.tickets.index') }}" 
+                   class="bg-yellow-500 text-white px-4 py-2 rounded hover:bg-yellow-600 transition flex items-center gap-2 shadow">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                        <path fill-rule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clip-rule="evenodd" />
+                    </svg>
+                    Kelola Tiket
+                </a>
+                <a href="{{ route('dashboard.destination.create') }}" 
+                   class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition flex items-center gap-2 shadow">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                        <path fill-rule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clip-rule="evenodd" />
+                    </svg>
+                    Tambah Destinasi
+                </a>
+            </div>
         </div>
 
         <div class="overflow-hidden bg-white shadow-md rounded-lg">
@@ -22,8 +31,6 @@
                             <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">#</th>
                             <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Nama</th>
                             <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Lokasi</th>
-                            <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Stock</th>
-                            <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Harga</th>
                             <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Tiket</th>
                             <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Gambar Utama</th>
                             <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Gambar Tambahan</th>
@@ -37,8 +44,6 @@
                                 <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-900">{{ $loop->iteration }}</td>
                                 <td class="px-4 py-3 whitespace-nowrap text-sm font-medium text-gray-900">{{ $destination->name }}</td>
                                 <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-600">{{ $destination->location }}</td>
-                                <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-600">{{ $destination->stock }}</td>
-                                <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-600">Rp{{ number_format($destination->price, 0, ',', '.') }}</td>
                                 <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-600">
                                     <div class="flex flex-col space-y-1">
                                         <span class="px-2 py-1 text-xs rounded-full {{ $destination->has_ticket ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800' }}">
@@ -46,7 +51,11 @@
                                         </span>
                                         @if($destination->has_ticket)
                                             @if($destination->hasTicket())
-                                                <span class="text-xs text-blue-600">✓ Tiket sudah dibuat</span>
+                                                <div class="text-xs text-blue-600">
+                                                    <div>✓ Tiket tersedia</div>
+                                                    <div>Stok: {{ $destination->ticket->stock }}</div>
+                                                    <div>Harga: Rp{{ number_format($destination->ticket->price, 0, ',', '.') }}</div>
+                                                </div>
                                             @else
                                                 <a href="{{ route('dashboard.tickets.create', ['destination_id' => $destination->id]) }}" 
                                                    class="text-xs text-orange-600 hover:text-orange-800">
@@ -58,7 +67,7 @@
                                 </td>
                                 <td class="px-4 py-3">
                                     @if ($destination->image)
-                                        <img src="{{ asset($destination->image) }}" 
+                                        <img src="{{ asset('storage/' . $destination->image) }}" 
                                              alt="{{ $destination->name }}" 
                                              class="w-24 h-24 object-cover rounded shadow-sm">
                                     @else
@@ -69,7 +78,7 @@
                                     @if ($destination->additional_images && is_array($destination->additional_images) && count($destination->additional_images) > 0)
                                         <div class="flex space-x-2">
                                             @foreach (array_slice($destination->additional_images, 0, 3) as $index => $image)
-                                                <img src="{{ asset($image) }}" 
+                                                <img src="{{ asset('storage/' . $image) }}" 
                                                      alt="Additional Image {{ $index + 1 }}" 
                                                      class="w-16 h-16 object-cover rounded shadow-sm">
                                             @endforeach

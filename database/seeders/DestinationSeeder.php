@@ -19,8 +19,6 @@ class DestinationSeeder extends Seeder
                 'images/additional_destinations/pantai_kuta_1.jpg',
                 'images/additional_destinations/pantai_kuta_2.jpg',
             ],
-            'stock' => 100,
-            'price' => 250000,
             'has_ticket' => true,
             'status' => 'approved',
         ]);
@@ -34,8 +32,6 @@ class DestinationSeeder extends Seeder
                 'images/additional_destinations/gunung_bromo_1.jpg',
                 'images/additional_destinations/gunung_bromo_2.jpg',
             ],
-            'stock' => 50,
-            'price' => 350000,
             'has_ticket' => true,
             'status' => 'approved',
         ]);
@@ -49,8 +45,6 @@ class DestinationSeeder extends Seeder
                 'images/additional_destinations/danau_toba_1.jpg',
                 'images/additional_destinations/danau_toba_2.jpg',
             ],
-            'stock' => 75,
-            'price' => 300000,
             'has_ticket' => false,
             'status' => 'approved',
         ]);

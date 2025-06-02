@@ -14,6 +14,12 @@
     body {
       font-family: 'Poppins', sans-serif;
     }
+    .modal {
+      display: none;
+    }
+    .modal.show {
+      display: flex !important;
+    }
   </style>
   @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
@@ -33,7 +39,7 @@
           <h1 class="text-5xl font-extrabold text-purple-800 lg:col-span-2">{{ $destinations->name }}</h1>
 
           <div class="flex justify-start order-1 lg:order-1">
-            <img src="{{asset($destinations->image)}}" alt="{{ $destinations->name }}" class="w-full h-auto max-w-md rounded-lg shadow-md">
+            <img src="{{ asset('storage/' . $destinations->image) }}" alt="{{ $destinations->name }}" class="w-full h-auto max-w-md rounded-lg shadow-md">
           </div>
 
           <div class="text-black order-2 lg:order-2">
@@ -75,9 +81,24 @@
             </div>
 
             <div class="flex flex-col lg:flex-row lg:items-center lg:space-x-4 mt-4">
-              <p class="text-4xl font-bold leading-tight mr-10">
-                <span class="font-bold text-black">IDR {{ number_format($destinations->price, 0, ',', '.') }}</span>
-              </p>
+              @if($destinations->has_ticket && $destinations->ticket)
+                <div class="flex flex-col">
+                  <p class="text-4xl font-bold leading-tight mr-10">
+                    <span class="font-bold text-black">IDR {{ number_format($destinations->ticket->price, 0, ',', '.') }}</span>
+                  </p>
+                  @if($destinations->ticket->stock <= 0)
+                    <span class="text-red-500 font-semibold text-lg mt-2">Out of Stock</span>
+                  @elseif($destinations->ticket->stock <= 10)
+                    <span class="text-yellow-600 font-medium text-sm mt-2">Only {{ $destinations->ticket->stock }} tickets left!</span>
+                  @else
+                    <span class="text-green-600 font-medium text-sm mt-2">{{ $destinations->ticket->stock }} tickets available</span>
+                  @endif
+                </div>
+              @else
+                <p class="text-2xl font-medium leading-tight mr-10">
+                  <span class="text-gray-600">{{ $destinations->has_ticket ? 'Contact for pricing' : '.' }}</span>
+                </p>
+              @endif
             </div>
 
             <div class="mt-8 flex space-x-4">
@@ -96,7 +117,7 @@
 
                 <a href="{{ $destinations->contact_link }}" class="px-8 py-4 bg-gradient-to-r from-purple-500 to-black text-white font-bold rounded-lg hover:bg-gradient-to-r hover:from-purple-600 hover:to-black transition flex items-center">
                   Contact Us
-                  <svg fill="#ffffff" height="24px" width="24px" version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 512 512" enable-background="new 0 0 512 512" xml:space="preserve" stroke="#ffffff" transform="rotate(0)matrix(-1, 0, 0, 1, 0, 0)" class="ml-2">
+                  <svg fill="#ffffff" height="24px" width="24px" version="1.1" id="Layer_1" xmlns="http://www.w3.org/1999/xhtml" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 512 512" enable-background="new 0 0 512 512" xml:space="preserve" stroke="#ffffff" transform="rotate(0)matrix(-1, 0, 0, 1, 0, 0)" class="ml-2">
                     <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
                     <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
                     <g id="SVGRepo_iconCarrier">
@@ -104,6 +125,21 @@
                     </g>
                   </svg>
                 </a>
+                
+                @if($destinations->has_ticket)
+                  @if($destinations->ticket && $destinations->ticket->stock > 0)
+                    <a href="{{ route('tickets.show_ticket_form', ['destination' => $destinations->id]) }}" class="px-8 py-4 bg-gradient-to-r from-purple-500 to-black text-white font-bold rounded-lg hover:bg-gradient-to-r hover:from-purple-600 hover:to-black transition flex items-center">
+                      Book Now
+                    </a>
+                  @else
+                    <button onclick="showOutOfStockAlert()" class="px-8 py-4 bg-gray-400 text-white font-bold rounded-lg cursor-not-allowed flex items-center">
+                      <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728L5.636 5.636m12.728 12.728L18.364 5.636M5.636 18.364l12.728-12.728"></path>
+                      </svg>
+                      Sold Out
+                    </button>
+                  @endif
+                @endif
               </div>
             </div>
           </div>
@@ -118,8 +154,8 @@
           @if (!empty($destinations->additional_images))
             @foreach (array_slice($destinations->additional_images, 0, 3) as $index => $image)
               <div class="bg-white rounded-lg shadow-md p-4 max-w-xs">
-                <a href="{{ asset($image) }}" data-fancybox="gallery" data-caption="Tour Highlight {{ $index + 1 }}">
-                  <img src="{{ asset($image) }}" alt="Additional Image" class="w-full h-auto rounded-lg mb-2">
+                <a href="{{ asset('storage/' . $image) }}" data-fancybox="gallery" data-caption="Tour Highlight {{ $index + 1 }}">
+                  <img src="{{ asset('storage/' . $image) }}" alt="Additional Image" class="w-full h-auto rounded-lg mb-2">
                 </a>
                 <h3 class="text-xl font-bold mb-2 text-center">Tour Highlight</h3>
               </div>
@@ -157,20 +193,116 @@
           <h2 class="text-3xl font-bold mb-8 underline text ml-7">Explore Other Tours</h2>
           <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-1 gap-8">
             @foreach ($other_destinations->take(2) as $other_destination)
-              <div class="max-w-sm drop-shadow-lg bg-white border border-gray-200 rounded-lg shadow-sm">
+            <div class="max-w-sm drop-shadow-lg bg-white border border-gray-200 rounded-lg shadow-sm">
+              <a href="{{ route('destinations.show', $other_destination->id) }}">
+              <img class="rounded-t-lg w-full" src="{{ asset('storage/' . $other_destination->image) }}" alt="{{ $other_destination->name }}" />
+              </a>
+              <div class="p-5">
                 <a href="{{ route('destinations.show', $other_destination->id) }}">
-                  <img class="rounded-t-lg w-full" src="{{ asset($other_destination->image) }}" alt="{{ $other_destination->name }}" />
+                  <h4 class="text-2xl font-bold tracking-tight text-gray-900">{{ $other_destination->name }}</h4>
+                  <h5 class="mb-2 text-xl font-bold tracking-tight text-purple-900">{{ $other_destination->location }}</h5>
                 </a>
-                <div class="p-5">
-                  <a href="{{ route('destinations.show', $other_destination->id) }}">
-                    <h4 class="text-2xl font-bold tracking-tight text-gray-900">{{ $other_destination->name }}</h4>
-                    <h5 class="mb-2 text-xl font-bold tracking-tight text-purple-900">{{ $other_destination->location }}</h5>
+                
+                @if($other_destination->has_ticket && $other_destination->ticket)
+                  @if($other_destination->ticket->stock > 0)
+                    <p class="text-lg font-semibold text-gray-800 mb-3">
+                      IDR {{ number_format($other_destination->ticket->price, 0, ',', '.') }}
+                    </p>
+                  @else
+                    <div class="mb-3">
+                      <p class="text-lg font-semibold text-red-600">
+                        IDR {{ number_format($other_destination->ticket->price, 0, ',', '.') }}
+                      </p>
+                      <span class="text-sm text-red-500 font-medium">Out of Stock</span>
+                    </div>
+                  @endif
+                @elseif($other_destination->has_ticket)
+                  <p class="text-lg font-medium text-gray-600 mb-3">Contact for pricing</p>
+                @else
+                  <p class="text-lg font-medium text-green-600 mb-3"></p>
+                @endif
+                
+                @if($other_destination->has_ticket && $other_destination->ticket && $other_destination->ticket->stock > 0)
+                  <a href="{{ route('destinations.show', $other_destination->id) }}" class="inline-block text-white bg-gradient-to-br from-purple-400 to-black hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-gray-200 dark:focus:ring-purple-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2">
+                    Book Now
                   </a>
-                  <a href="{{ route('destinations.show', $other_destination->id) }}" class="inline-block text-white bg-gradient-to-br from-purple-400 to-black hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-gray-200 dark:focus:ring-purple-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2">Book Now</a>
-                </div>
+                @elseif($other_destination->has_ticket && $other_destination->ticket)
+                  <button disabled class="inline-block text-gray-500 bg-gray-300 cursor-not-allowed font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2">
+                    Sold Out
+                  </button>
+                @else
+                  <a href="{{ route('destinations.show', $other_destination->id) }}" class="inline-block text-white bg-gradient-to-br from-purple-400 to-black hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-gray-200 dark:focus:ring-purple-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2">
+                    Learn More
+                  </a>
+                @endif
               </div>
+            </div>
             @endforeach
           </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="py-16">
+      <div class="container mx-auto px-4">
+        <h2 class="text-3xl font-bold text-center mb-8">Ratings & Reviews</h2>
+        <div class="bg-white rounded-lg shadow-lg p-6">
+          <div class="flex justify-between items-center mb-6">
+            <div>
+              <h3 class="text-2xl font-bold">Average Rating</h3>
+              <div class="flex items-center mt-2">
+                <span class="text-4xl font-bold text-purple-800">{{ number_format($destinations->averageRating(), 1) }}</span>
+                <span class="text-gray-500 ml-2">/ 5</span>
+              </div>
+            </div>
+            @auth
+              @if(auth()->user()->isUser())
+                <button onclick="openRatingModal()" class="px-6 py-3 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition">
+                  Write a Review
+                </button>
+              @endif
+            @endauth
+          </div>
+          <div class="space-y-6" id="ratings-container">
+            @php $ratingsToShow = $destinations->ratings()->with('user')->latest()->take(3)->get(); @endphp
+            @forelse($ratingsToShow as $rating)
+              <div class="border-b pb-6" data-rating-id="{{ $rating->id }}">
+                <div class="flex justify-between items-start">
+                  <div class="flex-1">
+                    <h4 class="font-bold">{{ $rating->user->name }}</h4>
+                    <div class="flex items-center mt-1">
+                      <div class="flex text-yellow-400">
+                        @for($i = 1; $i <= 5; $i++)
+                          <svg class="w-5 h-5 {{ $i <= $rating->rating ? 'fill-current' : 'text-gray-300' }}" viewBox="0 0 20 20">
+                            <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
+                          </svg>
+                        @endfor
+                      </div>
+                      <span class="text-gray-500 ml-2">{{ $rating->created_at->format('M d, Y') }}</span>
+                    </div>
+                    <!-- Tambahkan feedback di sini -->
+                    @if($rating->feedback)
+                      <p class="mt-3 text-gray-700 leading-relaxed">{{ $rating->feedback }}</p>
+                    @endif
+                  </div>
+                  @if(auth()->check() && auth()->id() === $rating->user_id)
+                    <button onclick="editRating({{ $rating->id }})" class="text-purple-600 hover:text-purple-800 ml-4">Edit</button>
+                  @endif
+                </div>
+              </div>
+            @empty
+              <div class="text-center py-8">
+                <p class="text-gray-500">Belum ada review untuk destinasi ini.</p>
+              </div>
+            @endforelse
+          </div>
+          @if($destinations->ratings()->count() > 1)
+            <div class="mt-6 text-center">
+              <button onclick="showAllRatings()" class="text-purple-600 hover:text-purple-800 font-medium">
+                Show All Reviews ({{ $destinations->ratings()->count() }})
+              </button>
+            </div>
+          @endif
         </div>
       </div>
     </section>
@@ -217,11 +349,25 @@ function toggleWishlist(destinationId) {
 </script>
 
   </main>
+
+  <!-- Include Modal Views -->
+  @include('user.ratings.modal')
+  @include('user.ratings.show-all-modal')
+
+  <!-- Scripts should be at the bottom -->
+  <script>
+    // Set global variables for JavaScript
+    window.destinationId = {{ $destinations->id }};
+    window.currentUserId = {{ auth()->check() ? auth()->id() : 'null' }};
+  </script>
   
+  <!-- Include Rating JavaScript as separate script tag -->
+  <script src="{{ Vite::asset('resources/js/rating-modal.js') }}"></script>
+
+  <!-- Footer Section -->
   <footer class="bg-purple-100 text-center py-6 text-sm text-purple-600 mt-12">
     <p>&copy; {{ date('Y') }} Dolan. Website ini dikelola oleh tim Dolan Wisata.</p>
   </footer>
-
 </body>
 
 </html>

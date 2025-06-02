@@ -11,18 +11,17 @@ class Destination extends Model
     use HasFactory;
 
     protected $fillable = [
-        'name',
-        'description',
-        'location',
+        'user_id',
+        'name', 
+        'description', 
+        'location', 
         'image',
-        'stock',
-        'price',
         'additional_images',
         'tour_includes',
         'tour_payments',
         'has_ticket',
         'status',
-        'user_id',
+        'category'
     ];
 
     protected $casts = [
@@ -38,7 +37,7 @@ class Destination extends Model
     {
         return $this->ratings()->avg('rating');
     }
-
+  
     public function ticket(): HasOne
     {
         return $this->hasOne(Ticket::class);
@@ -49,13 +48,19 @@ class Destination extends Model
         return $this->ticket()->exists();
     }
 
+    public function getPriceAttribute()
+    {
+        return $this->ticket ? $this->ticket->price : 0;
+    }
+
+    public function getStockAttribute()
+    {
+        return $this->ticket ? $this->ticket->stock : 0;
+    }
+
     public function getAvailableTicket()
     {
-        return $this->ticket()
-                    ->where('stock', '>', 0)
-                    ->whereNotNull('price')
-                    ->where('price', '>', 0)
-                    ->first();
+        return $this->ticket()->where('stock', '>', 0)->first();
     }
 
     public function user()

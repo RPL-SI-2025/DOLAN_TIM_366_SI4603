@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\Ticket;
 use App\Models\User;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
@@ -40,7 +41,7 @@ class DatabaseSeeder extends Seeder
             'role' => 'user',
         ]);
 
-         User::create([
+        User::create([
             'name' => 'Bento2',
             'email' => 'user2@gmail.com',
             'password' => 'user2123456',
@@ -48,14 +49,30 @@ class DatabaseSeeder extends Seeder
             'role' => 'user',
         ]);
 
+        User::create([
+            'name' => 'Bento3',
+            'email' => 'user3@gmail.com',
+            'password' => 'user3123456',
+            'phone' => '123456',
+            'role' => 'user',
+        ]);
+
+        User::create([
+            'name' => 'Bento4',
+            'email' => 'user4@gmail.com',
+            'password' => 'user4123456',
+            'phone' => '123456',
+            'role' => 'user',
+        ]);
+
 
         // Call other seeders
         $this->call([
-            DestinationSeeder::class,
-            ArticleSeeder::class,
-            PromoSeeder::class,
+            // DestinationSeeder::class,
+            // ArticleSeeder::class,
+            // PromoSeeder::class,
             BadgeSeeder::class
-
+            // TicketSeeder::class,
         ]);
     }
 }
