@@ -174,6 +174,12 @@ class TicketController extends Controller
                              ->with('error', 'Sorry, no tickets are currently available for this destination.');
         }
 
+        // Check if ticket is out of stock
+        if ($ticket->stock <= 0) {
+            return redirect()->route('destinations.show', $destination->id)
+                             ->with('error', 'Maaf, tiket untuk destinasi ini sudah habis. Silakan hubungi kami untuk informasi lebih lanjut.');
+        }
+
         return view('user.destinations.ticket_form', compact('destination', 'ticket'));
     }
 }

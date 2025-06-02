@@ -57,4 +57,13 @@ class Merchandise extends Model
         }
         return is_array($this->size) ? $this->size : [];
     }
+
+    public function returnStock($quantity): bool
+    {
+        if ($quantity > 0) {
+            $this->increment('stock', $quantity);
+            return true;
+        }
+        return false;
+    }
 }

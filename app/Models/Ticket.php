@@ -49,4 +49,13 @@ class Ticket extends Model
             return 'In Stock';
         }
     }
+
+    public function returnStock($quantity): bool
+    {
+        if ($quantity > 0) {
+            $this->increment('stock', $quantity);
+            return true;
+        }
+        return false;
+    }
 }

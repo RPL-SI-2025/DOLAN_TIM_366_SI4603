@@ -102,7 +102,7 @@
                                 </h3>
                                 
                                 @if($ticket->destination->image)
-                                    <img src="{{ asset($ticket->destination->image) }}" 
+                                    <img src="{{ asset('storage/' . $ticket->destination->image) }}" 
                                          alt="{{ $ticket->destination->name }}" 
                                          class="w-full h-40 object-cover rounded-lg mb-4">
                                 @endif
