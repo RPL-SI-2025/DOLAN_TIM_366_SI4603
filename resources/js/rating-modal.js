@@ -39,6 +39,7 @@ function openRatingModal() {
             document.getElementById('ratingForm').reset();
             document.getElementById('submitBtn').textContent = 'Submit';
             clearErrors();
+            resetStarRating(); // Reset star display
             currentRatingId = null;
             
             // Show modal
@@ -71,10 +72,13 @@ function editRating(ratingId) {
             document.getElementById('feedback').value = data.rating.feedback;
             document.getElementById('submitBtn').textContent = 'Update';
             clearErrors();
+            updateStarDisplay(data.rating.rating); // Update star display dengan rating yang ada
             currentRatingId = ratingId;
             const modal = document.getElementById('ratingModal');
             modal.style.display = 'flex';
             modal.classList.add('show');
+            // Prevent body scroll when modal is open
+            document.body.style.overflow = 'hidden';
         }
     })
     .catch(error => {
@@ -88,6 +92,11 @@ function closeRatingModal() {
     modal.style.display = 'none';
     modal.classList.remove('show');
     clearErrors();
+    
+    // Reset form dan current rating ID
+    document.getElementById('ratingForm').reset();
+    resetStarRating(); // Reset star display
+    currentRatingId = null;
     
     // Enable body scroll when modal is closed
     document.body.style.overflow = '';
@@ -144,7 +153,7 @@ function closeAllRatingsModal() {
 
 function createRatingElement(rating) {
     const div = document.createElement('div');
-    div.className = 'bg-white rounded-lg shadow-md p-4 border border-gray-200 hover:shadow-lg transition-shadow';
+    div.className = 'bg-white rounded-lg shadow-md p-4 border border-gray-200 hover:shadow-lg transition-shadow review-item';
     
     const stars = Array.from({length: 5}, (_, i) => 
         `<svg class="w-5 h-5 ${i < rating.rating ? 'text-yellow-400 fill-current' : 'text-gray-300'}" viewBox="0 0 20 20">
@@ -154,7 +163,7 @@ function createRatingElement(rating) {
 
     const currentUserId = window.currentUserId;
     const editButton = currentUserId && currentUserId == rating.user_id 
-        ? `<button onclick="editRating(${rating.id})" class="text-purple-600 hover:text-purple-800 font-medium transition-colors">Edit</button>`
+        ? `<button onclick="editRatingFromModal(${rating.id})" class="text-purple-600 hover:text-purple-800 font-medium transition-colors">Edit</button>`
         : '';
 
     div.innerHTML = `
@@ -174,6 +183,64 @@ function createRatingElement(rating) {
     `;
     
     return div;
+}
+
+// Function untuk edit dari dalam modal show all ratings
+function editRatingFromModal(ratingId) {
+    // Close the show all ratings modal first
+    closeAllRatingsModal();
+    
+    // Then open edit modal
+    setTimeout(() => {
+        editRating(ratingId);
+    }, 300); // Small delay to ensure modal is closed
+}
+
+// Function untuk update star display
+function updateStarDisplay(rating) {
+    const starButtons = document.querySelectorAll('.star-btn');
+    const ratingText = document.getElementById('ratingText');
+    
+    const ratingLabels = {
+        1: 'Poor',
+        2: 'Fair', 
+        3: 'Good',
+        4: 'Very Good',
+        5: 'Excellent'
+    };
+
+    // Update star colors
+    starButtons.forEach((btn, index) => {
+        if (index < rating) {
+            btn.classList.remove('text-gray-300');
+            btn.classList.add('text-yellow-400');
+        } else {
+            btn.classList.remove('text-yellow-400');
+            btn.classList.add('text-gray-300');
+        }
+    });
+    
+    // Update rating text
+    if (ratingText) {
+        ratingText.textContent = ratingLabels[rating] || '';
+    }
+}
+
+// Function untuk reset star display
+function resetStarRating() {
+    const starButtons = document.querySelectorAll('.star-btn');
+    const ratingText = document.getElementById('ratingText');
+    
+    // Reset all stars to gray
+    starButtons.forEach(btn => {
+        btn.classList.remove('text-yellow-400');
+        btn.classList.add('text-gray-300');
+    });
+    
+    // Clear rating text
+    if (ratingText) {
+        ratingText.textContent = '';
+    }
 }
 
 function clearErrors() {
@@ -228,7 +295,7 @@ function showNotification(message, type = 'success') {
     }, 3000);
 }
 
-// Form submission handler
+// Form submission handler - HANYA SATU FUNCTION INI
 document.addEventListener('DOMContentLoaded', function() {
     const ratingForm = document.getElementById('ratingForm');
     if (ratingForm) {
@@ -266,12 +333,21 @@ document.addEventListener('DOMContentLoaded', function() {
                 } else if (data.error) {
                     showNotification(data.error, 'error');
                 } else {
-                    showNotification(data.success, 'success');
+                    // Handle success
+                    const isUpdate = currentRatingId !== null;
+                    if (data.success) {
+                        showNotification(data.success, 'success');
+                    } else if (isUpdate) {
+                        showNotification('Rating berhasil diperbarui', 'success');
+                    } else {
+                        showNotification('Rating berhasil disimpan', 'success');
+                    }
+                    
                     closeRatingModal();
                     // Refresh the ratings section
                     setTimeout(() => {
                         location.reload();
-                    }, 1000);
+                    }, 1500);
                 }
             })
             .catch(error => {
@@ -281,68 +357,3 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 });
-
-function submitRating() {
-    const form = document.getElementById('ratingForm');
-    const formData = new FormData(form);
-    
-    // Determine if this is create or update
-    const isUpdate = currentRatingId !== null;
-    const url = isUpdate 
-        ? `/ratings/${currentRatingId}` 
-        : `/destinations/${window.destinationId}/ratings`;
-    
-    const method = isUpdate ? 'PUT' : 'POST';
-    
-    // Convert FormData to regular data for PUT requests
-    const data = {};
-    for (let [key, value] of formData.entries()) {
-        data[key] = value;
-    }
-    
-    const headers = {
-        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
-        'Accept': 'application/json',
-        'Content-Type': 'application/json',
-    };
-    
-    fetch(url, {
-        method: method,
-        headers: headers,
-        body: JSON.stringify(data)
-    })
-    .then(response => response.json())
-    .then(data => {
-        // Handle error terlebih dahulu
-        if (data.error) {
-            showNotification(data.error, 'error');
-            return;
-        }
-        
-        // Handle success - cek apakah ada success message dari backend
-        if (data.success) {
-            // Untuk create rating - pesan dari backend
-            showNotification(data.success, 'success');
-        } else if (data.rating && isUpdate) {
-            // Untuk update rating - pesan dari frontend
-            showNotification('Rating berhasil diperbarui', 'success');
-        } else if (data.rating) {
-            // Fallback jika ada rating tapi tidak ada success message
-            showNotification('Rating berhasil disimpan', 'success');
-        }
-        
-        // Update UI dan tutup modal
-        if (data.rating) {
-            updateRatingDisplay(data.rating);
-            closeModal();
-            
-            setTimeout(() => {
-                location.reload();
-            }, 1500);
-        }
-    })
-    .catch(error => {
-        console.error('Error:', error);
-        showNotification('Terjadi kesalahan', 'error');
-    });
-}

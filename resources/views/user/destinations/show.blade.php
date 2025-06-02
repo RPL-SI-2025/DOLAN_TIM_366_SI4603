@@ -295,7 +295,7 @@
               </div>
             @endforelse
           </div>
-          @if($destinations->ratings()->count() > 3)
+          @if($destinations->ratings()->count() > 1)
             <div class="mt-6 text-center">
               <button onclick="showAllRatings()" class="text-purple-600 hover:text-purple-800 font-medium">
                 Show All Reviews ({{ $destinations->ratings()->count() }})
