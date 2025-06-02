@@ -109,6 +109,8 @@ function showAllRatings() {
     modal.style.display = 'flex';
     modal.classList.add('show');
     document.getElementById('loadingSpinner').style.display = 'block';
+    document.getElementById('reviewsList').classList.add('hidden');
+    document.getElementById('emptyState').classList.add('hidden');
     
     // Prevent body scroll when modal is open
     document.body.style.overflow = 'hidden';
@@ -122,22 +124,31 @@ function showAllRatings() {
     .then(response => response.json())
     .then(data => {
         const container = document.getElementById('allRatingsContainer');
-        document.getElementById('loadingSpinner').style.display = 'none';
-        container.innerHTML = '';
+        const reviewsList = document.getElementById('reviewsList');
+        const emptyState = document.getElementById('emptyState');
+        const loadingSpinner = document.getElementById('loadingSpinner');
+        
+        loadingSpinner.style.display = 'none';
         
         if (data.ratings.length === 0) {
-            container.innerHTML = '<p class="text-center text-gray-500 py-8">No reviews available.</p>';
+            emptyState.classList.remove('hidden');
+            reviewsList.classList.add('hidden');
         } else {
+            reviewsList.classList.remove('hidden');
+            emptyState.classList.add('hidden');
+            reviewsList.innerHTML = '';
+            
             data.ratings.forEach(rating => {
                 const ratingElement = createRatingElement(rating);
-                container.appendChild(ratingElement);
+                reviewsList.appendChild(ratingElement);
             });
         }
     })
     .catch(error => {
         console.error('Error:', error);
         document.getElementById('loadingSpinner').style.display = 'none';
-        document.getElementById('allRatingsContainer').innerHTML = 
+        document.getElementById('emptyState').classList.remove('hidden');
+        document.getElementById('emptyState').innerHTML = 
             '<p class="text-center text-red-500 py-8">Error loading reviews.</p>';
     });
 }
@@ -314,6 +325,26 @@ document.addEventListener('DOMContentLoaded', function() {
 
             // Clear previous errors
             clearErrors();
+
+            // Client-side validation
+            const rating = formData.get('rating');
+            const feedback = formData.get('feedback');
+
+            let hasErrors = false;
+
+            if (!rating || rating === '') {
+                showFieldError('rating', 'Please select a rating');
+                hasErrors = true;
+            }
+
+            if (!feedback || feedback.trim() === '') {
+                showFieldError('feedback', 'Please provide your feedback');
+                hasErrors = true;
+            }
+
+            if (hasErrors) {
+                return;
+            }
 
             fetch(url, {
                 method: 'POST',
