@@ -50,7 +50,6 @@ class OrderController extends Controller
                     'status' => 'pending',
                 ]);
 
-                $ticket->reduceStock($request->quantity);
             });
 
             if (!$order) {
@@ -97,7 +96,6 @@ class OrderController extends Controller
                     'status' => 'pending',
                 ]);
 
-                $merchandise->decrement('stock', $request->quantity);
             });
 
             if (!$order) {

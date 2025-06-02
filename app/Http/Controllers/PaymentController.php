@@ -28,6 +28,16 @@ class PaymentController extends Controller
             abort(403, 'Unauthorized action.'); 
         }
 
+        if ($order->status !== 'pending') {
+            if ($order->status === 'completed') {
+                return redirect()->route('user.orders')->with('info', 'This order has already been completed.');
+            } elseif ($order->status === 'cancelled') {
+                return redirect()->route('user.orders')->with('error', 'This order has been cancelled and cannot be paid for.');
+            } else {
+                return redirect()->route('user.orders')->with('error', 'This order is not available for payment.');
+            }
+        }
+
         $order->load('product', 'user');
 
         $transaction_details = [
@@ -75,11 +85,23 @@ class PaymentController extends Controller
 
     public function paymentFinish(Request $request, Order $order)
     {
+        if ($order->status === 'cancelled') {
+            return redirect()->route('user.orders')->with('error', 'This order has been cancelled and cannot be processed.');
+        }
+
+        if ($order->status === 'completed') {
+            return redirect()->route('user.orders')->with('info', 'This order has already been completed.');
+        }
+
         $status = $request->query('status');
         
         if ($status === 'success') {
             // Update order status to completed
             $order->update(['status' => 'completed']);
+            
+            if ($order->product) {
+                $order->product->reduceStock($order->quantity);
+            }
             
             return redirect()->route('user.orders')->with('success', 'Payment successful! Your order has been completed.');
         } elseif ($status === 'pending') {
@@ -107,6 +129,9 @@ class PaymentController extends Controller
                 if ($transaction_status == 'capture' || $transaction_status == 'settlement') {
                     // Payment successful
                     $order->update(['status' => 'completed']);
+                    if ($order->product) {
+                    $order->product->reduceStock($order->quantity);
+                    }
                 } elseif ($transaction_status == 'pending') {
                     // Payment pending
                     $order->update(['status' => 'pending']);

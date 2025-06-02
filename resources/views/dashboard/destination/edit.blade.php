@@ -40,19 +40,7 @@
 
                 <!-- Right Column -->
                 <div class="space-y-6">
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <div class="flex flex-col">
-                            <label for="stock" class="text-sm font-semibold text-gray-700 mb-1">Stok</label>
-                            <input type="number" id="stock" name="stock" required value="{{ old('stock', $destination->stock) }}"
-                                class="p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 transition">
-                        </div>
-
-                        <div class="flex flex-col">
-                            <label for="price" class="text-sm font-semibold text-gray-700 mb-1">Harga</label>
-                            <input type="number" id="price" name="price" required value="{{ old('price', $destination->price) }}"
-                                class="p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 transition">
-                        </div>
-                    </div>
+                    <!-- Remove stock and price fields -->
                     
                     <div class="flex flex-col">
                         <label for="tour_payments" class="text-sm font-semibold text-gray-700 mb-1">Informasi Pembayaran</label>
@@ -69,7 +57,7 @@
                             <option value="1" {{ old('has_ticket', $destination->has_ticket) == 1 ? 'selected' : '' }}>Ya</option>
                             <option value="0" {{ old('has_ticket', $destination->has_ticket) == 0 ? 'selected' : '' }}>Tidak</option>
                         </select>
-                        <p class="text-xs text-gray-500 mt-1">Jika tidak, pengunjung tidak perlu melakukan pembayaran dan booking</p>
+                        <p class="text-xs text-gray-500 mt-1">Jika ya, tiket akan dikelola di menu tiket</p>
                     </div>
 
                     <div class="flex flex-col">
@@ -139,180 +127,155 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-        const hasTicketSelect = document.getElementById('has_ticket');
-        const priceInput = document.getElementById('price');
-        const stockInput = document.getElementById('stock');
-        const tourPaymentsInput = document.getElementById('tour_payments');
-        
-        function toggleTicketFields() {
-            const hasTicket = hasTicketSelect.value === '1';
+            const hasTicketSelect = document.getElementById('has_ticket');
+            const tourPaymentsInput = document.getElementById('tour_payments');
             
-            // Instead of hiding, disable the fields
-            priceInput.disabled = !hasTicket;
-            stockInput.disabled = !hasTicket;
-            tourPaymentsInput.disabled = !hasTicket;
-            
-            // Add visual cue to disabled fields
-            if (!hasTicket) {
-                priceInput.classList.add('bg-gray-100');
-                stockInput.classList.add('bg-gray-100');
-                tourPaymentsInput.classList.add('bg-gray-100');
+            function toggleTicketFields() {
+                const hasTicket = hasTicketSelect.value === '1';
                 
-                // Set default values for disabled fields
-                priceInput.value = "0";
-                stockInput.value = "0";
-                tourPaymentsInput.value = "";
+                tourPaymentsInput.disabled = !hasTicket;
                 
-                // Add a placeholder text
-                tourPaymentsInput.placeholder = "Tidak tersedia untuk destinasi tanpa tiket";
-            } else {
-                priceInput.classList.remove('bg-gray-100');
-                stockInput.classList.remove('bg-gray-100');
-                tourPaymentsInput.classList.remove('bg-gray-100');
-                
-                // Reset placeholder if coming from disabled state
-                if (tourPaymentsInput.placeholder === "Tidak tersedia untuk destinasi tanpa tiket") {
-                    tourPaymentsInput.placeholder = "Contoh: HTM 10.000-15.000 rupiah untuk dewasa, pembayaran bisa dilakukan dengan e-wallet, QRIS, dll";
+                if (!hasTicket) {
+                    tourPaymentsInput.classList.add('bg-gray-100');
+                    tourPaymentsInput.value = "";
+                    tourPaymentsInput.placeholder = "Tidak tersedia untuk destinasi tanpa tiket";
+                } else {
+                    tourPaymentsInput.classList.remove('bg-gray-100');
+                    if (tourPaymentsInput.placeholder === "Tidak tersedia untuk destinasi tanpa tiket") {
+                        tourPaymentsInput.placeholder = "Contoh: HTM 10.000-15.000 rupiah untuk dewasa, pembayaran bisa dilakukan dengan e-wallet, QRIS, dll";
+                    }
                 }
             }
             
-            // Toggle required attribute
-            priceInput.required = hasTicket;
-            stockInput.required = hasTicket;
-        }
+            toggleTicketFields();
+            hasTicketSelect.addEventListener('change', toggleTicketFields);
+        });
         
-        // Initial toggle based on current value
-        toggleTicketFields();
+        // Array to store removed images
+        const removedImages = [];
         
-        // Add event listener for changes
-        hasTicketSelect.addEventListener('change', toggleTicketFields);
-    });
-    
-    // Array to store removed images
-    const removedImages = [];
-    
-    function removeImage(imagePath, index) {
-        // Show loading or disable button
-        const container = document.getElementById('image-container-' + index);
-        container.classList.add('opacity-50');
-        
-        // AJAX call to delete the image physically from storage
-        fetch('{{ route("dashboard.destination.removeImage") }}', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-CSRF-TOKEN': '{{ csrf_token() }}'
-            },
-            body: JSON.stringify({
-                image_path: imagePath
+        function removeImage(imagePath, index) {
+            // Show loading or disable button
+            const container = document.getElementById('image-container-' + index);
+            container.classList.add('opacity-50');
+            
+            // AJAX call to delete the image physically from storage
+            fetch('{{ route("dashboard.destination.removeImage") }}', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                },
+                body: JSON.stringify({
+                    image_path: imagePath
+                })
             })
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                // Add to removed images array for form submission
-                removedImages.push(imagePath);
-                
-                // Remove the container from UI with animation
-                setTimeout(() => {
-                    container.remove();
-                }, 300);
-                
-                // Update hidden input field for form submission
-                updateRemovedImagesField();
-                
-                // Show success message
-                showNotification('Gambar berhasil dihapus', 'success');
-            } else {
-                // Show error and revert opacity
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    // Add to removed images array for form submission
+                    removedImages.push(imagePath);
+                    
+                    // Remove the container from UI with animation
+                    setTimeout(() => {
+                        container.remove();
+                    }, 300);
+                    
+                    // Update hidden input field for form submission
+                    updateRemovedImagesField();
+                    
+                    // Show success message
+                    showNotification('Gambar berhasil dihapus', 'success');
+                } else {
+                    // Show error and revert opacity
+                    container.classList.remove('opacity-50');
+                    showNotification('Gagal menghapus gambar: ' + data.message, 'error');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
                 container.classList.remove('opacity-50');
-                showNotification('Gagal menghapus gambar: ' + data.message, 'error');
-            }
-        })
-        .catch(error => {
-            console.error('Error:', error);
-            container.classList.remove('opacity-50');
-            showNotification('Terjadi kesalahan saat menghapus gambar', 'error');
-        });
-    }
-    
-    function updateRemovedImagesField() {
-        // Get the container for removed images
-        const container = document.getElementById('removed-images-container');
-        container.innerHTML = ''; // Clear existing inputs
-        
-        // Add new hidden inputs for each removed image
-        removedImages.forEach(image => {
-            const input = document.createElement('input');
-            input.type = 'hidden';
-            input.name = 'removed_images[]';
-            input.value = image;
-            container.appendChild(input);
-        });
-    }
-    
-    function previewMainImage(event) {
-        const reader = new FileReader();
-        reader.onload = function() {
-            const previewImg = document.getElementById('main-image-preview');
-            if (previewImg) {
-                previewImg.src = reader.result;
-            } else {
-                const newImg = document.createElement('img');
-                newImg.src = reader.result;
-                newImg.id = 'main-image-preview';
-                newImg.classList.add('rounded', 'shadow', 'max-h-40', 'mt-3');
-                
-                const container = document.querySelector('label[for="image"]').parentNode;
-                container.appendChild(newImg);
-            }
+                showNotification('Terjadi kesalahan saat menghapus gambar', 'error');
+            });
         }
-        if (event.target.files[0]) {
-            reader.readAsDataURL(event.target.files[0]);
-        }
-    }
-    
-    function previewNewImages(event) {
-        const previewContainer = document.getElementById('new-images-preview');
-        previewContainer.innerHTML = '';
         
-        Array.from(event.target.files).forEach((file, idx) => {
+        function updateRemovedImagesField() {
+            // Get the container for removed images
+            const container = document.getElementById('removed-images-container');
+            container.innerHTML = ''; // Clear existing inputs
+            
+            // Add new hidden inputs for each removed image
+            removedImages.forEach(image => {
+                const input = document.createElement('input');
+                input.type = 'hidden';
+                input.name = 'removed_images[]';
+                input.value = image;
+                container.appendChild(input);
+            });
+        }
+        
+        function previewMainImage(event) {
             const reader = new FileReader();
             reader.onload = function() {
-                const imgContainer = document.createElement('div');
-                imgContainer.classList.add('relative', 'w-24', 'h-24');
-                
-                const imgElement = document.createElement('img');
-                imgElement.src = reader.result;
-                imgElement.classList.add('w-full', 'h-full', 'object-cover', 'rounded', 'shadow-sm');
-                
-                imgContainer.appendChild(imgElement);
-                previewContainer.appendChild(imgContainer);
+                const previewImg = document.getElementById('main-image-preview');
+                if (previewImg) {
+                    previewImg.src = reader.result;
+                } else {
+                    const newImg = document.createElement('img');
+                    newImg.src = reader.result;
+                    newImg.id = 'main-image-preview';
+                    newImg.classList.add('rounded', 'shadow', 'max-h-40', 'mt-3');
+                    
+                    const container = document.querySelector('label[for="image"]').parentNode;
+                    container.appendChild(newImg);
+                }
             }
-            reader.readAsDataURL(file);
-        });
-    }
-    
-    function showNotification(message, type = 'info') {
-        // Create notification element
-        const notification = document.createElement('div');
-        notification.className = `fixed bottom-4 right-4 p-4 rounded shadow-lg ${
-            type === 'success' ? 'bg-green-500' : 
-            type === 'error' ? 'bg-red-500' : 
-            'bg-blue-500'
-        } text-white`;
-        notification.innerText = message;
+            if (event.target.files[0]) {
+                reader.readAsDataURL(event.target.files[0]);
+            }
+        }
         
-        // Add to DOM
-        document.body.appendChild(notification);
+        function previewNewImages(event) {
+            const previewContainer = document.getElementById('new-images-preview');
+            previewContainer.innerHTML = '';
+            
+            Array.from(event.target.files).forEach((file, idx) => {
+                const reader = new FileReader();
+                reader.onload = function() {
+                    const imgContainer = document.createElement('div');
+                    imgContainer.classList.add('relative', 'w-24', 'h-24');
+                    
+                    const imgElement = document.createElement('img');
+                    imgElement.src = reader.result;
+                    imgElement.classList.add('w-full', 'h-full', 'object-cover', 'rounded', 'shadow-sm');
+                    
+                    imgContainer.appendChild(imgElement);
+                    previewContainer.appendChild(imgContainer);
+                }
+                reader.readAsDataURL(file);
+            });
+        }
         
-        // Remove after 3 seconds
-        setTimeout(() => {
-            notification.classList.add('opacity-0', 'transition-opacity');
+        function showNotification(message, type = 'info') {
+            // Create notification element
+            const notification = document.createElement('div');
+            notification.className = `fixed bottom-4 right-4 p-4 rounded shadow-lg ${
+                type === 'success' ? 'bg-green-500' : 
+                type === 'error' ? 'bg-red-500' : 
+                'bg-blue-500'
+            } text-white`;
+            notification.innerText = message;
+            
+            // Add to DOM
+            document.body.appendChild(notification);
+            
+            // Remove after 3 seconds
             setTimeout(() => {
-                notification.remove();
-            }, 300);
-        }, 3000);
-    }
+                notification.classList.add('opacity-0', 'transition-opacity');
+                setTimeout(() => {
+                    notification.remove();
+                }, 300);
+            }, 3000);
+        }
     </script>
 </x-layout-admin>

@@ -32,8 +32,9 @@ class RatingController extends Controller
 
         if ($existingRating) {
             return response()->json([
-                'error' => 'You have already rated this destination. You can edit your existing rating.',
-                'existing_rating' => $existingRating
+                'error' => 'existing_rating_found',
+                'existing_rating' => $existingRating,
+                'message' => 'You have already rated this destination. Would you like to edit your existing rating?'
             ], 400);
         }
 
@@ -46,31 +47,25 @@ class RatingController extends Controller
             return response()->json(['error' => 'Unauthorized access'], 403);
         }
 
-        // Check if user already has a rating for this destination
-        $existingRating = Rating::where('user_id', auth()->id())
-                               ->where('destination_id', $destination->id)
-                               ->first();
-
-        if ($existingRating) {
-            return response()->json([
-                'error' => 'You have already rated this destination. You can edit your existing rating.',
-                'existing_rating' => $existingRating
-            ], 400);
-        }
-
         $validated = $request->validate([
             'rating' => 'required|integer|min:1|max:5',
             'feedback' => 'required|string|max:1000',
         ]);
 
-        $rating = $destination->ratings()->create([
-            'user_id' => auth()->id(),
-            'rating' => $validated['rating'],
-            'feedback' => $validated['feedback'],
-        ]);
+        // Langsung gunakan updateOrCreate tanpa pesan berbeda
+        $rating = $destination->ratings()->updateOrCreate(
+            [
+                'user_id' => auth()->id(),
+                'destination_id' => $destination->id
+            ],
+            [
+                'rating' => $validated['rating'],
+                'feedback' => $validated['feedback'],
+            ]
+        );
 
         return response()->json([
-            'success' => 'Rating submitted successfully',
+            'success' => 'Rating berhasil disimpan',
             'rating' => $rating->load('user')
         ]);
     }
@@ -105,8 +100,8 @@ class RatingController extends Controller
 
         $rating->update($validated);
 
+        // Hapus pesan success dari sini untuk menghindari duplikasi
         return response()->json([
-            'success' => 'Rating updated successfully',
             'rating' => $rating->load('user')
         ]);
     }
