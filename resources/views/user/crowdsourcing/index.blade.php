@@ -27,7 +27,11 @@
  
 
             @if($destinations->isEmpty())
-                <p class="text-center text-gray-500 italic py-8">Belum ada destinasi yang diajukan.</p>
+                @if(auth()->check() && in_array(auth()->user()->role, ['admin', 'super_admin']))
+                    <p class="text-center text-gray-500 bold py-8">Kamu admin bang bukan member 🤓 .</p>
+                @else
+                    <p class="text-center text-gray-500 italic py-8">Belum ada destinasi yang diajukan.</p>
+                @endif
             @else
                 <div class="overflow-x-auto rounded-lg border border-gray-200">
                     <table class="min-w-full bg-white">

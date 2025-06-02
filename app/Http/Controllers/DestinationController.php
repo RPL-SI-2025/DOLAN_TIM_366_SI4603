@@ -98,8 +98,17 @@ public function store(Request $request)
 
     try {
         $destination = Destination::create($validated);
-        return redirect()->route('user.destinations.index')
-                         ->with('success', 'Destinasi berhasil ditambahkan! Terima kasih telah mengirimkan destinasi.');
+        
+        // Logic if-else untuk redirect berdasarkan role user
+        if (in_array(Auth::user()->role, ['admin', 'super_admin'])) {
+            // Jika admin, redirect ke dashboard destinations dengan pesan sukses
+            return redirect()->route('dashboard.destination.index')
+                             ->with('success', 'Destinasi berhasil ditambahkan dan langsung disetujui.');
+        } else {
+            // Jika user biasa, redirect ke daftar kontribusi mereka
+            return redirect()->route('user.destinations.index')
+                             ->with('success', 'Destinasi berhasil ditambahkan! Terima kasih telah mengirimkan destinasi.');
+        }
     } catch (\Exception $e) {
         return redirect()->back()
                          ->with('error', 'Gagal menambahkan destinasi: ' . $e->getMessage())
@@ -306,7 +315,16 @@ public function updateStatus(Request $request, $id)
 }
 public function userDestinations()
 {
-    $destinations = Destination::where('user_id', Auth::id())->get();
+    $user = Auth::user();
+    
+    // Jika user saat ini adalah admin/super_admin, jangan tampilkan destinasi apapun di contribute list
+    if (in_array($user->role, ['admin', 'super_admin'])) {
+        $destinations = collect(); // Empty collection
+    } else {
+        // Untuk user biasa, tampilkan semua destinasi yang mereka buat
+        $destinations = Destination::where('user_id', Auth::id())->get();
+    }
+    
     return view('user.crowdsourcing.index', compact('destinations'));
 }
 }
