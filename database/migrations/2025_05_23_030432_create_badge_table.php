@@ -15,11 +15,18 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->string('description');
-            $table->decimal('discount', 5, 2);
-            $table->unsignedBigInteger('user_id');
+            $table->string('icon')->nullable();
             $table->timestamps();
+        });
         
-            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+        // Create pivot table for badge-user relationship
+        Schema::create('badge_user', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('badge_id')->constrained()->onDelete('cascade');
+            $table->foreignId('user_id')->constrained()->onDelete('cascade');
+            $table->timestamps();
+            
+            $table->unique(['badge_id', 'user_id']);
         });
     }
 
@@ -28,6 +35,7 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('badge');
+        Schema::dropIfExists('badge_user');
+        Schema::dropIfExists('badges');
     }
 };
