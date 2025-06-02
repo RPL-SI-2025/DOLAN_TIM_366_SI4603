@@ -27,4 +27,13 @@ public function up()
         $table->timestamps();
     });
 }
+
+/**
+     * Reverse the migrations.
+     */
+    public function down(): void
+    {
+        Schema::dropIfExists('badge_user');
+        Schema::dropIfExists('badges');
+    }
 };

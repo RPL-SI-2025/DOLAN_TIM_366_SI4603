@@ -1,0 +1,56 @@
+[
+    {
+        "level": "SEVERE",
+        "message": "http:\/\/127.0.0.1:8000\/src\/styles.css - Failed to load resource: the server responded with a status of 404 (Not Found)",
+        "source": "network",
+        "timestamp": 1748883069666
+    },
+    {
+        "level": "SEVERE",
+        "message": "http:\/\/127.0.0.1:8000\/photo-profile\/default.png - Failed to load resource: the server responded with a status of 404 (Not Found)",
+        "source": "network",
+        "timestamp": 1748883071148
+    },
+    {
+        "level": "SEVERE",
+        "message": "http:\/\/127.0.0.1:8000\/photo-profile\/default.png - Failed to load resource: the server responded with a status of 404 (Not Found)",
+        "source": "network",
+        "timestamp": 1748883074714
+    },
+    {
+        "level": "SEVERE",
+        "message": "http:\/\/127.0.0.1:8000\/photo-profile\/default.png - Failed to load resource: the server responded with a status of 404 (Not Found)",
+        "source": "network",
+        "timestamp": 1748883076079
+    },
+    {
+        "level": "SEVERE",
+        "message": "http:\/\/127.0.0.1:8000\/photo-profile\/default.png - Failed to load resource: the server responded with a status of 404 (Not Found)",
+        "source": "network",
+        "timestamp": 1748883079812
+    },
+    {
+        "level": "SEVERE",
+        "message": "http:\/\/127.0.0.1:8000\/storage\/test-crud.jpg - Failed to load resource: the server responded with a status of 403 (Forbidden)",
+        "source": "network",
+        "timestamp": 1748883080035
+    },
+    {
+        "level": "SEVERE",
+        "message": "http:\/\/127.0.0.1:8000\/photo-profile\/default.png - Failed to load resource: the server responded with a status of 404 (Not Found)",
+        "source": "network",
+        "timestamp": 1748883080754
+    },
+    {
+        "level": "SEVERE",
+        "message": "http:\/\/127.0.0.1:8000\/photo-profile\/default.png - Failed to load resource: the server responded with a status of 404 (Not Found)",
+        "source": "network",
+        "timestamp": 1748883084327
+    },
+    {
+        "level": "SEVERE",
+        "message": "http:\/\/127.0.0.1:8000\/photo-profile\/default.png - Failed to load resource: the server responded with a status of 404 (Not Found)",
+        "source": "network",
+        "timestamp": 1748883085285
+    }
+]

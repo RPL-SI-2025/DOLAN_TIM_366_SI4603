@@ -1,0 +1,26 @@
+[
+    {
+        "level": "SEVERE",
+        "message": "http:\/\/127.0.0.1:8000\/src\/styles.css - Failed to load resource: the server responded with a status of 404 (Not Found)",
+        "source": "network",
+        "timestamp": 1748882996371
+    },
+    {
+        "level": "SEVERE",
+        "message": "http:\/\/127.0.0.1:8000\/photo-profile\/default.png - Failed to load resource: the server responded with a status of 404 (Not Found)",
+        "source": "network",
+        "timestamp": 1748883010204
+    },
+    {
+        "level": "SEVERE",
+        "message": "http:\/\/127.0.0.1:8000\/photo-profile\/default.png - Failed to load resource: the server responded with a status of 404 (Not Found)",
+        "source": "network",
+        "timestamp": 1748883013921
+    },
+    {
+        "level": "SEVERE",
+        "message": "http:\/\/127.0.0.1:8000\/photo-profile\/default.png - Failed to load resource: the server responded with a status of 404 (Not Found)",
+        "source": "network",
+        "timestamp": 1748883015346
+    }
+]

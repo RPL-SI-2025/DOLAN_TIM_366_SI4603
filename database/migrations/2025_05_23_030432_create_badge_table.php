@@ -28,6 +28,7 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('badge');
+        Schema::dropIfExists('badge_user');  // pivot
+        Schema::dropIfExists('badges');      // induk
     }
 };

@@ -88,13 +88,13 @@ Route::prefix('dashboard')->name('dashboard.')->group(function () {
     Route::delete('merchandise/{merchandise}', [MerchandiseController::class, 'destroy'])->name('merchandise.destroy')->middleware(['auth', 'role:admin,super_admin']);
 
     // Ticket
-    Route::get('tickets', [TicketController::class, 'index'])->name('tickets.index');
-    Route::get('tickets/create', [TicketController::class, 'create'])->name('tickets.create');
-    Route::post('tickets', [TicketController::class, 'store'])->name('tickets.store');
-    Route::get('tickets/{ticket}', [TicketController::class, 'show'])->name('tickets.show');
-    Route::get('tickets/{ticket}/edit', [TicketController::class, 'edit'])->name('tickets.edit');
-    Route::put('tickets/{ticket}', [TicketController::class, 'update'])->name('tickets.update');
-    Route::delete('tickets/{ticket}', [TicketController::class, 'destroy'])->name('tickets.destroy');
+    Route::get('tickets', [TicketController::class, 'index'])->name('tickets.index')->middleware(['auth', 'role:admin,super_admin']);
+    Route::get('tickets/create', [TicketController::class, 'create'])->name('tickets.create')->middleware(['auth', 'role:admin,super_admin']);
+    Route::post('tickets', [TicketController::class, 'store'])->name('tickets.store')->middleware(['auth', 'role:admin,super_admin']);
+    Route::get('tickets/{ticket}', [TicketController::class, 'show'])->name('tickets.show')->middleware(['auth', 'role:admin,super_admin']);
+    Route::get('tickets/{ticket}/edit', [TicketController::class, 'edit'])->name('tickets.edit')->middleware(['auth', 'role:admin,super_admin']);
+    Route::put('tickets/{ticket}', [TicketController::class, 'update'])->name('tickets.update')->middleware(['auth', 'role:admin,super_admin']);
+    Route::delete('tickets/{ticket}', [TicketController::class, 'destroy'])->name('tickets.destroy')->middleware(['auth', 'role:admin,super_admin']);
 
     // Ratings
     Route::get('ratings', [RatingController::class, 'index'])->name('ratings.index')->middleware(['auth', 'role:admin,super_admin']);
