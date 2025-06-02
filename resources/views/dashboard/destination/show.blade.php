@@ -118,8 +118,8 @@
                                     <div class="flex justify-between">
                                         <span class="text-gray-600">Harga:</span>
                                         <span class="font-medium text-gray-900">
-                                            @if($destination->has_ticket)
-                                                Rp{{ number_format($destination->price, 0, ',', '.') }}
+                                            @if($destination->has_ticket && $destination->ticket)
+                                                Rp{{ number_format($destination->ticket->price, 0, ',', '.') }}
                                             @else
                                                 <span class="text-gray-500">-</span>
                                             @endif
@@ -130,8 +130,8 @@
                                     <div class="flex justify-between">
                                         <span class="text-gray-600">Stok Tersedia:</span>
                                         <span class="font-medium text-gray-900">
-                                            @if($destination->has_ticket)
-                                                {{ number_format($destination->stock, 0, ',', '.') }} tiket
+                                            @if($destination->has_ticket && $destination->ticket)
+                                                {{ number_format($destination->ticket->stock, 0, ',', '.') }} tiket
                                             @else
                                                 <span class="text-gray-500">-</span>
                                             @endif

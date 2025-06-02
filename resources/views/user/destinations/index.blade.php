@@ -61,11 +61,20 @@
                     
                     <!-- Price Display Logic -->
                     <div class="flex items-center mb-3">
-                        @if($destination->has_ticket && $destination->price > 0)
-                            <p class="text-lg font-semibold text-gray-800 dark:text-gray-300">
-                                IDR {{ number_format($destination->price, 0, ',', '.') }}
-                            </p>
-                        @elseif($destination->has_ticket && $destination->price == 0)
+                        @if($destination->has_ticket && $destination->ticket)
+                            @if($destination->ticket->stock > 0)
+                                <p class="text-lg font-semibold text-gray-800 dark:text-gray-300">
+                                    IDR {{ number_format($destination->ticket->price, 0, ',', '.') }}
+                                </p>
+                            @else
+                                <div class="flex flex-col">
+                                    <p class="text-lg font-semibold text-red-600 dark:text-red-400">
+                                        IDR {{ number_format($destination->ticket->price, 0, ',', '.') }}
+                                    </p>
+                                    <span class="text-sm text-red-500 font-medium">Out of Stock</span>
+                                </div>
+                            @endif
+                        @elseif($destination->has_ticket)
                             <p class="text-lg font-medium text-gray-600 dark:text-gray-400">
                                 Contact for pricing
                             </p>
@@ -77,11 +86,18 @@
                     </div>
 
                     <!-- Button Logic -->
-                    @if($destination->has_ticket && $destination->price > 0)
-                        <a href="{{ route('destinations.show', $destination->id) }}" 
-                           class="inline-block text-white bg-gradient-to-br from-purple-400 to-black hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-gray-200 dark:focus:ring-purple-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2">
-                            Book Now
-                        </a>
+                    @if($destination->has_ticket && $destination->ticket)
+                        @if($destination->ticket->stock > 0)
+                            <a href="{{ route('destinations.show', $destination->id) }}" 
+                               class="inline-block text-white bg-gradient-to-br from-purple-400 to-black hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-gray-200 dark:focus:ring-purple-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2">
+                                Book Now
+                            </a>
+                        @else
+                            <button disabled 
+                                    class="inline-block text-gray-500 bg-gray-300 cursor-not-allowed font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2">
+                                Sold Out
+                            </button>
+                        @endif
                     @else
                         <a href="{{ route('destinations.show', $destination->id) }}" 
                             class="inline-block text-white bg-gradient-to-br from-purple-400 to-black hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-gray-200 dark:focus:ring-purple-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2">    

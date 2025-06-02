@@ -80,13 +80,22 @@
             </div>
 
             <div class="flex flex-col lg:flex-row lg:items-center lg:space-x-4 mt-4">
-              @if($destinations->has_ticket && $destinations->price > 0)
-                <p class="text-4xl font-bold leading-tight mr-10">
-                  <span class="font-bold text-black">IDR {{ number_format($destinations->price, 0, ',', '.') }}</span>
-                </p>
+              @if($destinations->has_ticket && $destinations->ticket)
+                <div class="flex flex-col">
+                  <p class="text-4xl font-bold leading-tight mr-10">
+                    <span class="font-bold text-black">IDR {{ number_format($destinations->ticket->price, 0, ',', '.') }}</span>
+                  </p>
+                  @if($destinations->ticket->stock <= 0)
+                    <span class="text-red-500 font-semibold text-lg mt-2">Out of Stock</span>
+                  @elseif($destinations->ticket->stock <= 10)
+                    <span class="text-yellow-600 font-medium text-sm mt-2">Only {{ $destinations->ticket->stock }} tickets left!</span>
+                  @else
+                    <span class="text-green-600 font-medium text-sm mt-2">{{ $destinations->ticket->stock }} tickets available</span>
+                  @endif
+                </div>
               @else
                 <p class="text-2xl font-medium leading-tight mr-10">
-                  <span class="text-gray-600">{{ $destinations->has_ticket ? 'Contact for pricing' : '' }}</span>
+                  <span class="text-gray-600">{{ $destinations->has_ticket ? 'Contact for pricing' : '.' }}</span>
                 </p>
               @endif
             </div>
@@ -116,10 +125,19 @@
                   </svg>
                 </a>
                 
-                @if($destinations->has_ticket && $destinations->price > 0)
-                  <a href="{{ route('tickets.show_ticket_form', ['destination' => $destinations->id]) }}" class="px-8 py-4 bg-gradient-to-r from-purple-500 to-black text-white font-bold rounded-lg hover:bg-gradient-to-r hover:from-purple-600 hover:to-black transition flex items-center">
-                    Book Now
-                  </a>
+                @if($destinations->has_ticket)
+                  @if($destinations->ticket && $destinations->ticket->stock > 0)
+                    <a href="{{ route('tickets.show_ticket_form', ['destination' => $destinations->id]) }}" class="px-8 py-4 bg-gradient-to-r from-purple-500 to-black text-white font-bold rounded-lg hover:bg-gradient-to-r hover:from-purple-600 hover:to-black transition flex items-center">
+                      Book Now
+                    </a>
+                  @else
+                    <button onclick="showOutOfStockAlert()" class="px-8 py-4 bg-gray-400 text-white font-bold rounded-lg cursor-not-allowed flex items-center">
+                      <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728L5.636 5.636m12.728 12.728L18.364 5.636M5.636 18.364l12.728-12.728"></path>
+                      </svg>
+                      Sold Out
+                    </button>
+                  @endif
                 @endif
               </div>
             </div>
@@ -184,19 +202,38 @@
                   <h5 class="mb-2 text-xl font-bold tracking-tight text-purple-900">{{ $other_destination->location }}</h5>
                 </a>
                 
-                @if($other_destination->has_ticket && $other_destination->price > 0)
-                  <p class="text-lg font-semibold text-gray-800 mb-3">
-                    IDR {{ number_format($other_destination->price, 0, ',', '.') }}
-                  </p>
+                @if($other_destination->has_ticket && $other_destination->ticket)
+                  @if($other_destination->ticket->stock > 0)
+                    <p class="text-lg font-semibold text-gray-800 mb-3">
+                      IDR {{ number_format($other_destination->ticket->price, 0, ',', '.') }}
+                    </p>
+                  @else
+                    <div class="mb-3">
+                      <p class="text-lg font-semibold text-red-600">
+                        IDR {{ number_format($other_destination->ticket->price, 0, ',', '.') }}
+                      </p>
+                      <span class="text-sm text-red-500 font-medium">Out of Stock</span>
+                    </div>
+                  @endif
                 @elseif($other_destination->has_ticket)
                   <p class="text-lg font-medium text-gray-600 mb-3">Contact for pricing</p>
                 @else
                   <p class="text-lg font-medium text-green-600 mb-3"></p>
                 @endif
                 
-                <a href="{{ route('destinations.show', $other_destination->id) }}" class="inline-block text-white bg-gradient-to-br from-purple-400 to-black hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-gray-200 dark:focus:ring-purple-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2">
-                  {{ $other_destination->has_ticket && $other_destination->price > 0 ? 'Book Now' : 'Learn More' }}
-                </a>
+                @if($other_destination->has_ticket && $other_destination->ticket && $other_destination->ticket->stock > 0)
+                  <a href="{{ route('destinations.show', $other_destination->id) }}" class="inline-block text-white bg-gradient-to-br from-purple-400 to-black hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-gray-200 dark:focus:ring-purple-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2">
+                    Book Now
+                  </a>
+                @elseif($other_destination->has_ticket && $other_destination->ticket)
+                  <button disabled class="inline-block text-gray-500 bg-gray-300 cursor-not-allowed font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2">
+                    Sold Out
+                  </button>
+                @else
+                  <a href="{{ route('destinations.show', $other_destination->id) }}" class="inline-block text-white bg-gradient-to-br from-purple-400 to-black hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-gray-200 dark:focus:ring-purple-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2">
+                    Learn More
+                  </a>
+                @endif
               </div>
             </div>
             @endforeach
@@ -270,6 +307,16 @@
     </section>
 
  <script>
+  function showOutOfStockAlert() {
+    Swal.fire({
+      icon: 'warning',
+      title: 'Tiket Sudah Habis!',
+      text: 'Maaf, tiket untuk destinasi ini sudah habis. Silakan hubungi kami untuk informasi lebih lanjut atau coba destinasi lainnya.',
+      confirmButtonText: 'Mengerti',
+      confirmButtonColor: '#6B21A8'
+    });
+  }
+
   function toggleWishlist(destinationId) {
     const form = document.getElementById('wishlistForm-' + destinationId);
     const data = new FormData(form);
