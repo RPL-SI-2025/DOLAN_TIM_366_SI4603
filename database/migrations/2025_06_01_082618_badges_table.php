@@ -17,6 +17,7 @@ public function up()
         $table->string('name');
         $table->string('description')->nullable();
         $table->string('icon')->nullable(); // bisa berupa path ke gambar/icon
+        $table->integer('required_point')->default(0); // poin yang diperlukan untuk mendapatkan badge
         $table->timestamps();
     });
 
@@ -27,4 +28,12 @@ public function up()
         $table->timestamps();
     });
 }
+
+public function down()
+    {
+        Schema::disableForeignKeyConstraints();
+        Schema::dropIfExists('badge_user');
+        Schema::dropIfExists('badges');
+        Schema::enableForeignKeyConstraints();
+    }
 };
