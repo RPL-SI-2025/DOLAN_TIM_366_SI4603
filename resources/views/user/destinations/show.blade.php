@@ -9,6 +9,7 @@
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.css" />
   <script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.umd.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <meta name="csrf-token" content="{{ csrf_token() }}">
   <style>
     body {
       font-family: 'Poppins', sans-serif;
@@ -56,6 +57,7 @@
               <input type="hidden" name="destination_id" value="{{ $destinations->id }}">
 
               <button type="button"
+              dusk="wishlist-btn"
               onclick="toggleWishlist({{ $destinations->id }})"
               id="wishlistBtn-{{ $destinations->id }}"
               class="p-4 rounded-lg transition ml-auto bg-purple-700 hover:bg-purple-800 border-2 border-navy-900 inline-flex items-center justify-center"
@@ -174,43 +176,44 @@
     </section>
 
  <script>
-  function toggleWishlist(destinationId) {
-    const form = document.getElementById('wishlistForm-' + destinationId);
-    const data = new FormData(form);
-    const icon = document.getElementById('bookmarkIcon-' + destinationId);
-    const button = document.getElementById('wishlistBtn-' + destinationId);
+function toggleWishlist(destinationId) {
+  const form = document.getElementById('wishlistForm-' + destinationId);
+  const data = new FormData(form);
+  const icon = document.getElementById('bookmarkIcon-' + destinationId);
+  const button = document.getElementById('wishlistBtn-' + destinationId);
+  const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
 
-    fetch('{{ route("wishlist.toggle") }}', {
-      method: 'POST',
-      headers: {
-        'X-CSRF-TOKEN': '{{ csrf_token() }}',
-      },
-      body: data
-    })
-    .then(response => response.json())
-    .then(data => {
-      if (data.success) {
-        Swal.fire('Berhasil!', data.message, 'success');
+  fetch('{{ route("wishlist.toggle") }}', {
+    method: 'POST',
+    headers: {
+      'X-CSRF-TOKEN': csrfToken
+    },
+    body: data
+  })
+  .then(response => response.json())
+  .then(data => {
+    if (data.success) {
+      Swal.fire('Berhasil!', data.message, 'success');
 
-        if (data.in_wishlist) {
-          icon.classList.remove('bi-bookmark');
-          icon.classList.add('bi-bookmark-fill');
-          icon.setAttribute('fill', '#6B21A8');       // warna aktif
-          button.style.borderColor = '#6B21A8';       // border warna aktif
-        } else {
-          icon.classList.remove('bi-bookmark-fill');
-          icon.classList.add('bi-bookmark');
-          icon.setAttribute('fill', '#D1D5DB');       // warna nonaktif
-          button.style.borderColor = '#D1D5DB';       // border warna nonaktif
-        }
+      if (data.in_wishlist) {
+        icon.classList.remove('bi-bookmark');
+        icon.classList.add('bi-bookmark-fill');
+        icon.setAttribute('fill', '#6B21A8');
+        button.style.borderColor = '#6B21A8';
       } else {
-        Swal.fire('Oops!', data.message, 'error');
+        icon.classList.remove('bi-bookmark-fill');
+        icon.classList.add('bi-bookmark');
+        icon.setAttribute('fill', '#D1D5DB');
+        button.style.borderColor = '#D1D5DB';
       }
-    })
-    .catch(() => {
-      Swal.fire('Error!', 'Terjadi kesalahan. Coba lagi nanti.', 'error');
-    });
-  }
+    } else {
+      Swal.fire('Oops!', data.message, 'error');
+    }
+  })
+  .catch(() => {
+    Swal.fire('Error!', 'Terjadi kesalahan. Coba lagi nanti.', 'error');
+  });
+}
 </script>
 
   </main>
