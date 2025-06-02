@@ -1,5 +1,5 @@
 <div class="w-full flex justify-center pt-6">
-    <div class="bg-white glass rounded-full px-10 py-4 flex items-center justify-between shadow-lg max-w-3xl w-full">
+    <div class="bg-white glass rounded-full px-10 py-4 flex items-center justify-between shadow-lg max-w-4xl w-full">
       <div class="text-2xl font-bold text-purple-600 mr-2">Dolan</div>
       <nav class="hidden md:flex gap-6 text-gray-800 font-medium">
         <a href="{{ route('home') }}" class="hover:text-purple-600">Home</a>
